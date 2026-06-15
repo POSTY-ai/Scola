@@ -513,22 +513,27 @@
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Création en cours...';
 
-            try {
+           try {
 
-                const response = await fetch("/inscription", {
+                const response = await fetch("/register", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ name, email, password })
+                    body: JSON.stringify({name,email, password })
                 });
 
                 const data = await response.json();
 
-                if (response.ok) {
-                    // ✅ Succès → redirection vers l'accueil
-                    afficherMessage("succes", "✅ Compte créé avec succès ! Redirection...");
+                if (data.token) {
+                    // ✅ Sauvegarder le token
+                    localStorage.setItem("token", data.token);
+
+                    afficherMessage("succes", "✅ Inscription réussie !.");
+
+                    // Redirection vers l'accueil
                     setTimeout(() => {
                         window.location.href = "dashboard.html";
                     }, 1200);
+
                 } else {
                     afficherMessage("erreur", data.message || "Erreur lors de l'inscription.");
                     btn.disabled = false;
