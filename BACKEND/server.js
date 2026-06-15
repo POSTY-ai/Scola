@@ -159,7 +159,7 @@ function auth(req, res, next) {
 // ================================
 
 app.get("/dashboard", auth, (req, res) => {
-    res.sendFile(path.join(__dirname, "../ALLPAGES/pages/dashboard.html"));
+    res.sendFile(path.join(__dirname, "../ALLPAGES/Pages/dashboard.html"));
 });
 
 // ================================
