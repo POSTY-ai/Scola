@@ -76,7 +76,7 @@ if (search1) {
         }
 
         const texte = enleverAccents(search1.value);
-        search1.style.color = "black";
+        search1.style.color = "bold";"whhite";
         result1.innerHTML = "";
 
         cours.forEach(coursItem => {
