@@ -77,6 +77,7 @@ if (search1) {
 
         const texte = enleverAccents(search1.value);
         search1.style.color = "bold";"whhite";
+        search1.style.backgroundColor="linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);"
         result1.innerHTML = "";
 
         cours.forEach(coursItem => {
