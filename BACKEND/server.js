@@ -18,14 +18,16 @@ const cron = require("node-cron");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "../allpages")));
+app.use(express.static(path.join(__dirname, "../ALLPAGES")));
 
 // ================================
 // PAGE D'ACCUEIL
 // ================================
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "../allpages/index.html"));
+  res.sendFile(
+    path.join(__dirname, "../ALLPAGES/index.html")
+);
 });
 
 // ================================
@@ -157,7 +159,7 @@ function auth(req, res, next) {
 // ================================
 
 app.get("/dashboard", auth, (req, res) => {
-    res.sendFile(path.join(__dirname, "../allpages/pages/dashboard.html"));
+    res.sendFile(path.join(__dirname, "../ALLPAGES/pages/dashboard.html"));
 });
 
 // ================================
@@ -476,9 +478,7 @@ mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("✅ MongoDB connecté"))
     .catch((err) => console.log("❌ Erreur MongoDB :", err));
 
-// ================================
-// DÉMARRAGE SERVEUR
-// ================================
+
 cron.schedule("59 23 * * 5", async () => {
     await User.updateMany({}, {
         $set: {
@@ -488,9 +488,13 @@ cron.schedule("59 23 * * 5", async () => {
     });
     console.log("✅ Ligue réinitialisée automatiquement !");
 });
+// ================================
+// DÉMARRAGE SERVEUR
+// ================================
+const PORT = process.env.PORT || 3000;
 
-app.listen(3000, "localhost", () => {
-    console.log("🚀 Serveur démarré sur localhost:3000");
+app.listen(PORT, () => {
+    console.log(`🚀 Serveur démarré sur le port ${PORT}`);
 });
 
 // ================================
