@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <title>Emoji Code — Scola</title>
+    <style>
+
+        /* ====================================================
+           BASE
+           ==================================================== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* ====================================================
+           HEADER
+           ==================================================== */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            background: rgba(255,255,255,0.04);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+
+        .btn-retour {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 20px;
+            padding: 8px 16px;
+            transition: all 0.2s;
+        }
+
+        .btn-retour:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.13);
+        }
+
+        .header-titre {
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            font-weight: 700;
+            text-align: center;
+            flex: 1;
+        }
+
+        /* Compteur score dans le header */
+        .header-score {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,215,0,0.12);
+            border: 1px solid rgba(255,215,0,0.25);
+            border-radius: 20px;
+            padding: 8px 14px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffd700;
+            white-space: nowrap;
+        }
+
+        /* ====================================================
+           CONTENEUR PRINCIPAL
+           ==================================================== */
+        .jeu-wrapper {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 30px 20px 60px;
+        }
+
+        /* ====================================================
+           BARRE DE PROGRESSION
+           ==================================================== */
+        .progress-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .progress-fond {
+            flex: 1;
+            height: 7px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .progress-rempli {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #ffaa00);
+            border-radius: 99px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-label {
+            font-size: 13px;
+            color: rgba(255,255,255,0.5);
+            white-space: nowrap;
+        }
+
+        /* ====================================================
+           CARTE DE JEU
+           ==================================================== */
+        .jeu-carte {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 24px;
+            padding: 36px 30px;
+            backdrop-filter: blur(14px);
+            box-shadow: 0 20px 48px rgba(0,0,0,0.3);
+            animation: entree 0.4s ease;
+        }
+
+        @keyframes entree {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Label "Question X / Y" */
+        .question-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 20px;
+        }
+
+        /* Zone des emojis — c'est la partie principale */
+        .emoji-zone {
+            text-align: center;
+            padding: 28px 20px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,0.07);
+            margin-bottom: 20px;
+        }
+
+        .emoji-display {
+            font-size: clamp(2.8rem, 8vw, 4rem);
+            line-height: 1.4;
+            letter-spacing: 6px;
+            margin-bottom: 12px;
+            /* animation de rebond à l'affichage */
+            animation: rebond 0.5s ease;
+        }
+
+        @keyframes rebond {
+            0%   { transform: scale(0.7); opacity: 0; }
+            60%  { transform: scale(1.08); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .emoji-consigne {
+            font-size: 13px;
+            color: rgba(255,255,255,0.4);
+            font-style: italic;
+        }
+
+        /* Bouton indice */
+        .btn-indice {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 11px;
+            background: rgba(255,255,255,0.05);
+            border: 1px dashed rgba(255,255,255,0.2);
+            border-radius: 12px;
+            color: rgba(255,255,255,0.6);
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.2s;
+        }
+
+        .btn-indice:hover {
+            background: rgba(255,255,255,0.09);
+            color: #ffffff;
+        }
+
+        /* Texte d'indice révélé */
+        .indice-texte {
+            display: none;
+            text-align: center;
+            font-size: 14px;
+            color: #ffd700;
+            background: rgba(255,215,0,0.08);
+            border: 1px solid rgba(255,215,0,0.2);
+            border-radius: 10px;
+            padding: 10px 16px;
+            margin-bottom: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        /* ====================================================
+           CHOIX DE RÉPONSE (4 boutons)
+           ==================================================== */
+        .choix-grille {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .choix-btn {
+            padding: 16px 14px;
+            background: rgba(255,255,255,0.06);
+            border: 1.5px solid rgba(255,255,255,0.12);
+            border-radius: 14px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+            line-height: 1.3;
+        }
+
+        .choix-btn:hover:not(:disabled) {
+            background: rgba(255,255,255,0.11);
+            border-color: rgba(255,215,0,0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Lettre A B C D */
+        .choix-lettre {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+            transition: background 0.2s;
+        }
+
+        /* ✅ Bonne réponse */
+        .choix-btn.correct {
+            background: rgba(46,213,115,0.2);
+            border-color: #2ed573;
+            animation: popCorrect 0.4s ease;
+        }
+
+        .choix-btn.correct .choix-lettre {
+            background: #2ed573;
+            color: #1a1a2e;
+        }
+
+        /* ❌ Mauvaise réponse */
+        .choix-btn.incorrect {
+            background: rgba(255,71,87,0.2);
+            border-color: #ff4757;
+            animation: shakeX 0.4s ease;
+        }
+
+        .choix-btn.incorrect .choix-lettre {
+            background: #ff4757;
+            color: #fff;
+        }
+
+        .choix-btn:disabled { cursor: not-allowed; opacity: 0.7; }
+
+        @keyframes popCorrect {
+            0%,100% { transform: scale(1); }
+            40%     { transform: scale(1.04); }
+        }
+
+        @keyframes shakeX {
+            0%,100% { transform: translateX(0); }
+            25%     { transform: translateX(-6px); }
+            75%     { transform: translateX(6px); }
+        }
+
+        /* ====================================================
+           FEEDBACK
+           ==================================================== */
+        .feedback {
+            display: none;
+            padding: 13px 18px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 18px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .feedback.correct {
+            background: rgba(46,213,115,0.15);
+            border: 1px solid rgba(46,213,115,0.4);
+            color: #81f5b0;
+        }
+
+        .feedback.incorrect {
+            background: rgba(255,71,87,0.15);
+            border: 1px solid rgba(255,71,87,0.4);
+            color: #ff8fa3;
+        }
+
+        /* ====================================================
+           BOUTON SUIVANT
+           ==================================================== */
+        .btn-suivant {
+            display: none;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            border: none;
+            border-radius: 14px;
+            color: #1a1a2e;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-suivant:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255,215,0,0.35);
+        }
+
+        /* ====================================================
+           ÉCRAN DE RÉSULTATS
+           ==================================================== */
+        .resultats-carte {
+            display: none;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 24px;
+            padding: 40px 30px;
+            text-align: center;
+            backdrop-filter: blur(14px);
+            animation: entree 0.4s ease;
+        }
+
+        .res-emoji { font-size: 64px; margin-bottom: 16px; display: block; }
+
+        .res-titre {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .res-score {
+            font-size: 52px;
+            font-weight: 900;
+            color: #ffd700;
+            margin: 20px 0 6px;
+        }
+
+        .res-sous-score {
+            font-size: 15px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 28px;
+        }
+
+        /* Grille de stats */
+        .res-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .res-stat {
+            background: rgba(255,255,255,0.05);
+            border-radius: 14px;
+            padding: 16px 10px;
+        }
+
+        .res-stat-val {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .res-stat-label {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .res-message {
+            font-size: 15px;
+            color: rgba(255,255,255,0.7);
+            background: rgba(255,255,255,0.04);
+            border-radius: 12px;
+            padding: 16px;
+            border-left: 4px solid #ffd700;
+            margin-bottom: 28px;
+            text-align: left;
+            line-height: 1.6;
+        }
+
+        .res-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-rejouer {
+            flex: 1;
+            padding: 14px;
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            border: none;
+            border-radius: 14px;
+            color: #1a1a2e;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s;
+            min-width: 140px;
+        }
+
+        .btn-rejouer:hover { transform: translateY(-2px); }
+
+        .btn-accueil {
+            flex: 1;
+            padding: 14px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 14px;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.2s;
+            min-width: 140px;
+        }
+
+        .btn-accueil:hover { background: rgba(255,255,255,0.11); }
+
+        /* ====================================================
+           RESPONSIVE
+           ==================================================== */
+        @media (max-width: 480px) {
+            .jeu-carte, .resultats-carte { padding: 24px 16px; }
+            .choix-grille { grid-template-columns: 1fr; }
+            .emoji-display { font-size: 2.4rem; letter-spacing: 4px; }
+            .res-stats { grid-template-columns: repeat(3,1fr); gap: 8px; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+      
+        <div class="header-titre">🎭 Emoji Code</div>
+        <div class="header-score">
+            ⭐ <span id="scoreHeader">0</span> pts
+        </div>
+    </div>
+
+    <div class="jeu-wrapper">
+
+        <!-- BARRE DE PROGRESSION -->
+        <div class="progress-wrap">
+            <div class="progress-fond">
+                <div class="progress-rempli" id="progressRempli" style="width:0%"></div>
+            </div>
+            <div class="progress-label" id="progressLabel">1 / 16</div>
+        </div>
+
+        <!-- CARTE DE JEU -->
+        <div class="jeu-carte" id="jeuCarte">
+
+            <div class="question-label" id="questionLabel">Question 1 sur 16</div>
+
+            <!-- Zone d'affichage des emojis -->
+            <div class="emoji-zone">
+                <div class="emoji-display" id="emojiDisplay">⏳</div>
+                <div class="emoji-consigne">Déchiffre ces emojis et trouve l'événement ou le personnage !</div>
+            </div>
+
+            <!-- Bouton pour afficher un indice -->
+            <button class="btn-indice" id="btnIndice" onclick="afficherIndice()">
+                <i class="fa-solid fa-lightbulb"></i>
+                Voir un indice (-5 pts)
+            </button>
+
+            <!-- Indice révélé -->
+            <div class="indice-texte" id="indiceTexte"></div>
+
+            <!-- 4 choix de réponse -->
+            <div class="choix-grille" id="choixGrille"></div>
+
+            <!-- Feedback après réponse -->
+            <div class="feedback" id="feedback"></div>
+
+            <!-- Bouton question suivante -->
+            <button class="btn-suivant" id="btnSuivant" onclick="questionSuivante()">
+                Question suivante <i class="fa-solid fa-arrow-right"></i>
+            </button>
+
+        </div>
+
+        <!-- ÉCRAN DE RÉSULTATS -->
+        <div class="resultats-carte" id="resultatsCarte">
+            <span class="res-emoji" id="resEmoji">🏆</span>
+            <div class="res-titre">Quiz terminé !</div>
+            <div class="res-score" id="resScore">0</div>
+            <div class="res-sous-score" id="resSousTitre">points sur 160</div>
+
+            <div class="res-stats">
+                <div class="res-stat">
+                    <div class="res-stat-val" id="resBonnes" style="color:#2ed573">0</div>
+                    <div class="res-stat-label">✅ Bonnes</div>
+                </div>
+                <div class="res-stat">
+                    <div class="res-stat-val" id="resMauvaises" style="color:#ff4757">0</div>
+                    <div class="res-stat-label">❌ Mauvaises</div>
+                </div>
+                <div class="res-stat">
+                    <div class="res-stat-val" id="resPourcentage" style="color:#ffd700">0%</div>
+                    <div class="res-stat-label">🎯 Score</div>
+                </div>
+            </div>
+
+            <div class="res-message" id="resMessage"></div>
+
+            <div class="res-actions">
+                <button class="btn-rejouer" onclick="rejouer()">
+                    <i class="fa-solid fa-rotate-right"></i> Rejouer
+                </button>
+                <a href="jeuxeducatifs.html" class="btn-accueil">
+                    <i class="fa-solid fa-gamepad"></i> Autres jeux
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+
+        // ============================================================
+        // BANQUE DE QUESTIONS EMOJI CODE
+        // emojis = la séquence d'emojis à déchiffrer
+        // reponse = la bonne réponse
+        // indice = un indice textuel si l'élève est bloqué
+        // choix = les 4 options de réponse
+        // ============================================================
+
+        const questions = [
+            {
+                emojis: "🇭🇹👨‍💼⚖️🏛️🇺🇸🚪",
+                reponse: "Sténio Vincent",
+                indice: "Président haïtien qui a négocié le départ des Américains en 1934",
+                choix: ["Sténio Vincent", "Élie Lescot", "Dumarsais Estimé", "Paul Magloire"]
+            },
+            {
+                emojis: "🌍🔄📦✈️🏭💹",
+                reponse: "La Mondialisation",
+                indice: "Phénomène d'interconnexion économique et culturelle mondiale",
+                choix: ["La Mondialisation", "Le Plan Marshall", "La Guerre Froide", "La Triade"]
+            },
+            {
+                emojis: "💣⚔️🌍🪖💀🕊️",
+                reponse: "Les Guerres Mondiales",
+                indice: "Deux conflits armés qui ont ravagé le monde entier au XXe siècle",
+                choix: ["Les Guerres Mondiales", "La Guerre Froide", "L'Occupation Américaine", "La SDN"]
+            },
+            {
+                emojis: "📉💰🏦😱🇺🇸1️⃣9️⃣2️⃣9️⃣",
+                reponse: "Le Krach Boursier de 1929",
+                indice: "Effondrement brutal des marchés financiers américains, début d'une grande crise mondiale",
+                choix: ["Le Krach Boursier de 1929", "La Mondialisation", "Le Plan Marshall", "La Zone Euro"]
+            },
+            {
+                emojis: "🇭🇹👨‍💼✊🏿🌾👷🏿",
+                reponse: "Dumarsais Estimé",
+                indice: "Président haïtien défenseur des classes populaires et paysannes (1946-1950)",
+                choix: ["Dumarsais Estimé", "Sténio Vincent", "Paul Magloire", "Élie Lescot"]
+            },
+            {
+                emojis: "🇭🇹🪖👨‍✈️🏗️🌉",
+                reponse: "Paul Magloire",
+                indice: "Général devenu président, connu pour ses grands travaux d'infrastructure (1950-1956)",
+                choix: ["Paul Magloire", "Sténio Vincent", "Dumarsais Estimé", "Élie Lescot"]
+            },
+            {
+                emojis: "🇺🇸⚓🇭🇹🪖😤1️⃣9️⃣1️⃣5️⃣",
+                reponse: "L'Occupation Américaine",
+                indice: "Les Marines américains débarquent en Haïti en 1915 et restent jusqu'en 1934",
+                choix: ["L'Occupation Américaine", "Le Plan Marshall", "La Guerre Froide", "Le Traité de Versailles"]
+            },
+            {
+                emojis: "🇺🇸🇪🇺🇯🇵💪🌐💰",
+                reponse: "La Triade",
+                indice: "Les trois grandes puissances économiques qui dominent le commerce mondial",
+                choix: ["La Triade", "L'ONU", "La Mondialisation", "La Zone Euro"]
+            },
+            {
+                emojis: "🌍🕊️🤝🏛️🇺🇳",
+                reponse: "L'ONU",
+                indice: "Organisation internationale créée après 1945 pour maintenir la paix dans le monde",
+                choix: ["L'ONU", "La SDN", "L'Union Européenne", "L'OTAN"]
+            },
+            {
+                emojis: "🕊️🤝❌💥😞1️⃣9️⃣1️⃣9️⃣",
+                reponse: "La SDN",
+                indice: "Organisation de paix créée après 1918 qui a échoué à prévenir la Seconde Guerre Mondiale",
+                choix: ["La SDN", "L'ONU", "L'OTAN", "L'Union Européenne"]
+            },
+            {
+                emojis: "🇪🇺⭐🤝🏛️💶🌍",
+                reponse: "L'Union Européenne",
+                indice: "Bloc politique et économique regroupant des nations européennes autour de valeurs communes",
+                choix: ["L'Union Européenne", "La SDN", "L'ONU", "La Zone Euro"]
+            },
+            {
+                emojis: "🇺🇸💵🇪🇺🏗️🔨1️⃣9️⃣4️⃣7️⃣",
+                reponse: "Le Plan Marshall",
+                indice: "Programme d'aide financière américaine pour reconstruire l'Europe dévastée après 1945",
+                choix: ["Le Plan Marshall", "La Mondialisation", "La Guerre Froide", "Le Krach de 1929"]
+            },
+            {
+                emojis: "🇭🇹😡⚔️🇩🇴💀1️⃣9️⃣3️⃣7️⃣",
+                reponse: "Le Massacre de 1937",
+                indice: "Massacre de milliers d'Haïtiens ordonné par Trujillo en République Dominicaine",
+                choix: ["Le Massacre de 1937", "L'Occupation Américaine", "La Guerre des Cacos", "Le Traité de Versailles"]
+            },
+            {
+                emojis: "🇭🇹👨‍💼🇫🇷🤝✈️1️⃣9️⃣4️⃣1️⃣",
+                reponse: "Élie Lescot",
+                indice: "Président haïtien pro-occidental, renversé par une révolution populaire en 1946",
+                choix: ["Élie Lescot", "Sténio Vincent", "Paul Magloire", "Dumarsais Estimé"]
+            },
+            {
+                emojis: "✍️🇩🇪😤💸⚖️1️⃣9️⃣1️⃣9️⃣",
+                reponse: "Le Traité de Versailles",
+                indice: "Accord humiliant imposé à l'Allemagne après la Première Guerre Mondiale en 1919",
+                choix: ["Le Traité de Versailles", "Le Plan Marshall", "La SDN", "L'ONU"]
+            },
+            {
+                emojis: "💶🇪🇺🏦📊✅",
+                reponse: "La Zone Euro",
+                indice: "Espace monétaire des pays membres de l'UE qui ont adopté l'euro comme monnaie",
+                choix: ["La Zone Euro", "L'Union Européenne", "La Triade", "Le Plan Marshall"]
+            }
+        ];
+
+        // ============================================================
+        // VARIABLES D'ÉTAT DU JEU
+        // ============================================================
+
+        let indexQuestion  = 0;   // numéro de la question en cours
+        let score          = 0;   // score total en points
+        let bonnes         = 0;   // nombre de bonnes réponses
+        let mauvaises      = 0;   // nombre de mauvaises réponses
+        let aRepondu       = false; // true si l'élève a déjà répondu
+        let indiceUtilise  = false; // true si l'indice a été demandé
+
+        // ============================================================
+        // MÉLANGER LES QUESTIONS — ordre aléatoire à chaque session
+        // ============================================================
+
+        function melangerTableau(tab) {
+            const c = [...tab];
+            for (let i = c.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [c[i], c[j]] = [c[j], c[i]];
+            }
+            return c;
+        }
+
+        let questionsMelangees = melangerTableau(questions);
+
+        // ============================================================
+        // AFFICHER UNE QUESTION
+        // ============================================================
+
+        function afficherQuestion() {
+
+            aRepondu      = false;
+            indiceUtilise = false;
+
+            const q = questionsMelangees[indexQuestion];
+            const total = questionsMelangees.length;
+            const lettres = ['A', 'B', 'C', 'D'];
+
+            // Mettre à jour le label et la progression
+            document.getElementById("questionLabel").textContent =
+                `Question ${indexQuestion + 1} sur ${total}`;
+            document.getElementById("progressLabel").textContent =
+                `${indexQuestion + 1} / ${total}`;
+            document.getElementById("progressRempli").style.width =
+                `${((indexQuestion) / total) * 100}%`;
+
+            // Afficher les emojis
+            document.getElementById("emojiDisplay").textContent = q.emojis;
+
+            // Réinitialiser l'indice
+            document.getElementById("btnIndice").style.display = "flex";
+            document.getElementById("btnIndice").disabled = false;
+            document.getElementById("indiceTexte").style.display = "none";
+            document.getElementById("indiceTexte").textContent = "";
+
+            // Réinitialiser le feedback
+            const feedback = document.getElementById("feedback");
+            feedback.style.display = "none";
+            feedback.className = "feedback";
+
+            // Cacher le bouton suivant
+            document.getElementById("btnSuivant").style.display = "none";
+
+            // Générer les 4 choix
+            const grille = document.getElementById("choixGrille");
+            grille.innerHTML = "";
+
+            // Mélanger les choix pour que la bonne réponse ne soit pas toujours au même endroit
+            const choixMelanges = melangerTableau(
+                q.choix.map((texte, i) => ({ texte, correct: texte === q.reponse }))
+            );
+
+            choixMelanges.forEach((choix, i) => {
+                const btn = document.createElement("button");
+                btn.className = "choix-btn";
+                btn.innerHTML = `
+                    <span class="choix-lettre">${lettres[i]}</span>
+                    <span>${choix.texte}</span>
+                `;
+                btn.onclick = () => verifierReponse(choix.correct, btn, choix.texte, q.reponse);
+                grille.appendChild(btn);
+            });
+
+            // Animation d'entrée de la carte
+            const carte = document.getElementById("jeuCarte");
+            carte.style.animation = "none";
+            carte.offsetHeight; // force le reflow pour redéclencher l'animation
+            carte.style.animation = "entree 0.4s ease";
+
+        }
+
+        // ============================================================
+        // AFFICHER L'INDICE
+        // Coûte 5 points si l'élève s'en sert
+        // ============================================================
+
+        function afficherIndice() {
+
+            if (aRepondu) return;
+
+            indiceUtilise = true;
+            const q = questionsMelangees[indexQuestion];
+
+            // Afficher le texte de l'indice
+            const indiceEl = document.getElementById("indiceTexte");
+            indiceEl.textContent = "💡 " + q.indice;
+            indiceEl.style.display = "block";
+
+            // Désactiver le bouton d'indice
+            document.getElementById("btnIndice").disabled = true;
+            document.getElementById("btnIndice").style.opacity = "0.5";
+
+        }
+
+        // ============================================================
+        // VÉRIFIER LA RÉPONSE
+        // ============================================================
+
+        function verifierReponse(estCorrecte, btnClique, texteChoisi, bonneReponse) {
+
+            if (aRepondu) return;
+            aRepondu = true;
+
+            // Désactiver tous les boutons
+            document.querySelectorAll(".choix-btn").forEach(b => b.disabled = true);
+
+            const feedback = document.getElementById("feedback");
+
+            if (estCorrecte) {
+
+                btnClique.classList.add("correct");
+                bonnes++;
+
+                // 10 pts par bonne réponse, -5 si indice utilisé
+                const pts = indiceUtilise ? 5 : 10;
+                score += pts;
+
+                document.getElementById("scoreHeader").textContent = score;
+                feedback.textContent = indiceUtilise
+                    ? `✅ Bonne réponse ! +${pts} pts (indice utilisé)`
+                    : `✅ Bonne réponse ! +${pts} pts`;
+                feedback.className = "feedback correct";
+
+            } else {
+
+                btnClique.classList.add("incorrect");
+                mauvaises++;
+
+                // Montrer la bonne réponse en vert
+                document.querySelectorAll(".choix-btn").forEach(btn => {
+                    const texte = btn.querySelector("span:last-child").textContent;
+                    if (texte === bonneReponse) btn.classList.add("correct");
+                });
+
+                feedback.textContent = `❌ Mauvaise réponse. La bonne réponse était : ${bonneReponse}`;
+                feedback.className = "feedback incorrect";
+
+            }
+
+            feedback.style.display = "block";
+            document.getElementById("btnSuivant").style.display = "block";
+
+            // Cacher le bouton d'indice après réponse
+            document.getElementById("btnIndice").style.display = "none";
+
+        }
+
+        // ============================================================
+        // QUESTION SUIVANTE
+        // ============================================================
+
+        function questionSuivante() {
+
+            indexQuestion++;
+
+            if (indexQuestion < questionsMelangees.length) {
+                afficherQuestion();
+            } else {
+                afficherResultats();
+            }
+
+        }
+
+        // ============================================================
+        // AFFICHER LES RÉSULTATS FINAUX
+        // ============================================================
+
+        function afficherResultats() {
+
+            document.getElementById("jeuCarte").style.display = "none";
+            document.getElementById("resultatsCarte").style.display = "block";
+
+            const total    = questionsMelangees.length;
+            const maxScore = total * 10;
+            const pct      = Math.round((bonnes / total) * 100);
+
+            // Choisir l'emoji selon le score
+            let emoji, message;
+            if (pct === 100) {
+                emoji   = "🏆";
+                message = "Parfait ! Tu maîtrises tous ces événements et personnages historiques. Tu es prêt(e) pour le Bac !";
+            } else if (pct >= 75) {
+                emoji   = "🎉";
+                message = "Excellent ! Tu as de très bonnes connaissances. Revois les quelques événements que tu as manqués.";
+            } else if (pct >= 50) {
+                emoji   = "👍";
+                message = "Pas mal ! Tu as une bonne base. Rejoue pour mémoriser les événements que tu n'as pas reconnus.";
+            } else {
+                emoji   = "📚";
+                message = "Continue à réviser ! Relis tes cours sur ces événements puis retente le quiz.";
+            }
+
+            document.getElementById("resEmoji").textContent        = emoji;
+            document.getElementById("resScore").textContent        = score;
+            document.getElementById("resSousTitre").textContent    = `points sur ${maxScore}`;
+            document.getElementById("resBonnes").textContent       = bonnes;
+            document.getElementById("resMauvaises").textContent    = mauvaises;
+            document.getElementById("resPourcentage").textContent  = pct + "%";
+            document.getElementById("resMessage").textContent      = message;
+
+            // Barre de progression à 100%
+            document.getElementById("progressRempli").style.width = "100%";
+            document.getElementById("progressLabel").textContent  = `${total} / ${total}`;
+
+        }
+
+        // ============================================================
+        // REJOUER — réinitialise tout
+        // ============================================================
+
+        function rejouer() {
+
+            indexQuestion        = 0;
+            score                = 0;
+            bonnes               = 0;
+            mauvaises            = 0;
+            aRepondu             = false;
+            indiceUtilise        = false;
+            questionsMelangees   = melangerTableau(questions);
+
+            document.getElementById("scoreHeader").textContent    = "0";
+            document.getElementById("resultatsCarte").style.display = "none";
+            document.getElementById("jeuCarte").style.display      = "block";
+
+            afficherQuestion();
+
+        }
+
+        // ============================================================
+        // LANCEMENT
+        // ============================================================
+        afficherQuestion();
+
+    </script>
+</body>
+</html>

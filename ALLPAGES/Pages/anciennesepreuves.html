@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="../css/project.css">
+    <title>Anciens Examens — Scola</title>
+    <style>
+
+        /* ====================================================
+           PAGE CONTAINER
+           ==================================================== */
+        .examens-page {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px 20px 60px;
+        }
+
+        /* Bouton retour */
+        .btn-retour {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.6);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 28px;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 20px;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-retour:hover {
+            color: #ffffff;
+            background: rgba(255,255,255,0.12);
+        }
+
+        /* Titre de la page */
+        .page-titre {
+            font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        .page-sous-titre {
+            font-size: 15px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 30px;
+        }
+
+        /* ====================================================
+           FILTRES PAR FILIÈRE
+           ==================================================== */
+        .filtres {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .filtre-btn {
+            padding: 8px 18px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.7);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filtre-btn:hover,
+        .filtre-btn.actif {
+            background: #667eea;
+            border-color: #667eea;
+            color: #ffffff;
+        }
+
+        /* ====================================================
+           GRILLE DES CARTES D'EXAMENS
+           ==================================================== */
+        .examens-grille {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        /* Carte d'un examen */
+        .examen-carte {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 18px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .examen-carte:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+            border-color: rgba(102,126,234,0.3);
+        }
+
+        /* Miniature PDF — fond coloré avec icône */
+        .examen-miniature {
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Chaque filière a une couleur différente */
+        .miniature-ses    { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .miniature-lla    { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .miniature-smp    { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .miniature-svt    { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+        .miniature-multi  { background: linear-gradient(135deg, #fa709a, #fee140); }
+
+        /* Badge année en haut à droite */
+        .examen-annee-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0,0,0,0.35);
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            backdrop-filter: blur(6px);
+        }
+
+        /* Contenu texte de la carte */
+        .examen-info {
+            padding: 18px 16px;
+        }
+
+        .examen-titre {
+            font-size: 15px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+
+        .examen-filieres {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        /* Badge filière */
+        .filiere-tag {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 9px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .tag-ses  { background: rgba(102,126,234,0.2); color: #a5b4fc; }
+        .tag-lla  { background: rgba(240,147,251,0.2); color: #f0abfc; }
+        .tag-smp  { background: rgba(79,172,254,0.2);  color: #7dd3fc; }
+        .tag-svt  { background: rgba(67,233,123,0.2);  color: #86efac; }
+
+        /* Boutons de la carte */
+        .examen-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-voir {
+            flex: 1;
+            padding: 10px;
+            background: #667eea;
+            border: none;
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .btn-voir:hover {
+            background: #5a67d8;
+            transform: translateY(-1px);
+        }
+
+        .btn-telecharger {
+            padding: 10px 14px;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            color: rgba(255,255,255,0.7);
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-telecharger:hover {
+            background: rgba(255,255,255,0.13);
+            color: #ffffff;
+        }
+
+        /* ====================================================
+           VISIONNEUSE PDF — modal plein écran
+           ==================================================== */
+        .visionneuse-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.88);
+            z-index: 9999;
+            flex-direction: column;
+        }
+
+        /* Header de la visionneuse */
+        .visionneuse-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            background: rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            flex-shrink: 0;
+        }
+
+        .visionneuse-titre {
+            font-size: 15px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .visionneuse-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-fermer {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #ffffff;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .btn-fermer:hover { background: rgba(255,71,87,0.3); }
+
+        /* iframe qui affiche le PDF */
+        .visionneuse-iframe {
+            flex: 1;
+            width: 100%;
+            border: none;
+        }
+
+        /* Message de chargement du PDF */
+        .visionneuse-loading {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: rgba(255,255,255,0.5);
+            font-size: 15px;
+            pointer-events: none;
+        }
+
+        /* ====================================================
+           CARTE "AUCUN RÉSULTAT"
+           ==================================================== */
+        .aucun-resultat {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px 20px;
+            color: rgba(255,255,255,0.4);
+            font-size: 15px;
+        }
+
+        /* ====================================================
+           RESPONSIVE
+           ==================================================== */
+        @media (max-width: 480px) {
+            .examens-grille {
+                grid-template-columns: 1fr;
+            }
+            .filtres {
+                gap: 8px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="examens-page">
+
+        <!-- Bouton retour -->
+        <a href="../index.html" class="btn-retour">
+            <i class="fa-solid fa-arrow-left"></i>
+            Retour à l'accueil
+        </a>
+
+        <!-- Titre -->
+        <h1 class="page-titre">📄 Anciens examens du Bac</h1>
+        <p class="page-sous-titre">Consulte et télécharge les sujets officiels des années précédentes</p>
+
+        <!-- ================================================ -->
+        <!-- FILTRES PAR FILIÈRE                              -->
+        <!-- Permettent de filtrer les cartes par filière     -->
+        <!-- ================================================ -->
+        <div class="filtres">
+            <button class="filtre-btn actif" onclick="filtrer('tous', this)">
+                Tous les examens
+            </button>
+            <button class="filtre-btn" onclick="filtrer('SES', this)">
+                SES
+            </button>
+            <button class="filtre-btn" onclick="filtrer('LLA', this)">
+                LLA
+            </button>
+            <button class="filtre-btn" onclick="filtrer('SMP', this)">
+                SMP
+            </button>
+            <button class="filtre-btn" onclick="filtrer('SVT', this)">
+                SVT
+            </button>
+        </div>
+
+        <!-- ================================================ -->
+        <!-- GRILLE DES EXAMENS                              -->
+        <!-- Remplie dynamiquement par JavaScript             -->
+        <!-- ================================================ -->
+        <div class="examens-grille" id="examens-grille"></div>
+
+    </div>
+
+    <!-- ================================================ -->
+    <!-- VISIONNEUSE PDF — s'ouvre en plein écran         -->
+    <!-- ================================================ -->
+    <div class="visionneuse-overlay" id="visionneuse">
+
+        <div class="visionneuse-header">
+            <div class="visionneuse-titre" id="visionneuse-titre">Examen</div>
+            <div class="visionneuse-actions">
+                <!-- Lien de téléchargement direct -->
+                <a id="btn-dl-visionneuse" href="#" target="_blank" class="btn-telecharger" title="Télécharger">
+                    <i class="fa-solid fa-download"></i>
+                </a>
+                <button class="btn-fermer" onclick="fermerVisionneuse()" title="Fermer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Texte affiché pendant le chargement du PDF -->
+        <div class="visionneuse-loading">
+            <i class="fa-solid fa-circle-notch fa-spin" style="font-size:28px; margin-bottom:10px;"></i><br>
+            Chargement du PDF...
+        </div>
+
+        <!-- Le PDF s'affiche ici via Google Drive Viewer -->
+        <iframe
+            class="visionneuse-iframe"
+            id="visionneuse-iframe"
+            src=""
+            allowfullscreen
+        ></iframe>
+
+    </div>
+
+    <script>
+
+        // ============================================================
+        // LISTE DES EXAMENS
+        // Chaque objet contient toutes les infos d'un examen
+        // filieres = tableau des filières concernées par cet examen
+        // driveId = l'identifiant du fichier sur Google Drive
+        //   → extrait du lien : drive.google.com/file/d/[ICI]/view
+        // ============================================================
+
+        const examens = [
+            {
+                titre: "Examen du Bac 2025",
+                annee: "2025",
+                filieres: ["SES", "LLA", "SMP", "SVT"],
+                miniature: "miniature-multi",
+                emoji: "📋",
+                driveId: "1ef3ir-SlvMyEBHibxdm174l1qr9YmR7B"
+                // Lien original : https://drive.google.com/file/d/1ef3ir-SlvMyEBHibxdm174l1qr9YmR7B/view
+            },
+            {
+                titre: "Examen du Bac 2022 — LLA, SES",
+                annee: "2022",
+                filieres: ["LLA", "SES"],
+                miniature: "miniature-lla",
+                emoji: "📖",
+                driveId: "1VS-vb-c1V-ILHJTo1eGshYZ4Ox7U_bRm"
+            },
+            {
+                titre: "Examen du Bac 2022 — LLA, SES",
+                annee: "2022",
+                filieres: ["LLA", "SES"],
+                miniature: "miniature-ses",
+                emoji: "📊",
+                driveId: "1UR7PR0jt9Z2G6xxsGmMm8SDFtcvEsV7i"
+            },
+            {
+                titre: "Examen du Bac 2022 — SMP, SVT",
+                annee: "2022",
+                filieres: ["SMP", "SVT"],
+                miniature: "miniature-smp",
+                emoji: "🔬",
+                driveId: "1vXvPtkZ3tvYhvRQ3pmCU_tQeJ6WJjirB"
+            },
+            {
+                titre: "Examen du Bac 2022 — SMP, SVT",
+                annee: "2022",
+                filieres: ["SMP", "SVT"],
+                miniature: "miniature-svt",
+                emoji: "🌿",
+                driveId: "1fI9uThwwV1-NqDQQOkGYdvM0-mbZqUBh"
+            },
+            {
+                titre: "Examen du Bac 2021 — SES, LLA",
+                annee: "2021",
+                filieres: ["SES", "LLA"],
+                miniature: "miniature-multi",
+                emoji: "📝",
+                driveId: "15fWRwMwgx2tejri36CumErAN7AO-u_mz"
+            },
+            {
+                titre: "Examen du Bac 2018 — LLA, SVT, SMP",
+                annee: "2018",
+                filieres: ["LLA", "SVT", "SMP"],
+                miniature: "miniature-svt",
+                emoji: "🧬",
+                driveId: "1g9JlcjlJsfkLe9g7vZVSZut8OCVEMPe8"
+            },
+            {
+                titre: "Examen du Bac 2018 — SES",
+                annee: "2018",
+                filieres: ["SES"],
+                miniature: "miniature-ses",
+                emoji: "💹",
+                driveId: "1eMph9y7BaEn98jQNRmssCd70stW1H8vM"
+            },
+            {
+                titre: "Examen SES",
+                annee: "—",
+                filieres: ["SES"],
+                miniature: "miniature-ses",
+                emoji: "📈",
+                driveId: "1YNruEpWmQPAr7B_4ZoUp66srxzTul10O"
+            },
+            {
+                titre: "Examen SMP, SVT",
+                annee: "—",
+                filieres: ["SMP", "SVT"],
+                miniature: "miniature-smp",
+                emoji: "⚗️",
+                driveId: "1vcyADa3sadMskUmmEYn0hdBNiG9b7LnN"
+            }
+        ];
+
+        // ============================================================
+        // COULEURS DES BADGES DE FILIÈRE
+        // Associe chaque filière à une classe CSS
+        // ============================================================
+
+        const couleurFiliere = {
+            "SES": "tag-ses",
+            "LLA": "tag-lla",
+            "SMP": "tag-smp",
+            "SVT": "tag-svt"
+        };
+
+        // ============================================================
+        // CONSTRUIRE L'URL GOOGLE DRIVE VIEWER
+        // On remplace /view par /preview pour l'affichage dans iframe
+        // ============================================================
+
+        function urlPreview(driveId) {
+            return `https://drive.google.com/file/d/${driveId}/preview`;
+            // /preview = mode intégration dans une iframe
+        }
+
+        function urlTelechargement(driveId) {
+            return `https://drive.google.com/uc?export=download&id=${driveId}`;
+            // uc?export=download = force le téléchargement direct
+        }
+
+        // ============================================================
+        // GÉNÉRER LES CARTES D'EXAMENS
+        // examensFiltres = le tableau à afficher (tous ou filtrés)
+        // ============================================================
+
+        function genererCartes(examensFiltres) {
+
+            const grille = document.getElementById("examens-grille");
+            grille.innerHTML = ""; // vider la grille avant de la remplir
+
+            if (examensFiltres.length === 0) {
+                grille.innerHTML = `
+                    <div class="aucun-resultat">
+                        <i class="fa-solid fa-folder-open" style="font-size:36px; margin-bottom:12px; display:block;"></i>
+                        Aucun examen trouvé pour cette filière.
+                    </div>
+                `;
+                return;
+            }
+
+            examensFiltres.forEach((examen, index) => {
+
+                // Générer les badges de filière HTML
+                const badgesFilieres = examen.filieres
+                    .map(f => `<span class="filiere-tag ${couleurFiliere[f] || ''}">${f}</span>`)
+                    .join("");
+
+                // Créer la carte HTML
+                const carte = document.createElement("div");
+                carte.className = "examen-carte";
+                // data-filieres = attribut pour le filtrage
+                carte.setAttribute("data-filieres", examen.filieres.join(","));
+
+                carte.innerHTML = `
+                    <div class="examen-miniature ${examen.miniature}">
+                        <span>${examen.emoji}</span>
+                        <span class="examen-annee-badge">${examen.annee}</span>
+                    </div>
+                    <div class="examen-info">
+                        <div class="examen-titre">${examen.titre}</div>
+                        <div class="examen-filieres">${badgesFilieres}</div>
+                        <div class="examen-actions">
+                            <button class="btn-voir" onclick="ouvrirVisionneuse('${examen.driveId}', '${examen.titre}')">
+                                <i class="fa-solid fa-eye"></i>
+                                Consulter
+                            </button>
+                            <a class="btn-telecharger" href="${urlTelechargement(examen.driveId)}" target="_blank" title="Télécharger">
+                                <i class="fa-solid fa-download"></i>
+                            </a>
+                        </div>
+                    </div>
+                `;
+
+                // Animation d'entrée décalée selon l'index
+                carte.style.animationDelay = `${index * 0.06}s`;
+                grille.appendChild(carte);
+
+            });
+
+        }
+
+        // ============================================================
+        // FILTRER PAR FILIÈRE
+        // filiere = "tous" ou "SES" ou "LLA" etc.
+        // btnClique = le bouton cliqué pour mettre la classe "actif"
+        // ============================================================
+
+        function filtrer(filiere, btnClique) {
+
+            // Mettre à jour le bouton actif
+            document.querySelectorAll(".filtre-btn").forEach(btn => {
+                btn.classList.remove("actif");
+            });
+            btnClique.classList.add("actif");
+
+            // Filtrer le tableau d'examens
+            const resultats = filiere === "tous"
+                ? examens
+                : examens.filter(e => e.filieres.includes(filiere));
+            // .includes(filiere) = vérifie si le tableau filieres contient la filière choisie
+
+            genererCartes(resultats);
+
+        }
+
+        // ============================================================
+        // OUVRIR LA VISIONNEUSE PDF
+        // driveId = l'ID Google Drive du fichier
+        // titre = le titre de l'examen à afficher dans le header
+        // ============================================================
+
+        function ouvrirVisionneuse(driveId, titre) {
+
+            const overlay = document.getElementById("visionneuse");
+            const iframe  = document.getElementById("visionneuse-iframe");
+            const titrEl  = document.getElementById("visionneuse-titre");
+            const btnDl   = document.getElementById("btn-dl-visionneuse");
+
+            // Mettre à jour le titre et le lien de téléchargement
+            titrEl.textContent = titre;
+            btnDl.href = urlTelechargement(driveId);
+
+            // Vider l'iframe avant de charger le nouveau PDF
+            // (évite d'afficher l'ancien PDF pendant le chargement)
+            iframe.src = "";
+
+            // Afficher l'overlay
+            overlay.style.display = "flex";
+            document.body.style.overflow = "hidden";
+            // overflow:hidden = bloque le scroll de la page derrière
+
+            // Charger le PDF après un court délai
+            // Le délai permet à l'overlay de s'afficher avant le chargement
+            setTimeout(() => {
+                iframe.src = urlPreview(driveId);
+            }, 200);
+
+        }
+
+        // ============================================================
+        // FERMER LA VISIONNEUSE
+        // ============================================================
+
+        function fermerVisionneuse() {
+
+            const overlay = document.getElementById("visionneuse");
+            const iframe  = document.getElementById("visionneuse-iframe");
+
+            overlay.style.display = "none";
+            iframe.src = ""; // vider l'iframe pour stopper le chargement
+            document.body.style.overflow = "";
+            // Remettre le scroll normal de la page
+
+        }
+
+        // Fermer avec la touche Echap
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") fermerVisionneuse();
+        });
+
+        // Fermer en cliquant sur le fond sombre
+        document.getElementById("visionneuse").addEventListener("click", (e) => {
+            if (e.target === document.getElementById("visionneuse")) {
+                fermerVisionneuse();
+            }
+        });
+
+        // ============================================================
+        // LANCEMENT — afficher tous les examens au chargement
+        // ============================================================
+        genererCartes(examens);
+
+    </script>
+
+</body>
+</html>

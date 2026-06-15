@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/project.css">
+    <title>Inscription</title>
+</head>
+
+<body style="
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    min-height:80vh;
+">
+
+    <header class="header-accueil">
+
+        <div class="containerLogo">
+            <img
+                src="../images/IMG_0758.PNG"
+                class="logo"
+                alt="logo site"
+                width="80px"
+                height="80px"
+                style="position: relative; left:25px;"
+            >
+
+            <p class="name" style="position: relative; left: 5px;">
+                Scola
+            </p>
+        </div>
+
+        <nav>
+            <ul>
+
+                <li class="specialButton1">
+                    <button class="abc">
+                        <a
+                            href="../pages/register.html"
+                            class="abc2"
+                        >
+                            Connexion
+                        </a>
+                    </button>
+                </li>
+
+                <li class="specialButton2">
+                    <button class="abc">
+                        <a
+                            href="../pages/inscription.html"
+                            class="abc2"
+                        >
+                            Inscription
+                        </a>
+                    </button>
+                </li>
+
+            </ul>
+        </nav>
+
+    </header>
+
+    <div class="formulaire">
+
+        <!-- Formulaire inscription -->
+        <form id="signupForm" class="form1">
+
+            <h1 style="text-decoration: underline;color: white;">
+                Inscription
+            </h1>
+
+            <h4 style="color: gray;">
+                Crée ton compte gratuitement
+            </h4>
+
+            <br>
+
+            <label>
+
+                Nom :
+
+                <br>
+
+                <input
+                    type="text"
+                    name="name"
+                    required
+                >
+
+            </label>
+
+            <br><br>
+
+            <label>
+
+                Email :
+
+                <br>
+
+                <input
+                    type="email"
+                    name="email"
+                    required
+                >
+
+            </label>
+
+            <br><br>
+
+            <label>
+
+                Password :
+
+                <br>
+
+                <input
+                    type="password"
+                    name="password"
+                    required
+                >
+
+            </label>
+
+            <br><br>
+
+            <input
+                type="submit"
+                value="Créer un compte"
+                id="submitButt"
+            >
+            <p>
+
+                Mot de passe :
+
+                minimum 8 caractères,
+
+                1 majuscule,
+
+                1 minuscule,
+
+                1 chiffre.
+</p>
+
+        </form>
+
+    </div>
+
+<script>
+
+// ================================
+// INSCRIPTION UTILISATEUR
+// ================================
+
+const signupForm =
+document.getElementById(
+    "signupForm"
+);
+
+signupForm.addEventListener(
+"submit",
+async function(e){
+
+    e.preventDefault();
+
+    const name =
+    document.querySelector(
+        'input[name="name"]'
+    ).value;
+
+    const email =
+    document.querySelector(
+        'input[name="email"]'
+    ).value;
+
+    const password =
+    document.querySelector(
+        'input[name="password"]'
+    ).value;
+
+    try{
+
+        const response =
+        await fetch(
+            "/inscription",
+            {
+
+                method:"POST",
+
+                headers:{
+                    "Content-Type":
+                    "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    name,
+                    email,
+                    password
+
+                })
+
+            }
+        );
+
+        const text =
+        await response.text();
+
+        alert(text);
+
+        // Si inscription réussie
+        if(response.ok){
+
+            // Redirection vers connexion
+            window.location.href =
+            "/pages/register.html";
+
+        }
+
+    }catch(err){
+
+        console.log(err);
+
+        alert(
+            "Erreur serveur"
+        );
+
+    }
+
+});
+</script>
+
+</body>
+</html>

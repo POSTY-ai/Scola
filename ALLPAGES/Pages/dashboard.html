@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <link rel="shortcut icon" href="images/IMG_0755.JPG" type="image/x-icon">
+    <link rel="stylesheet" href="../css/project.css">
+
+    <title>Scola</title>
+</head>
+<body>
+    <div class="color">
+        <header class="header-accueil">
+            <div class="deroulant" style="color: blue;">
+                <a href="#" class="linky">
+                    <span class="arrow"><i class="fa-solid fa-bars"></i></span>
+                </a>
+
+                <div class="menuderoulant">
+                    <a href="sujetsofficiels.html">Les chapitres</a>
+                    <a href="anciennesepreuves.html">Les anciens examens</a>
+                        <a href="jeuxeducatifs.html">Jeux éducatifs</a>
+                        <a href="liguebac.html">Ligue bac</a>
+                </div>
+
+                <input type="search" class="firstworldwar" id="searchbar" placeholder="Rechercher"/>
+            </div>
+
+            <div class="containerLogo">
+                <img
+                    src="../images/IMG_0758.PNG"
+                    class="logo"
+                    alt="logo site"
+                    width="80px"
+                    height="80px"
+                    style="position: relative; left:25px;"
+                >
+
+                <p class="name" style="position: relative; left: 5px;">Scola</p>
+            </div>
+
+            <nav>
+                <ul>
+                    <li class="moveup">
+                        <a href="../pages/dashboard.html" class="abc">
+                            <i class="fa-solid fa-house-chimney"></i>
+                        </a>
+                    </li>
+                      <li class="specialButton1" id="logn-button">
+                        <button class="abc" id="abc"><a href="register.html" class="abc2" id="abc">Connexion</a></button>
+                    </li>
+
+                    <li class="specialButton2" id="signup-button">
+                        <button class="abc"><a href="inscription.html" class="abc2">Inscription</a></button>
+                    </li>
+
+                    <li class="profile-button" id="profile-button" style="display:none;">
+
+    <button class="abc">
+
+        <a
+            href="profile.html"
+            class="abc2"
+        >
+            Profil
+        </a>
+
+    </button>
+
+</li>
+<li
+id="logout-button"
+style="display:none;"
+>
+
+<button
+class="abc"
+onclick="logout()"
+>
+Déconnexion
+</button>
+
+</li>
+
+                   
+                </ul>
+            </nav>
+        </header>
+
+        <br>
+
+        <div id="result"></div>
+
+    </div>
+
+    <h1 class="title0000">Explorez les grandes périodes</h1>
+
+    <div id="container1" classs="container1">
+
+        <div class="link1" id="link1">
+            <a href="Premiereguerremondiale.html" class="col">
+                <img
+                    src="../images/IMG-20250803-WA0114.jpg"
+                    alt="Premiereguerremondiale.html"
+                    class="firstww"
+                >
+
+                <h1 class="title00" id="title00">
+                    La Première Guerre<br>
+                    mondiale
+                </h1>
+
+                <p class="para1">
+                    La Première Guerre mondiale est une guerre<br>
+                    qui a débuté en 1914 et prendra fin en 1918.<br>
+                    C’est une guerre qui a impliqué la plupart<br>
+                    des grandes puissances du monde.
+                </p>
+            </a>
+        </div>
+
+        <div class="link2">
+            <a href="Deuxiemeguerremondiale.html" class="col">
+                <img
+                    src="../images/IMG-20250803-WA0112.jpg"
+                    alt="Deuxiemeguerremondiale.html"
+                    class="firstww"
+                >
+
+                <h1 class="title02">
+                    La Deuxième Guerre<br>
+                    mondiale
+                </h1>
+
+                <p class="para2">
+                    La Deuxième Guerre mondiale est un conflit mondial qui a débuté<br>
+                    le 1er septembre 1939 et prendra fin le 8 avril 1945<br>
+                    en Europe. C’est l’un des conflits les plus marquants<br>
+                    et sanglants de l’histoire de l’humanité.
+                </p>
+            </a>
+        </div>
+
+        <div class="link3">
+            <a href="guerrefroide.html" class="col">
+                <img
+                    src="../images/IMG-20250803-WA0113.jpg"
+                    alt="guerrefroide.html"
+                    class="firstww"
+                    id="fff"
+                >
+
+                <h1 class="title03">Guerre froide</h1>
+
+                <p class="para3">
+                    La Guerre froide est un conflit bilatéral<br>
+                    qui a eu lieu entre les États-Unis d’Amérique (capitalistes)<br>
+                    et l’Union des Républiques Socialistes Soviétiques (URSS) (communistes).<br>
+                    Elle débute en 1947 et prendra fin en 1991.
+                </p>
+            </a>
+        </div>
+
+    </div>
+
+    <footer>
+        <nav>
+            <ul class="separatefooter">
+                <li>
+                    <a href="apropos.html" class="abc">À PROPOS</a>
+                </li>
+
+                <li class="moveup2">
+                    <a href="contact.html" class="abc">CONTACT</a>
+                </li>
+            </ul>
+
+            <p class="copy" id="copy">
+                &copy;2025 - TOUS DROITS RÉSERVÉS
+            </p>
+        </nav>
+    </footer>
+
+    <script src="../javascript/project.js"></script>
+</body>
+</html>

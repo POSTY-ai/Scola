@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Le Plan Marshall dans la Guerre froide</title>
+  <style>
+    :root{
+      --bg:#f9fbff;
+      --card:#fff;
+      --accent:#0a5dc2;
+      --muted:#555;
+      --maxw:1100px;
+    }
+    *{box-sizing:border-box;}
+    body{
+      font-family:system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      margin:0;
+      padding:24px;
+      background:var(--bg);
+      color:#111;
+      display:flex;
+      flex-direction: column;
+      justify-content:center;
+    }
+    .container{ max-width:var(--maxw); width:100%; }
+    header{ margin-bottom:18px; }
+    h1{ margin:0 0 6px; font-size:1.7rem; color:var(--accent);}
+    p.lead{ margin:0; color:var(--muted); font-size:1rem; }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:18px;
+      margin-top:18px;
+    }
+    @media(max-width:900px){ .grid{ grid-template-columns:1fr; } }
+
+    .card{
+      background:var(--card);
+      border-radius:10px;
+      padding:14px;
+      box-shadow:0 6px 18px rgba(12,20,50,0.06);
+      border:1px solid rgba(10,10,10,0.03);
+    }
+
+    .media{
+      display:block;
+      border-radius:8px;
+      border:4px solid #e6e9f2;
+      overflow:hidden;
+    }
+    .media img{ width:100%; height:220px; object-fit:cover; display:block; }
+    .caption{
+      text-align:center;
+      margin-top:8px;
+      font-weight:700;
+      color:var(--accent);
+      font-size:0.95rem;
+    }
+
+    h2{ margin:10px 0; font-size:1.05rem; color:#0f1724; }
+    .explain{ font-size:0.98rem; line-height:1.5; color:#222; }
+    ul{ margin:8px 0 8px 18px; }
+
+    footer{ margin-top:18px; font-size:0.9rem; color:var(--muted);}
+    .sources a{ color:var(--accent); text-decoration:none; }
+    .badge{ display:inline-block; padding:6px 10px; border-radius:999px; background:#eaf0ff; color:var(--accent); font-weight:700; font-size:0.82rem; margin-bottom:8px;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge">Guerre froide • 1947</div>
+      <h1>Le Plan Marshall : arme économique et politique</h1>
+      <p class="lead" style="color: white;">Un outil américain pour reconstruire l’Europe et contenir l’influence soviétique.</p>
+    </header>
+
+    <section class="grid">
+
+      <!-- Contexte -->
+      <article class="card" id="contexte">
+        <a class="media" href="#contexte">
+          <img src="../images/Screenshot 2026-06-02 040751.png" alt="George Marshall, initiateur du plan">
+        </a>
+        <div class="caption">George C. Marshall (1947)</div>
+        <h2>1) Contexte</h2>
+        <p class="explain">
+          Après la Seconde Guerre mondiale, l’Europe est ruinée : villes détruites, économies effondrées, pénuries alimentaires.
+          Dans ce contexte, les États-Unis proposent en 1947 un programme d’aide financière massif : le <strong>Plan Marshall</strong>.
+        </p>
+      </article>
+
+      <!-- Aide économique -->
+      <article class="card" id="aide">
+        <a class="media" href="#aide">
+          
+        </a>
+        <div class="caption">Affiche de propagande du Plan Marshall</div>
+        <h2>2) Une arme économique</h2>
+        <p class="explain">
+          Le plan prévoit plus de <strong>13 milliards de dollars</strong> d’aides pour relancer la production, moderniser les infrastructures et stabiliser les monnaies.
+          Résultats :
+        </p>
+        <ul>
+          <li>Reconstruction rapide de l’Europe de l’Ouest ;</li>
+          <li>Relance de la croissance et du commerce international ;</li>
+          <li>Renforcement de la dépendance économique envers les États-Unis.</li>
+        </ul>
+      </article>
+
+      <!-- Dimension politique -->
+      <article class="card" id="politique">
+        <a class="media" href="#politique">
+          
+        </a>
+        <div class="caption">Europe divisée en deux blocs</div>
+        <h2>3) Une arme politique</h2>
+        <p class="explain">
+          Derrière l’aide économique, l’objectif est clair : <strong>endiguer le communisme</strong>.
+          L’URSS rejette le plan et interdit aux pays de l’Est d’y participer, ce qui accentue la <strong>bipolarisation du monde</strong>.
+        </p>
+        <ul>
+          <li>L’Europe de l’Ouest s’aligne sur Washington ;</li>
+          <li>L’Europe de l’Est reste sous contrôle soviétique ;</li>
+          <li>La division Est-Ouest s’institutionnalise.</li>
+        </ul>
+      </article>
+
+      <!-- Conséquences -->
+      <article class="card" id="consequences">
+        <a class="media" href="#consequences">
+         
+        </a>
+        <div class="caption">Propagande pro-américaine</div>
+        <h2>4) Conséquences</h2>
+        <p class="explain">
+          Le Plan Marshall renforce la puissance américaine en Europe occidentale et marque le début de la <strong>Guerre froide</strong>.
+          Il devient une arme d’influence (soft power) au service du bloc occidental.
+        </p>
+      </article>
+
+    </section>
+
+    <footer>
+      <div class="card">
+        <strong>Sources</strong>
+        <ul class="sources">
+          <li><a href="https://fr.wikipedia.org/wiki/Plan_Marshall" target="_blank">Wikipédia — Plan Marshall</a></li>
+          <li><a href="https://www.britannica.com/event/Marshall-Plan" target="_blank">Britannica — Marshall Plan</a></li>
+          <li><a href="https://www.herodote.net/5_juin_1947-evenement-19470605.php" target="_blank">Herodote.net — Plan Marshall</a></li>
+        </ul>
+      </div>
+    </footer>
+  </div>
+  
+                <!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/quiz.css">
+    <title>Quiz - Plan Marshall</title>
+</head>
+<body>
+    <div class="quiz-container">
+        <header class="quiz-header">
+            <div class="header-content">
+                
+                <h1 class="quiz-title" style="color: white;">
+                    <i class="fas fa-medal"></i>
+                    Quiz Plan Marshall
+                </h1>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <span class="progress-text" id="progressText">Question 1 / 10</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="quiz-main">
+            <div class="quiz-card" id="quizCard">
+                <div class="question-container">
+                    <div class="question-number" id="questionNumber">Question 1</div>
+                    <h2 class="question-text" id="questionText">Chargement...</h2>
+                </div>
+
+                <div class="answers-container" id="answersContainer">
+                    <!-- Les réponses seront générées par JavaScript -->
+                </div>
+
+                <div class="quiz-controls">
+                    <button class="btn btn-secondary" id="prevBtn" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                        Précédent
+                    </button>
+                    <button class="btn btn-primary" id="nextBtn" disabled>
+                        Suivant
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="results-card hidden" id="resultsCard">
+                <div class="results-header">
+                    <i class="fas fa-trophy results-icon" id="resultsIcon"></i>
+                    <h2 class="results-title" id="resultsTitle">Quiz Terminé!</h2>
+                </div>
+                
+                <div class="score-display">
+                    <div class="score-circle">
+                        <div class="score-text">
+                            <span class="score-number" id="scoreNumber">0</span>
+                            <span class="score-total">/ 10</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="score-details">
+                    <div class="score-item correct">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Bonnes réponses: <strong id="correctCount">0</strong></span>
+                    </div>
+                    <div class="score-item incorrect">
+                        <i class="fas fa-times-circle"></i>
+                        <span>Mauvaises réponses: <strong id="incorrectCount">0</strong></span>
+                    </div>
+                    <div class="score-item percentage">
+                        <i class="fas fa-percentage"></i>
+                        <span>Pourcentage: <strong id="percentageScore">0%</strong></span>
+                    </div>
+                </div>
+
+                <div class="results-message" id="resultsMessage">
+                    Excellent travail!
+                </div>
+
+                <div class="results-actions">
+                    <button class="btn btn-primary" id="restartBtn">
+                        <i class="fas fa-redo"></i>
+                        Recommencer
+                    </button>
+                    <a href="../pages/plan marshall.html" class="btn btn-secondary">
+                        <i class="fas fa-home"></i>
+                        Retour
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../javascript/quizmarshall.js"></script>
+</body>
+</html>

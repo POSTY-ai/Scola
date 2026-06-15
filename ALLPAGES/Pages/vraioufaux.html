@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <title>Vrai ou Faux — Scola</title>
+    <style>
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* ====================================================
+           HEADER
+           ==================================================== */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            background: rgba(255,255,255,0.04);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+
+        .btn-retour {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 20px;
+            padding: 8px 16px;
+            transition: all 0.2s;
+        }
+
+        .btn-retour:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.13);
+        }
+
+        .header-titre {
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            font-weight: 700;
+            text-align: center;
+            flex: 1;
+        }
+
+        .header-score {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(46,213,115,0.12);
+            border: 1px solid rgba(46,213,115,0.25);
+            border-radius: 20px;
+            padding: 8px 14px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #2ed573;
+            white-space: nowrap;
+        }
+
+        /* ====================================================
+           CONTENEUR
+           ==================================================== */
+        .jeu-wrapper {
+            max-width: 660px;
+            margin: 0 auto;
+            padding: 30px 20px 60px;
+        }
+
+        /* ====================================================
+           BARRE DE PROGRESSION
+           ==================================================== */
+        .progress-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .progress-fond {
+            flex: 1;
+            height: 7px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .progress-rempli {
+            height: 100%;
+            background: linear-gradient(90deg, #2ed573, #26de81);
+            border-radius: 99px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-label {
+            font-size: 13px;
+            color: rgba(255,255,255,0.5);
+            white-space: nowrap;
+        }
+
+        /* ====================================================
+           CARTE DE JEU
+           ==================================================== */
+        .jeu-carte {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 24px;
+            padding: 36px 30px;
+            backdrop-filter: blur(14px);
+            box-shadow: 0 20px 48px rgba(0,0,0,0.3);
+            animation: entree 0.4s ease;
+        }
+
+        @keyframes entree {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Thème de la question */
+        .question-theme {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 5px 12px;
+            margin-bottom: 20px;
+        }
+
+        /* Numéro de question */
+        .question-numero {
+            font-size: 13px;
+            color: rgba(255,255,255,0.35);
+            margin-bottom: 16px;
+        }
+
+        /* Texte de la question */
+        .question-texte {
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            font-weight: 600;
+            line-height: 1.6;
+            color: #ffffff;
+            margin-bottom: 32px;
+            min-height: 80px;
+        }
+
+        /* ====================================================
+           BOUTONS VRAI / FAUX
+           ==================================================== */
+        .vf-boutons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .vf-btn {
+            padding: 22px 16px;
+            border-radius: 18px;
+            border: 2px solid transparent;
+            font-size: 18px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            letter-spacing: 0.05em;
+        }
+
+        .vf-btn .vf-icone {
+            font-size: 36px;
+            /* transition pour l'animation de l'icône */
+            transition: transform 0.2s;
+        }
+
+        /* Bouton VRAI — vert */
+        .btn-vrai {
+            background: rgba(46,213,115,0.12);
+            border-color: rgba(46,213,115,0.3);
+            color: #2ed573;
+        }
+
+        .btn-vrai:hover:not(:disabled) {
+            background: rgba(46,213,115,0.22);
+            border-color: #2ed573;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(46,213,115,0.25);
+        }
+
+        .btn-vrai:hover:not(:disabled) .vf-icone {
+            transform: scale(1.15);
+        }
+
+        /* Bouton FAUX — rouge */
+        .btn-faux {
+            background: rgba(255,71,87,0.12);
+            border-color: rgba(255,71,87,0.3);
+            color: #ff4757;
+        }
+
+        .btn-faux:hover:not(:disabled) {
+            background: rgba(255,71,87,0.22);
+            border-color: #ff4757;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(255,71,87,0.25);
+        }
+
+        .btn-faux:hover:not(:disabled) .vf-icone {
+            transform: scale(1.15);
+        }
+
+        /* État correct après réponse */
+        .vf-btn.correct {
+            background: rgba(46,213,115,0.25);
+            border-color: #2ed573;
+            color: #2ed573;
+            animation: popCorrect 0.4s ease;
+        }
+
+        /* État incorrect après réponse */
+        .vf-btn.incorrect {
+            background: rgba(255,71,87,0.25);
+            border-color: #ff4757;
+            color: #ff4757;
+            animation: shakeX 0.4s ease;
+        }
+
+        .vf-btn:disabled { cursor: not-allowed; opacity: 0.6; }
+
+        @keyframes popCorrect {
+            0%,100% { transform: scale(1); }
+            40%     { transform: scale(1.05); }
+        }
+
+        @keyframes shakeX {
+            0%,100% { transform: translateX(0); }
+            25%     { transform: translateX(-8px); }
+            75%     { transform: translateX(8px); }
+        }
+
+        /* ====================================================
+           FEEDBACK + EXPLICATION
+           ==================================================== */
+        .feedback {
+            display: none;
+            padding: 16px 18px;
+            border-radius: 14px;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 18px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .feedback.correct {
+            background: rgba(46,213,115,0.12);
+            border: 1px solid rgba(46,213,115,0.35);
+            color: #81f5b0;
+        }
+
+        .feedback.incorrect {
+            background: rgba(255,71,87,0.12);
+            border: 1px solid rgba(255,71,87,0.35);
+            color: #ff8fa3;
+        }
+
+        .feedback-titre {
+            font-weight: 700;
+            font-size: 15px;
+            margin-bottom: 6px;
+        }
+
+        /* ====================================================
+           BOUTON SUIVANT
+           ==================================================== */
+        .btn-suivant {
+            display: none;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #2ed573, #26de81);
+            border: none;
+            border-radius: 14px;
+            color: #1a1a2e;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-suivant:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(46,213,115,0.35);
+        }
+
+        /* ====================================================
+           ÉCRAN DE RÉSULTATS
+           ==================================================== */
+        .resultats-carte {
+            display: none;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 24px;
+            padding: 40px 30px;
+            text-align: center;
+            backdrop-filter: blur(14px);
+            animation: entree 0.4s ease;
+        }
+
+        .res-emoji { font-size: 64px; margin-bottom: 14px; display: block; }
+        .res-titre { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+
+        .res-score {
+            font-size: 52px;
+            font-weight: 900;
+            color: #2ed573;
+            margin: 20px 0 4px;
+        }
+
+        .res-sous-titre {
+            font-size: 15px;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 28px;
+        }
+
+        .res-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .res-stat {
+            background: rgba(255,255,255,0.05);
+            border-radius: 14px;
+            padding: 16px 10px;
+        }
+
+        .res-stat-val {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .res-stat-label {
+            font-size: 12px;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .res-message {
+            font-size: 15px;
+            color: rgba(255,255,255,0.7);
+            background: rgba(255,255,255,0.04);
+            border-radius: 12px;
+            padding: 16px;
+            border-left: 4px solid #2ed573;
+            margin-bottom: 28px;
+            text-align: left;
+            line-height: 1.6;
+        }
+
+        .res-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-rejouer {
+            flex: 1;
+            padding: 14px;
+            background: linear-gradient(135deg, #2ed573, #26de81);
+            border: none;
+            border-radius: 14px;
+            color: #1a1a2e;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s;
+            min-width: 140px;
+        }
+
+        .btn-rejouer:hover { transform: translateY(-2px); }
+
+        .btn-accueil {
+            flex: 1;
+            padding: 14px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 14px;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.2s;
+            min-width: 140px;
+        }
+
+        .btn-accueil:hover { background: rgba(255,255,255,0.11); }
+
+        /* ====================================================
+           RESPONSIVE
+           ==================================================== */
+        @media (max-width: 480px) {
+            .jeu-carte, .resultats-carte { padding: 24px 16px; }
+            .vf-btn { padding: 18px 12px; font-size: 16px; }
+            .vf-btn .vf-icone { font-size: 28px; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+        
+        <div class="header-titre">✅❌ Vrai ou Faux</div>
+        <div class="header-score">
+            ⭐ <span id="scoreHeader">0</span> pts
+        </div>
+    </div>
+
+    <div class="jeu-wrapper">
+
+        <!-- BARRE DE PROGRESSION -->
+        <div class="progress-wrap">
+            <div class="progress-fond">
+                <div class="progress-rempli" id="progressRempli" style="width:0%"></div>
+            </div>
+            <div class="progress-label" id="progressLabel">1 / 32</div>
+        </div>
+
+        <!-- CARTE DE JEU -->
+        <div class="jeu-carte" id="jeuCarte">
+
+            <!-- Thème de la question -->
+            <div class="question-theme" id="questionTheme">
+                <i class="fa-solid fa-tag"></i>
+                <span>Thème</span>
+            </div>
+
+            <div class="question-numero" id="questionNumero">Question 1 sur 32</div>
+
+            <!-- Énoncé -->
+            <div class="question-texte" id="questionTexte">Chargement...</div>
+
+            <!-- Boutons VRAI / FAUX -->
+            <div class="vf-boutons">
+                <button class="vf-btn btn-vrai" id="btnVrai" onclick="repondre(true)">
+                    <span class="vf-icone">✅</span>
+                    VRAI
+                </button>
+                <button class="vf-btn btn-faux" id="btnFaux" onclick="repondre(false)">
+                    <span class="vf-icone">❌</span>
+                    FAUX
+                </button>
+            </div>
+
+            <!-- Feedback avec explication -->
+            <div class="feedback" id="feedback">
+                <div class="feedback-titre" id="feedbackTitre"></div>
+                <div id="feedbackExplication"></div>
+            </div>
+
+            <!-- Bouton suivant -->
+            <button class="btn-suivant" id="btnSuivant" onclick="questionSuivante()">
+                Question suivante <i class="fa-solid fa-arrow-right"></i>
+            </button>
+
+        </div>
+
+        <!-- RÉSULTATS -->
+        <div class="resultats-carte" id="resultatsCarte">
+            <span class="res-emoji" id="resEmoji">🏆</span>
+            <div class="res-titre">Quiz terminé !</div>
+            <div class="res-score" id="resScore">0</div>
+            <div class="res-sous-titre" id="resSousTitre">points sur 320</div>
+
+            <div class="res-stats">
+                <div class="res-stat">
+                    <div class="res-stat-val" id="resBonnes" style="color:#2ed573">0</div>
+                    <div class="res-stat-label">✅ Bonnes</div>
+                </div>
+                <div class="res-stat">
+                    <div class="res-stat-val" id="resMauvaises" style="color:#ff4757">0</div>
+                    <div class="res-stat-label">❌ Mauvaises</div>
+                </div>
+                <div class="res-stat">
+                    <div class="res-stat-val" id="resPourcentage" style="color:#2ed573">0%</div>
+                    <div class="res-stat-label">🎯 Score</div>
+                </div>
+            </div>
+
+            <div class="res-message" id="resMessage"></div>
+
+            <div class="res-actions">
+                <button class="btn-rejouer" onclick="rejouer()">
+                    <i class="fa-solid fa-rotate-right"></i> Rejouer
+                </button>
+                <a href="jeuxeducatifs.html" class="btn-accueil">
+                    <i class="fa-solid fa-gamepad"></i> Autres jeux
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+
+        // ============================================================
+        // BANQUE DE QUESTIONS VRAI OU FAUX
+        // theme = le chapitre concerné
+        // enonce = la phrase à évaluer
+        // reponse = true (vrai) ou false (faux)
+        // explication = la correction affichée après la réponse
+        // ============================================================
+
+        const questions = [
+
+            // --- STÉNIO VINCENT ---
+            {
+                theme: "Sténio Vincent",
+                enonce: "Sténio Vincent est devenu président d'Haïti en 1930.",
+                reponse: true,
+                explication: "Sténio Vincent a effectivement été élu président en 1930, succédant à Louis Borno."
+            },
+            {
+                theme: "Sténio Vincent",
+                enonce: "C'est sous Sténio Vincent que l'occupation américaine d'Haïti a pris fin en 1934.",
+                reponse: true,
+                explication: "Le traité signé sous Vincent a officiellement mis fin à l'occupation américaine en 1934."
+            },
+            {
+                theme: "Sténio Vincent",
+                enonce: "Sténio Vincent a quitté le pouvoir en 1950.",
+                reponse: false,
+                explication: "Faux. Sténio Vincent a quitté la présidence en 1941, remplacé par Élie Lescot."
+            },
+
+            // --- MONDIALISATION ---
+            {
+                theme: "Mondialisation",
+                enonce: "La mondialisation favorise uniquement les échanges économiques entre les pays.",
+                reponse: false,
+                explication: "Faux. La mondialisation touche aussi les échanges culturels, technologiques, migratoires et environnementaux."
+            },
+            {
+                theme: "Mondialisation",
+                enonce: "La mondialisation a accentué les inégalités entre pays riches et pays pauvres.",
+                reponse: true,
+                explication: "Vrai. Malgré la croissance mondiale, les écarts entre pays développés et pays en développement restent importants."
+            },
+            {
+                theme: "Mondialisation",
+                enonce: "Les firmes multinationales sont des acteurs majeurs de la mondialisation.",
+                reponse: true,
+                explication: "Vrai. Les firmes multinationales jouent un rôle central dans la production, le commerce et les investissements mondiaux."
+            },
+
+            // --- GUERRES MONDIALES ---
+            {
+                theme: "Les Guerres Mondiales",
+                enonce: "La Première Guerre mondiale a débuté en 1914 et s'est terminée en 1918.",
+                reponse: true,
+                explication: "Vrai. La Première Guerre mondiale a duré de 1914 à 1918, avec l'armistice du 11 novembre 1918."
+            },
+            {
+                theme: "Les Guerres Mondiales",
+                enonce: "La Seconde Guerre mondiale a débuté en 1939 avec l'invasion de la France par l'Allemagne.",
+                reponse: false,
+                explication: "Faux. La Seconde Guerre mondiale a commencé en septembre 1939 avec l'invasion de la Pologne, pas de la France."
+            },
+            {
+                theme: "Les Guerres Mondiales",
+                enonce: "Les États-Unis sont entrés dans la Seconde Guerre mondiale après l'attaque de Pearl Harbor en 1941.",
+                reponse: true,
+                explication: "Vrai. L'attaque japonaise sur Pearl Harbor le 7 décembre 1941 a poussé les États-Unis à entrer en guerre."
+            },
+
+            // --- KRACH BOURSIER DE 1929 ---
+            {
+                theme: "Krach Boursier de 1929",
+                enonce: "Le krach boursier de 1929 a commencé à la bourse de New York.",
+                reponse: true,
+                explication: "Vrai. Le krach a débuté à Wall Street le 24 octobre 1929, surnommé le 'Jeudi Noir'."
+            },
+            {
+                theme: "Krach Boursier de 1929",
+                enonce: "Le krach de 1929 n'a touché que les États-Unis.",
+                reponse: false,
+                explication: "Faux. La crise s'est rapidement propagée à l'Europe et au reste du monde, provoquant une dépression économique mondiale."
+            },
+            {
+                theme: "Krach Boursier de 1929",
+                enonce: "Le New Deal de Roosevelt était une réponse politique au krach de 1929.",
+                reponse: true,
+                explication: "Vrai. Le New Deal était un programme de réformes économiques et sociales lancé par Roosevelt pour relancer l'économie américaine."
+            },
+
+            // --- DUMARSAIS ESTIMÉ ---
+            {
+                theme: "Dumarsais Estimé",
+                enonce: "Dumarsais Estimé a gouverné Haïti de 1946 à 1950.",
+                reponse: true,
+                explication: "Vrai. Dumarsais Estimé a été président d'Haïti de 1946 jusqu'à son renversement par un coup d'état militaire en 1950."
+            },
+            {
+                theme: "Dumarsais Estimé",
+                enonce: "Dumarsais Estimé était connu pour défendre les intérêts des élites haïtiennes.",
+                reponse: false,
+                explication: "Faux. Estimé était reconnu pour défendre les classes populaires, les paysans et les Haïtiens noirs."
+            },
+            {
+                theme: "Dumarsais Estimé",
+                enonce: "Dumarsais Estimé a été renversé par un coup d'état militaire mené par Paul Magloire.",
+                reponse: true,
+                explication: "Vrai. En 1950, l'armée dirigée par Magloire a renversé Estimé qui tentait de modifier la constitution pour rester au pouvoir."
+            },
+
+            // --- PAUL MAGLOIRE ---
+            {
+                theme: "Paul Magloire",
+                enonce: "Paul Magloire était général avant de devenir président d'Haïti.",
+                reponse: true,
+                explication: "Vrai. Magloire était général de l'armée haïtienne avant d'accéder à la présidence en 1950."
+            },
+            {
+                theme: "Paul Magloire",
+                enonce: "Le gouvernement de Paul Magloire est connu pour avoir réalisé des grands travaux d'infrastructure.",
+                reponse: true,
+                explication: "Vrai. Magloire a lancé plusieurs projets de construction de routes, de bâtiments publics et d'infrastructures en Haïti."
+            },
+            {
+                theme: "Paul Magloire",
+                enonce: "Paul Magloire a gouverné Haïti jusqu'en 1964.",
+                reponse: false,
+                explication: "Faux. Magloire a quitté le pouvoir en 1956, chassé par une grève générale après avoir tenté de prolonger son mandat."
+            },
+
+            // --- OCCUPATION AMÉRICAINE ---
+            {
+                theme: "Occupation Américaine",
+                enonce: "L'occupation américaine d'Haïti a duré de 1915 à 1934.",
+                reponse: true,
+                explication: "Vrai. Les Marines américains ont occupé Haïti pendant 19 ans, de 1915 à 1934."
+            },
+            {
+                theme: "Occupation Américaine",
+                enonce: "Pendant l'occupation américaine, les Haïtiens avaient un contrôle total sur leurs finances nationales.",
+                reponse: false,
+                explication: "Faux. Les États-Unis ont pris le contrôle des douanes et des finances haïtiennes pendant toute l'occupation."
+            },
+            {
+                theme: "Occupation Américaine",
+                enonce: "La révolte des Cacos était une résistance haïtienne contre l'occupation américaine.",
+                reponse: true,
+                explication: "Vrai. Les Cacos étaient des combattants haïtiens qui ont résisté militairement à l'occupation américaine."
+            },
+
+            // --- LA TRIADE ---
+            {
+                theme: "La Triade",
+                enonce: "La Triade économique regroupe les États-Unis, l'Union Européenne et le Japon.",
+                reponse: true,
+                explication: "Vrai. Ces trois pôles concentrent la majorité des échanges commerciaux, des investissements et de la production mondiale."
+            },
+            {
+                theme: "La Triade",
+                enonce: "La Chine fait partie de la Triade économique traditionnelle.",
+                reponse: false,
+                explication: "Faux. La Triade traditionnelle regroupe les États-Unis, l'UE et le Japon. La Chine est une puissance émergente qui bouscule ce modèle."
+            },
+
+            // --- ONU ---
+            {
+                theme: "L'ONU",
+                enonce: "L'ONU a été créée en 1945 après la Seconde Guerre mondiale.",
+                reponse: true,
+                explication: "Vrai. L'Organisation des Nations Unies a été fondée le 24 octobre 1945 pour maintenir la paix et la sécurité internationales."
+            },
+            {
+                theme: "L'ONU",
+                enonce: "Le siège de l'ONU se trouve à Paris, en France.",
+                reponse: false,
+                explication: "Faux. Le siège principal de l'ONU est à New York, aux États-Unis. Il existe aussi un siège européen à Genève."
+            },
+
+            // --- SDN ---
+            {
+                theme: "La SDN",
+                enonce: "La Société des Nations a été créée après la Première Guerre mondiale.",
+                reponse: true,
+                explication: "Vrai. La SDN a été fondée en 1919 par le Traité de Versailles pour prévenir de futurs conflits mondiaux."
+            },
+            {
+                theme: "La SDN",
+                enonce: "Les États-Unis étaient membres fondateurs de la Société des Nations.",
+                reponse: false,
+                explication: "Faux. Malgré l'initiative du président Wilson, le Sénat américain a refusé de ratifier le traité. Les États-Unis n'ont jamais rejoint la SDN."
+            },
+
+            // --- UNION EUROPÉENNE ---
+            {
+                theme: "L'Union Européenne",
+                enonce: "L'Union Européenne a été officiellement créée par le Traité de Maastricht en 1992.",
+                reponse: true,
+                explication: "Vrai. Le Traité de Maastricht signé en 1992 a officiellement créé l'Union Européenne telle qu'on la connaît."
+            },
+            {
+                theme: "L'Union Européenne",
+                enonce: "Tous les pays membres de l'Union Européenne utilisent l'euro comme monnaie.",
+                reponse: false,
+                explication: "Faux. Certains pays membres comme la Suède, la Hongrie ou la Pologne n'utilisent pas l'euro et conservent leur monnaie nationale."
+            },
+
+            // --- PLAN MARSHALL ---
+            {
+                theme: "Le Plan Marshall",
+                enonce: "Le Plan Marshall était une aide économique américaine pour reconstruire l'Europe après 1945.",
+                reponse: true,
+                explication: "Vrai. Proposé par le secrétaire d'État George Marshall en 1947, ce plan a fourni 13 milliards de dollars pour reconstruire l'Europe occidentale."
+            },
+            {
+                theme: "Le Plan Marshall",
+                enonce: "L'URSS a accepté et bénéficié du Plan Marshall.",
+                reponse: false,
+                explication: "Faux. L'URSS a refusé le Plan Marshall et a interdit aux pays de l'Est européen d'y participer, le considérant comme une ingérence américaine."
+            },
+
+            // --- MASSACRE DE 1937 ---
+            {
+                theme: "Le Massacre de 1937",
+                enonce: "Le massacre de 1937 a été ordonné par le dictateur dominicain Rafael Trujillo.",
+                reponse: true,
+                explication: "Vrai. Trujillo a ordonné le massacre de milliers d'Haïtiens vivant en République Dominicaine en octobre 1937."
+            },
+
+            // --- ÉLIE LESCOT ---
+            {
+                theme: "Élie Lescot",
+                enonce: "Élie Lescot a gouverné Haïti de 1941 à 1946.",
+                reponse: true,
+                explication: "Vrai. Élie Lescot a été président d'Haïti de 1941 jusqu'à son renversement par une révolution populaire en 1946."
+            },
+
+            // --- TRAITÉ DE VERSAILLES ---
+            {
+                theme: "Traité de Versailles",
+                enonce: "Le Traité de Versailles de 1919 a imposé de lourdes sanctions économiques à l'Allemagne.",
+                reponse: true,
+                explication: "Vrai. L'Allemagne a dû payer d'importantes réparations de guerre, céder des territoires et réduire son armée."
+            },
+            {
+                theme: "Traité de Versailles",
+                enonce: "De nombreux historiens pensent que le Traité de Versailles a contribué à la montée du nazisme.",
+                reponse: true,
+                explication: "Vrai. Les conditions humiliantes imposées à l'Allemagne ont alimenté le ressentiment national et favorisé la montée de mouvements extrémistes comme le parti nazi."
+            },
+
+            // --- ZONE EURO ---
+            {
+                theme: "Zone Euro",
+                enonce: "L'euro a été introduit comme monnaie fiduciaire (billets et pièces) en 2002.",
+                reponse: true,
+                explication: "Vrai. L'euro a d'abord existé comme monnaie scripturale en 1999, puis les billets et pièces ont été mis en circulation le 1er janvier 2002."
+            },
+            {
+                theme: "Zone Euro",
+                enonce: "La Zone Euro regroupe tous les 27 pays membres de l'Union Européenne.",
+                reponse: false,
+                explication: "Faux. La Zone Euro ne comprend que les pays de l'UE qui ont adopté l'euro, soit environ 20 pays sur 27."
+            }
+        ];
+
+        // ============================================================
+        // VARIABLES D'ÉTAT
+        // ============================================================
+
+        let indexQuestion = 0;
+        let score         = 0;
+        let bonnes        = 0;
+        let mauvaises     = 0;
+        let aRepondu      = false;
+
+        // Mélanger les questions au départ
+        let questionsMelangees = melangerTableau(questions);
+
+        // ============================================================
+        // MÉLANGER LE TABLEAU — ordre aléatoire
+        // ============================================================
+
+        function melangerTableau(tab) {
+            const c = [...tab];
+            for (let i = c.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [c[i], c[j]] = [c[j], c[i]];
+            }
+            return c;
+        }
+
+        // ============================================================
+        // AFFICHER UNE QUESTION
+        // ============================================================
+
+        function afficherQuestion() {
+
+            aRepondu = false;
+
+            const q     = questionsMelangees[indexQuestion];
+            const total = questionsMelangees.length;
+
+            // Mettre à jour les éléments d'interface
+            document.getElementById("questionTheme").innerHTML =
+                `<i class="fa-solid fa-tag"></i> ${q.theme}`;
+            document.getElementById("questionNumero").textContent =
+                `Question ${indexQuestion + 1} sur ${total}`;
+            document.getElementById("questionTexte").textContent = q.enonce;
+            document.getElementById("progressLabel").textContent =
+                `${indexQuestion + 1} / ${total}`;
+            document.getElementById("progressRempli").style.width =
+                `${(indexQuestion / total) * 100}%`;
+
+            // Réinitialiser les boutons
+            const btnVrai = document.getElementById("btnVrai");
+            const btnFaux = document.getElementById("btnFaux");
+            btnVrai.disabled = false;
+            btnFaux.disabled = false;
+            btnVrai.className = "vf-btn btn-vrai";
+            btnFaux.className = "vf-btn btn-faux";
+
+            // Cacher feedback et bouton suivant
+            document.getElementById("feedback").style.display   = "none";
+            document.getElementById("btnSuivant").style.display = "none";
+
+            // Animation d'entrée
+            const carte = document.getElementById("jeuCarte");
+            carte.style.animation = "none";
+            carte.offsetHeight;
+            carte.style.animation = "entree 0.4s ease";
+
+        }
+
+        // ============================================================
+        // RÉPONDRE — appelé quand on clique sur VRAI ou FAUX
+        // reponseEleve = true si VRAI, false si FAUX
+        // ============================================================
+
+        function repondre(reponseEleve) {
+
+            if (aRepondu) return;
+            aRepondu = true;
+
+            const q          = questionsMelangees[indexQuestion];
+            const estCorrecte = reponseEleve === q.reponse;
+
+            // Désactiver les deux boutons
+            document.getElementById("btnVrai").disabled = true;
+            document.getElementById("btnFaux").disabled = true;
+
+            // Colorer le bouton cliqué
+            const btnClique = reponseEleve
+                ? document.getElementById("btnVrai")
+                : document.getElementById("btnFaux");
+
+            if (estCorrecte) {
+
+                btnClique.classList.add("correct");
+                score += 10;
+                bonnes++;
+                document.getElementById("scoreHeader").textContent = score;
+
+                // Afficher le feedback vert
+                document.getElementById("feedbackTitre").textContent = "✅ Bonne réponse ! +10 pts";
+                document.getElementById("feedbackExplication").textContent = q.explication;
+                const feedback = document.getElementById("feedback");
+                feedback.className = "feedback correct";
+                feedback.style.display = "block";
+
+            } else {
+
+                btnClique.classList.add("incorrect");
+                mauvaises++;
+
+                // Montrer aussi le bon bouton en vert
+                const bonBtn = q.reponse
+                    ? document.getElementById("btnVrai")
+                    : document.getElementById("btnFaux");
+                bonBtn.classList.add("correct");
+
+                // Afficher le feedback rouge avec explication
+                document.getElementById("feedbackTitre").textContent =
+                    `❌ Mauvaise réponse ! C'était ${q.reponse ? "VRAI" : "FAUX"}`;
+                document.getElementById("feedbackExplication").textContent = q.explication;
+                const feedback = document.getElementById("feedback");
+                feedback.className = "feedback incorrect";
+                feedback.style.display = "block";
+
+            }
+
+            document.getElementById("btnSuivant").style.display = "block";
+
+        }
+
+        // ============================================================
+        // QUESTION SUIVANTE
+        // ============================================================
+
+        function questionSuivante() {
+
+            indexQuestion++;
+
+            if (indexQuestion < questionsMelangees.length) {
+                afficherQuestion();
+            } else {
+                afficherResultats();
+            }
+
+        }
+
+        // ============================================================
+        // AFFICHER LES RÉSULTATS
+        // ============================================================
+
+        function afficherResultats() {
+
+            document.getElementById("jeuCarte").style.display      = "none";
+            document.getElementById("resultatsCarte").style.display = "block";
+
+            const total = questionsMelangees.length;
+            const pct   = Math.round((bonnes / total) * 100);
+
+            let emoji, message;
+            if (pct === 100) {
+                emoji   = "🏆";
+                message = "Score parfait ! Tu maîtrises parfaitement tous ces sujets. Tu es prêt(e) pour le Bac !";
+            } else if (pct >= 75) {
+                emoji   = "🎉";
+                message = "Excellent résultat ! Tu as de très bonnes connaissances historiques. Revois les quelques points manqués.";
+            } else if (pct >= 50) {
+                emoji   = "👍";
+                message = "Pas mal ! Tu as une bonne base. Lis attentivement les explications des questions ratées pour progresser.";
+            } else {
+                emoji   = "📚";
+                message = "Continue à réviser ! Relis tes cours sur ces thèmes et retente le quiz pour t'améliorer.";
+            }
+
+            document.getElementById("resEmoji").textContent       = emoji;
+            document.getElementById("resScore").textContent       = score;
+            document.getElementById("resSousTitre").textContent   = `points sur ${total * 10}`;
+            document.getElementById("resBonnes").textContent      = bonnes;
+            document.getElementById("resMauvaises").textContent   = mauvaises;
+            document.getElementById("resPourcentage").textContent = pct + "%";
+            document.getElementById("resMessage").textContent     = message;
+
+            document.getElementById("progressRempli").style.width = "100%";
+            document.getElementById("progressLabel").textContent  = `${total} / ${total}`;
+
+        }
+
+        // ============================================================
+        // REJOUER
+        // ============================================================
+
+        function rejouer() {
+
+            indexQuestion      = 0;
+            score              = 0;
+            bonnes             = 0;
+            mauvaises          = 0;
+            aRepondu           = false;
+            questionsMelangees = melangerTableau(questions);
+
+            document.getElementById("scoreHeader").textContent       = "0";
+            document.getElementById("resultatsCarte").style.display  = "none";
+            document.getElementById("jeuCarte").style.display        = "block";
+
+            afficherQuestion();
+
+        }
+
+        // ============================================================
+        // LANCEMENT
+        // ============================================================
+        afficherQuestion();
+
+    </script>
+</body>
+</html>

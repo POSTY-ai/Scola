@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>La domination des États-Unis</title>
+  <style>
+    :root{
+      --bg:#f9fbff;
+      --card:#ffffff;
+      --accent:#0033a0;
+      --muted:#555;
+      --maxw:1100px;
+    }
+    *{box-sizing:border-box;}
+    body{
+      font-family:system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      margin:0;
+      padding:24px;
+      background:var(--bg);
+      color:#111;
+      display:flex;
+      justify-content:center;
+    }
+    .container{ max-width:var(--maxw); width:100%; }
+    header{ margin-bottom:18px; }
+    h1{ margin:0 0 6px; font-size:1.7rem; color:var(--accent);}
+    p.lead{ margin:0; color:var(--muted); font-size:1rem; }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:18px;
+      margin-top:18px;
+    }
+    @media(max-width:900px){ .grid{ grid-template-columns:1fr; } }
+
+    .card{
+      background:var(--card);
+      border-radius:10px;
+      padding:14px;
+      box-shadow:0 6px 18px rgba(12,20,50,0.06);
+      border:1px solid rgba(10,10,10,0.03);
+    }
+
+    .media{
+      display:block;
+      border-radius:8px;
+      border:4px solid #e6e9f2;
+      overflow:hidden;
+    }
+    .media img{ width:100%; height:220px; object-fit:cover; display:block; }
+    .caption{
+      text-align:center;
+      margin-top:8px;
+      font-weight:700;
+      color:var(--accent);
+      font-size:0.95rem;
+    }
+
+    h2{ margin:10px 0; font-size:1.05rem; color:#0f1724; }
+    .explain{ font-size:0.98rem; line-height:1.5; color:#222; }
+    ul{ margin:8px 0 8px 18px; }
+
+    footer{ margin-top:18px; font-size:0.9rem; color:var(--muted);}
+    .sources a{ color:var(--accent); text-decoration:none; }
+    .badge{ display:inline-block; padding:6px 10px; border-radius:999px; background:#eaf0ff; color:var(--accent); font-weight:700; font-size:0.82rem; margin-bottom:8px;}
+  </style>
+</head>
+<body style="background-color:#0f1724">
+  <div class="container">
+    <header>
+      <div class="badge">XXe siècle – Guerre froide & après</div>
+      <h1>La domination des États-Unis</h1>
+      <p class="lead">Puissance économique, culturelle et militaire, les États-Unis s’imposent comme leader mondial après 1945.</p>
+    </header>
+
+    <section class="grid">
+
+      <!-- Economie -->
+      <article class="card" id="eco">
+        <a class="media" href="#eco">
+        
+        </a>
+        <div class="caption">Puissance économique</div>
+        <h2>1) Domination économique</h2>
+        <p class="explain">
+          Après 1945, les États-Unis représentent près de <strong>50 % de la production industrielle mondiale</strong>.
+          Ils imposent le dollar comme monnaie de référence (système de Bretton Woods) et deviennent les premiers investisseurs à l’étranger.
+        </p>
+        <ul>
+          <li>Leadership dans la finance (Wall Street) ;</li>
+          <li>Multinationales américaines présentes dans le monde entier ;</li>
+          <li>Innovation technologique (Silicon Valley, GAFAM).</li>
+        </ul>
+      </article>
+
+      <!-- Culture -->
+      <article class="card" id="culture">
+        <a class="media" href="#culture">
+          
+        </a>
+        <div class="caption">Soft power culturel</div>
+        <h2>2) Domination culturelle</h2>
+        <p class="explain">
+          Les États-Unis diffusent leur mode de vie à travers le <strong>cinéma (Hollywood)</strong>, la <strong>musique (jazz, rock, pop, rap)</strong>, et les médias de masse.
+          Ce <em>soft power</em> influence la jeunesse mondiale, popularisant l’anglais comme langue internationale.
+        </p>
+        <ul>
+          <li>Hollywood et séries télévisées ;</li>
+          <li>Marques emblématiques (Coca-Cola, McDonald’s, Nike) ;</li>
+          <li>Internet dominé par des plateformes américaines (Google, Facebook, Netflix).</li>
+        </ul>
+      </article>
+
+      <!-- Militaire -->
+      <article class="card" id="militaire">
+        <a class="media" href="#militaire">
+         
+        </a>
+        <div class="caption">Puissance militaire</div>
+        <h2>3) Domination militaire</h2>
+        <p class="explain">
+          Les États-Unis disposent de la <strong>première armée du monde</strong>, avec un budget militaire supérieur à celui des dix pays suivants réunis.
+          Ils assurent une présence mondiale grâce à leurs bases et à leurs flottes.
+        </p>
+        <ul>
+          <li>Arme nucléaire et supériorité technologique ;</li>
+          <li>OTAN comme instrument de leur influence ;</li>
+          <li>Capacité d’intervention rapide sur tous les continents.</li>
+        </ul>
+      </article>
+<div class="card">
+        <strong style="color: #0f1724;">Sources</strong>
+        <ul class="sources">
+          <li><a href="https://fr.wikipedia.org/wiki/Puissance_des_%C3%89tats-Unis" target="_blank">Wikipédia — Puissance des États-Unis</a></li>
+          <li><a href="https://www.britannica.com/place/United-States" target="_blank">Britannica — United States</a></li>
+          <li><a href="https://www.cairn.info/revue-internationale-et-strategique-2000-2-page-101.htm" target="_blank">Cairn — Puissance américaine</a></li>
+        </ul>
+      </div>
+    </section>
+
+      
+  </div>
+</body>
+</html>

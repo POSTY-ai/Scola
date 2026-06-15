@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Critères d'entrée dans la zone euro</title>
+  <style>
+    :root{
+      --bg:#f9fbff;
+      --card:#fff;
+      --accent:#0d4d92;
+      --muted:#555;
+      --maxw:900px;
+    }
+    *{box-sizing:border-box;}
+    body{
+      font-family:system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      margin:0;
+      padding:24px;
+      background:var(--bg);
+      color:#111;
+      display:flex;
+      flex-direction: column;
+      justify-content:center;
+    }
+    .container{ max-width:var(--maxw); width:100%; }
+    header{ margin-bottom:18px; }
+    h1{ margin:0 0 6px; font-size:1.6rem; color:var(--accent);}
+    p.lead{ margin:0; color:var(--muted); font-size:1rem; }
+
+    .card{
+      background:var(--card);
+      border-radius:10px;
+      padding:16px;
+      box-shadow:0 6px 18px rgba(12,20,50,0.06);
+      border:1px solid rgba(10,10,10,0.03);
+      margin-bottom:18px;
+    }
+    h2{ margin:10px 0; font-size:1.2rem; color:#0f1724; }
+    .explain{ font-size:0.96rem; line-height:1.5; color:#222; }
+    ul{ margin-left:18px; }
+    .badge{ display:inline-block; padding:6px 10px; border-radius:999px; background:#e4eeff; color:var(--accent); font-weight:700; font-size:0.82rem; margin-bottom:6px;}
+    footer{ margin-top:20px; font-size:0.9rem; color:var(--muted);}
+    .sources a{ color:var(--accent); text-decoration:none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge">Zone euro</div>
+      <h1>Critères d'entrée dans la zone euro</h1>
+      <p class="lead" style="color: white;">Pour rejoindre la zone euro, un pays doit respecter plusieurs critères économiques et financiers.</p>
+    </header>
+
+    <section>
+
+      <article class="card">
+        <h2>1) Dette publique</h2>
+        <p class="explain">
+          La dette publique d’un pays ne doit pas dépasser <strong>60 % du PIB</strong>.  
+          Objectif : assurer une gestion saine des finances publiques et limiter les risques de crise.
+        </p>
+      </article>
+
+      <article class="card">
+        <h2>2) Déficit public</h2>
+        <p class="explain">
+          Le déficit public annuel doit être inférieur à <strong>3 % du PIB</strong>.  
+          Objectif : éviter un endettement excessif et maintenir la stabilité budgétaire.
+        </p>
+      </article>
+
+      <article class="card">
+        <h2>3) Inflation maîtrisée</h2>
+        <p class="explain">
+          L’inflation doit rester proche de la moyenne des trois pays de la zone euro présentant l’inflation la plus faible (généralement autour de 2 %).  
+          Objectif : garantir la stabilité des prix et la confiance dans la monnaie unique.
+        </p>
+      </article>
+
+      <article class="card">
+        <h2>4) Taux de change stable</h2>
+        <p class="explain">
+          Le pays doit participer au mécanisme de taux de change (MCE II) pendant au moins 2 ans sans dévaluation significative de sa monnaie par rapport à l’euro.
+        </p>
+      </article>
+
+      <article class="card">
+        <h2>5) Taux d’intérêt à long terme</h2>
+        <p class="explain">
+          Le taux d’intérêt à long terme ne doit pas dépasser de plus de 2 points celui des trois États membres présentant la plus faible inflation.  
+          Objectif : s’assurer que le pays bénéficie de conditions de financement stables avant l’adoption de l’euro.
+        </p>
+      </article>
+
+    </section>
+
+    <footer>
+      <div class="card">
+        <strong>Sources</strong>
+        <ul class="sources">
+          <li><a href="https://fr.wikipedia.org/wiki/Crit%C3%A8res_de_Maastricht" target="_blank">Wikipédia — Critères de Maastricht</a></li>
+          <li><a href="https://www.ecb.europa.eu" target="_blank">Banque centrale européenne</a></li>
+          <li><a href="https://europa.eu/european-union/euro/criteria_fr" target="_blank">Site officiel de l'Union européenne</a></li>
+        </ul>
+      </div>
+    </footer>
+  </div>
+      
+                <!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/quiz.css">
+    <title>Quiz - Zone euro</title>
+</head>
+<body>
+    <div class="quiz-container">
+        <header class="quiz-header">
+            <div class="header-content">
+                
+                <h1 class="quiz-title" style="color: white;">
+                    <i class="fas fa-medal"></i>
+                    Quiz  Zone euro
+                </h1>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <span class="progress-text" id="progressText">Question 1 / 10</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="quiz-main">
+            <div class="quiz-card" id="quizCard">
+                <div class="question-container">
+                    <div class="question-number" id="questionNumber">Question 1</div>
+                    <h2 class="question-text" id="questionText">Chargement...</h2>
+                </div>
+
+                <div class="answers-container" id="answersContainer">
+                    <!-- Les réponses seront générées par JavaScript -->
+                </div>
+
+                <div class="quiz-controls">
+                    <button class="btn btn-secondary" id="prevBtn" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                        Précédent
+                    </button>
+                    <button class="btn btn-primary" id="nextBtn" disabled>
+                        Suivant
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="results-card hidden" id="resultsCard">
+                <div class="results-header">
+                    <i class="fas fa-trophy results-icon" id="resultsIcon"></i>
+                    <h2 class="results-title" id="resultsTitle">Quiz Terminé!</h2>
+                </div>
+                
+                <div class="score-display">
+                    <div class="score-circle">
+                        <div class="score-text">
+                            <span class="score-number" id="scoreNumber">0</span>
+                            <span class="score-total">/ 10</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="score-details">
+                    <div class="score-item correct">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Bonnes réponses: <strong id="correctCount">0</strong></span>
+                    </div>
+                    <div class="score-item incorrect">
+                        <i class="fas fa-times-circle"></i>
+                        <span>Mauvaises réponses: <strong id="incorrectCount">0</strong></span>
+                    </div>
+                    <div class="score-item percentage">
+                        <i class="fas fa-percentage"></i>
+                        <span>Pourcentage: <strong id="percentageScore">0%</strong></span>
+                    </div>
+                </div>
+
+                <div class="results-message" id="resultsMessage">
+                    Excellent travail!
+                </div>
+
+                <div class="results-actions">
+                    <button class="btn btn-primary" id="restartBtn">
+                        <i class="fas fa-redo"></i>
+                        Recommencer
+                    </button>
+                    <a href="../pages/zoneeuro.html" class="btn btn-secondary">
+                        <i class="fas fa-home"></i>
+                        Retour
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../javascript/quizzoneeuro.js"></script>
+</body>
+</html>

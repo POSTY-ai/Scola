@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>La crise de 1929 → chômage → New Deal / totalitarismes → Seconde Guerre mondiale</title>
+  <style>
+    :root{
+      --bg:#fbfdff;
+      --card:#ffffff;
+      --accent:#0b6efd;
+      --muted:blue;
+      --maxw:1100px;
+    }
+    /* Reset & layout */
+    *{box-sizing:border-box}
+    body{
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      margin:0;
+      padding:24px;
+      background:var(--bg);
+      color:blue;
+      display:flex;
+      justify-content:center;
+    }
+    .container{ width:100%; max-width:var(--maxw); }
+    header{ margin-bottom:18px; text-align:left; }
+    h1{ margin:0 0 6px 0; font-size:1.6rem; }
+    p.lead{ margin:0; color:var(--muted); }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:18px;
+      margin-top:18px;
+    }
+    @media (max-width:900px){ .grid{ grid-template-columns:1fr; } }
+
+    .card{
+      background:var(--card);
+      border-radius:10px;
+      padding:14px;
+      box-shadow: 0 6px 18px rgba(12,20,50,0.06);
+      border:1px solid rgba(10,10,10,0.03);
+    }
+
+    .media{
+      display:block;
+      width:100%;
+      overflow:hidden;
+      border-radius:8px;
+      border:4px solid #e6e9f2; /* bordure visible */
+      box-sizing:border-box;
+    }
+    .media img{ display:block; width:100%; height:220px; object-fit:cover; }
+
+    .caption{
+      text-align:center;
+      margin-top:8px;
+      font-weight:700;
+      color:var(--accent);
+      font-size:0.95rem;
+    }
+
+    h2{ margin:10px 0; font-size:1.05rem; color:#0f1724; }
+    .explain{ color:#222; line-height:1.5; font-size:0.98rem; }
+
+    ul{ margin:8px 0 8px 18px; }
+    footer{ margin-top:18px; font-size:0.9rem; color:var(--muted); }
+    .sources a{ color:var(--accent); text-decoration:none; }
+    .badge{ display:inline-block; padding:6px 10px; border-radius:999px; background:#eef5ff; color:var(--accent); font-weight:700; font-size:0.82rem; margin-bottom:8px;}
+    .note{ font-size:0.88rem; color:#444; margin-top:8px; }
+  </style>
+</head>
+<body>
+  <div class="container" role="main">
+    <header>
+      <div class="badge">Synthèse historique • Approche en chaîne causale</div>
+      <h1 style="color: blue;">krach boursier de 1929 /Crise de 1929 </h1>
+      <p class="lead" style="color: white;">Résumé clair en étapes : causes immédiates, propagation économique, réponses politiques (New Deal, dérives autoritaires) et comment cela a contribué à l’éclatement de la Seconde Guerre.</p>
+    </header>
+
+    <section class="grid" aria-label="Étapes du processus">
+
+      <!-- 1. Le krach de 1929 -->
+      <article class="card" id="krach-1929">
+        <a class="media" href="#krach-1929" aria-hidden="true">
+          <img src="../images/Screenshot 2026-06-02 034445.png" alt="Bourse de New York, krach d'octobre 1929">
+        </a>
+        <div class="caption">Le krach d'octobre 1929 (Wall Street)</div>
+
+        <h2>1) Le krach boursier de 1929 — déclencheur</h2>
+        <p class="explain">
+          En octobre 1929, la confiance spéculative s'effondre : des ventes massives d'actions provoquent une chute rapide des cours (le « Krach »).
+          Causes structurelles préalables : spéculation excessive, achat d'actions à crédit (marges), surproduction industrielle, endettement des ménages et fragilité bancaire.
+        </p>
+        <p class="explain">
+          Résultat immédiat : destruction de richesse papier, paniques bancaires partielles et contraction du crédit — les banques réduisent les prêts et les entreprises perdent l'accès au financement.
+        </p>
+      </article>
+
+      <!-- 2. Propagation et chômage -->
+      <article class="card" id="propagation-chomage">
+        <a class="media" href="#propagation-chomage" aria-hidden="true">
+          <img src="../images/Screenshot 2026-06-02 034727.png">
+        </a>
+        <div class="caption">Chômage massif et contraction de la demande</div>
+
+        <h2>2) Propagation économique → chômage massif</h2>
+        <p class="explain">
+          Quand les entreprises perdent des ventes et l'accès au crédit, elles réduisent la production et licencient. Le chômage augmente fortement.
+          Avec moins de revenus, la demande (consommation) chute encore — c’est une spirale déflationniste : prix et salaires baissent, aggravant dettes réelles et faillites.
+        </p>
+        <p class="explain">
+          Effets sociaux : pauvreté, files d'attente pour l'aide, tensions sociales, baisse de natalité et recul des investissements publics et privés.
+        </p>
+      </article>
+
+      <!-- 3. Réponses politiques et économiques (New Deal) -->
+      <article class="card" id="new-deal">
+        <a class="media" href="#new-deal" aria-hidden="true">
+          <img src="../images/Screenshot 2026-06-02 034922.png" alt="Franklin D. Roosevelt, président des États-Unis (1933)">
+        </a>
+        <div class="caption">Roosevelt et le New Deal (États-Unis)</div>
+
+        <h2>3) Réponses démocratiques : le New Deal et interventions publiques</h2>
+        <p class="explain">
+          Face à l'effondrement, certains gouvernements optent pour l'intervention publique. Aux États-Unis, Franklin D. Roosevelt (élu 1932) lance le <strong>New Deal</strong> :
+          politiques de relance (création d'emplois publics), réforme bancaire (garantie des dépôts), régulation financière et soutien agricole/industriel.
+        </p>
+        <p class="explain">
+          Objectifs : restaurer la confiance, relancer la demande, réformer le système financier pour réduire le risque de nouveau krach. Le New Deal modifie durablement le rôle de l'État.
+        </p>
+      </article>
+
+      <!-- 4. Montée des totalitarismes -->
+      <article class="card" id="totalitarismes">
+        <a class="media" href="#totalitarismes" aria-hidden="true">
+          <img src="../images/Screenshot 2026-06-02 035114.png" alt="Rassemblement nazi en Allemagne (années 1930)">
+        </a>
+        <div class="caption">Exploitation politique de la crise — montée des régimes autoritaires</div>
+
+        <h2>4) Montée des totalitarismes en Europe et en Asie</h2>
+        <p class="explain">
+          La crise économique fragilise les démocraties et alimente colère, désespoir et recherche de solutions radicales. Des mouvements autoritaires exploitent ces peurs :
+        </p>
+        <ul>
+          <li><strong>Allemagne :</strong> chômage massif, inflation passée, ressentiment territorial et faiblesse du système parlementaire favorisent la montée du nazisme (Hitler arrive au pouvoir en 1933) ;</li>
+          <li><strong>Italie :</strong> le fascisme de Mussolini s'appuie sur autoritarisme et nationalisme ;</li>
+          <li><strong>Japon :</strong> expansionnisme et militarisme gagnent du terrain en réponse à crises économiques et besoins en matières premières.</li>
+        </ul>
+        <p class="explain">
+          Ces régimes promettent ordre, emploi et grandeur nationale — souvent en sacrifiant libertés, en militarisant l'économie et en menant des politiques extérieures agressives.
+        </p>
+      </article>
+
+      <!-- 5. De la crise au conflit mondial -->
+      <article class="card" id="vers-guerre">
+        <a class="media" href="#vers-guerre" aria-hidden="true">
+          <img src="../images/Screenshot 2026-06-02 035333.png" alt="Invasion de la Pologne, septembre 1939">
+        </a>
+        <div class="caption">De l'instabilité économique aux ambitions expansionnistes — vers 1939</div>
+
+        <h2>5) Chaîne causale menant à la Seconde Guerre mondiale</h2>
+        <p class="explain">
+          La combinaison d'un fragile ordre international (suite à la Première Guerre), d'une crise économique mondiale et de la montée d'États agressifs a créé un terrain propice au conflit :
+        </p>
+        <ul>
+          <li>Les régimes autoritaires réarment et cherchent des gains territoriaux pour résoudre la crise économique par la conquête ;</li>
+          <li>La diplomatie internationale est affaiblie : traités et institutions peinent à contenir les violations (ex. remilitarisation, annexion) ;</li>
+          <li>Les alliances et rivalités idéologiques (fascisme vs démocratie vs communisme) polarisent les relations internationales.</li>
+        </ul>
+        <p class="explain">
+          Résultat : une succession d'agressions (Éthiopie 1935, annexion de l'Autriche 1938, invasion de la Pologne 1939) débouche sur l'éclatement de la Seconde Guerre mondiale.
+        </p>
+      </article>
+         <div class="card">
+        <strong style="color: #0f1724;">Références et lectures recommandées</strong>
+        <ul class="sources">
+          <li><a href="https://www.britannica.com/event/Great-Depression" target="_blank" rel="noopener">Encyclopaedia Britannica — The Great Depression (anglais)</a></li>
+          <li><a href="https://www.history.com/topics/great-depression" target="_blank" rel="noopener">History.com — The Great Depression</a></li>
+          <li><a href="https://www.britannica.com/biography/Franklin-Delano-Roosevelt" target="_blank" rel="noopener">Britannica — Franklin D. Roosevelt &amp; New Deal</a></li>
+          <li><a href="https://www.bbc.co.uk/history/worldwars/wwtwo/" target="_blank" rel="noopener">BBC — Causes et déroulement de la Seconde Guerre mondiale</a></li>
+          <li><a href="https://fr.wikipedia.org/wiki/Grande_D%C3%A9pression" target="_blank" rel="noopener">Wikipédia FR — Grande Dépression (synthèse et timeline)</a></li>
+        </ul>
+
+        <p class="note">
+          Remarque : si vous voulez que j'ajoute des timelines interactives, des cartes (par ex. taux de chômage par pays 1929–1939), des notes de bas de page détaillées
+          ou une version imprimable A4/PDF, je l'intègre directement dans la page sans problème.
+        </p>
+      </div>
+
+    </section>
+
+   
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/quiz.css">
+    <title>Quiz - Crise de 1929</title>
+</head>
+<body style="background-color: white;">
+    <div class="quiz-container">
+        <header class="quiz-header">
+            <div class="header-content">
+                
+                <h1 class="quiz-title" style="color: white;">
+                    <i class="fas fa-medal"></i>
+                    Quiz crise de 1929
+                </h1>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <span class="progress-text" id="progressText">Question 1 / 10</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="quiz-main" style="color: white;">
+            <div class="quiz-card" id="quizCard">
+                <div class="question-container">
+                    <div class="question-number" id="questionNumber">Question 1</div>
+                    <h2 class="question-text" id="questionText">Chargement...</h2>
+                </div>
+
+                <div class="answers-container" id="answersContainer">
+                    <!-- Les réponses seront générées par JavaScript -->
+                </div>
+
+                <div class="quiz-controls">
+                    <button class="btn btn-secondary" id="prevBtn" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                        Précédent
+                    </button>
+                    <button class="btn btn-primary" id="nextBtn" disabled>
+                        Suivant
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="results-card hidden" id="resultsCard">
+                <div class="results-header">
+                    <i class="fas fa-trophy results-icon" id="resultsIcon"></i>
+                    <h2 class="results-title" id="resultsTitle">Quiz Terminé!</h2>
+                </div>
+                
+                <div class="score-display">
+                    <div class="score-circle">
+                        <div class="score-text">
+                            <span class="score-number" id="scoreNumber">0</span>
+                            <span class="score-total">/ 10</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="score-details">
+                    <div class="score-item correct">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Bonnes réponses: <strong id="correctCount">0</strong></span>
+                    </div>
+                    <div class="score-item incorrect">
+                        <i class="fas fa-times-circle"></i>
+                        <span>Mauvaises réponses: <strong id="incorrectCount">0</strong></span>
+                    </div>
+                    <div class="score-item percentage">
+                        <i class="fas fa-percentage"></i>
+                        <span>Pourcentage: <strong id="percentageScore">0%</strong></span>
+                    </div>
+                </div>
+
+                <div class="results-message" id="resultsMessage">
+                    Excellent travail!
+                </div>
+
+                <div class="results-actions">
+                    <button class="btn btn-primary" id="restartBtn">
+                        <i class="fas fa-redo"></i>
+                        Recommencer
+                    </button>
+                    <a href="../pages/crise1929.html" class="btn btn-secondary">
+                        <i class="fas fa-home"></i>
+                        Retour
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../javascript/quizcrise1929.js"></script>
+ 
+  </div>
+</body>
+</html>

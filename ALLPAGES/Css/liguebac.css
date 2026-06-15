@@ -1,0 +1,509 @@
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    color: #ffffff;
+    overflow-x: hidden;
+}
+
+/* Particules de fond — pseudo-élément décoratif */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background:
+        radial-gradient(ellipse at 20% 20%, rgba(102,126,234,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(118,75,162,0.08) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ============================================================
+   LIEN JOUER
+   ============================================================ */
+.jouer {
+    text-decoration: none;
+    color: white;
+}
+
+/* ============================================================
+   CONTENEUR PRINCIPAL
+   ============================================================ */
+.ligue-container {
+    position: relative;
+    z-index: 1;
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 28px;
+    margin: 20px auto;
+    padding: 30px 24px 40px;
+    box-shadow:
+        0 8px 32px rgba(0,0,0,0.4),
+        0 0 0 1px rgba(255,255,255,0.06),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.08);
+    max-width: 95%;
+    /* Animation d'apparition au chargement */
+    animation: apparition 0.7s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+@keyframes apparition {
+    from { opacity: 0; transform: translateY(30px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ============================================================
+   STATUT — niveau actuel + réinitialisation
+   ============================================================ */
+.ligue-statut {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 80px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+/* Carte niveau actuel */
+.niveau-actuel {
+    background: linear-gradient(135deg, rgba(102,126,234,0.15), rgba(118,75,162,0.15));
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(102,126,234,0.25);
+    padding: 14px 20px;
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102,126,234,0.1);
+}
+
+.niveau-actuel:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(102,126,234,0.2);
+    border-color: rgba(102,126,234,0.4);
+}
+
+/* Réinitialisation */
+.reinitialisation {
+    padding: 14px 20px;
+    background: rgba(255,165,0,0.08);
+    border: 1px solid rgba(255,165,0,0.2);
+    border-radius: 16px;
+    /* Animation de clignotement doux */
+    animation: clignote 3s ease-in-out infinite;
+}
+
+@keyframes clignote {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 rgba(255,165,0,0); }
+    50%       { opacity: 0.75; box-shadow: 0 0 16px rgba(255,165,0,0.15); }
+}
+
+/* ============================================================
+   CARTES STATISTIQUES — XP, classement, streak
+   ============================================================ */
+.ligue-card {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 16px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+}
+
+.xp-user,
+.classement-user,
+.consistence-user {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 18px 20px;
+    border-radius: 18px;
+    min-width: 130px;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Reflet lumineux au survol */
+.xp-user::before,
+.classement-user::before,
+.consistence-user::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+    transition: left 0.5s ease;
+}
+
+.xp-user:hover::before,
+.classement-user:hover::before,
+.consistence-user:hover::before {
+    left: 100%;
+}
+
+.xp-user:hover,
+.classement-user:hover,
+.consistence-user:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 16px 36px rgba(0,0,0,0.3);
+    border-color: rgba(102,126,234,0.3);
+}
+
+/* XP — couleur violette */
+.xp-user {
+    border-top: 3px solid rgba(102,126,234,0.5);
+}
+
+/* Classement — couleur dorée */
+.classement-user {
+    border-top: 3px solid rgba(255,215,0,0.5);
+}
+
+/* Streak — couleur orange feu */
+.consistence-user {
+    border-top: 3px solid rgba(255,107,53,0.5);
+    min-height: 110px;
+}
+
+/* Animation "respiration" sur le chiffre XP */
+.contenu-xpuser h4 {
+    animation: respiration 2.5s ease-in-out infinite;
+    display: inline-block;
+}
+
+@keyframes respiration {
+    0%, 100% { transform: scale(1); }
+    50%       { transform: scale(1.1); color: #a78bfa; }
+}
+
+/* ============================================================
+   BANNIÈRE SEMAINE
+   ============================================================ */
+.banniere-semaine {
+    background: linear-gradient(135deg, rgba(102,126,234,0.12), rgba(118,75,162,0.12));
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(102,126,234,0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+    border-radius: 18px;
+    width: 65%;
+    min-width: 260px;
+    margin: 20px auto 0;
+    padding: 20px;
+    transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Fond animé derrière la bannière */
+.banniere-semaine::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        rgba(102,126,234,0.04) 60deg,
+        transparent 120deg
+    );
+    animation: rotation 8s linear infinite;
+}
+
+@keyframes rotation {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+.banniere-semaine:hover {
+    transform: scale(1.03);
+    box-shadow: 0 14px 36px rgba(102,126,234,0.2);
+    border-color: rgba(102,126,234,0.4);
+}
+
+/* Bouton Jouer */
+.banniere-semaine button {
+    position: relative;
+    z-index: 1;
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: 600;
+    padding: 11px 22px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(102,126,234,0.3), rgba(118,75,162,0.3));
+    border: 1px solid rgba(102,126,234,0.4);
+    font-size: clamp(0.875rem, 2vw, 1rem);
+    cursor: pointer;
+}
+
+.banniere-semaine button::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.banniere-semaine button:hover::before { left: 100%; }
+
+.banniere-semaine button:hover {
+    background: linear-gradient(135deg, rgba(102,126,234,0.5), rgba(118,75,162,0.5));
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(102,126,234,0.35);
+    border-color: rgba(102,126,234,0.7);
+}
+
+/* ============================================================
+   PODIUM VISUEL
+   ============================================================ */
+.podium-visuel {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 36px;
+    padding-bottom: 8px;
+}
+
+.podium-visuel .user {
+    padding-top: 20px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Bloc position 2 — argent */
+.position1 {
+    background: linear-gradient(180deg, #9ca3af, #6b7280);
+    height: 140px;
+    width: 60px;
+    border-radius: 14px 14px 0 0;
+    text-align: center;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 10px;
+    font-weight: 800;
+    font-size: 18px;
+    box-shadow: 0 -4px 20px rgba(156,163,175,0.3);
+    transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+/* Bloc position 1 — or */
+.position2 {
+    background: linear-gradient(180deg, #fbbf24, #f59e0b);
+    height: 190px;
+    width: 60px;
+    border-radius: 14px 14px 0 0;
+    text-align: center;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 10px;
+    font-weight: 800;
+    font-size: 18px;
+    color: #1a1a2e;
+    box-shadow: 0 -8px 28px rgba(251,191,36,0.4);
+    transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    /* Légère animation pour le 1er */
+    animation: podiumPulse 3s ease-in-out infinite;
+}
+
+@keyframes podiumPulse {
+    0%, 100% { box-shadow: 0 -8px 28px rgba(251,191,36,0.4); }
+    50%       { box-shadow: 0 -8px 40px rgba(251,191,36,0.65); }
+}
+
+/* Bloc position 3 — bronze */
+.position3 {
+    background: linear-gradient(180deg, #fb923c, #ea580c);
+    height: 110px;
+    width: 60px;
+    border-radius: 14px 14px 0 0;
+    text-align: center;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 10px;
+    font-weight: 800;
+    font-size: 18px;
+    box-shadow: 0 -4px 20px rgba(251,146,60,0.3);
+    transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.position1:hover { transform: translateY(-10px); box-shadow: 0 -4px 30px rgba(156,163,175,0.5); }
+.position2:hover { transform: translateY(-14px); box-shadow: 0 -8px 44px rgba(251,191,36,0.7); }
+.position3:hover { transform: translateY(-8px);  box-shadow: 0 -4px 30px rgba(251,146,60,0.5); }
+
+/* ============================================================
+   LEADERBOARD
+   ============================================================ */
+.leaderboard {
+    margin: 20px auto 0;
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.07);
+    padding: 8px;
+    border-radius: 18px;
+    width: 65%;
+    min-width: 260px;
+    overflow: hidden;
+}
+
+/* Chaque ligne du leaderboard */
+.leaderboard .user1 {
+    width: 100%;
+    padding: 12px 16px;
+    box-sizing: border-box;
+    border-radius: 12px;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.leaderboard .user1:last-child {
+    border-bottom: none;
+}
+
+.leaderboard .user1:hover {
+    transform: translateX(8px);
+    background: rgba(102,126,234,0.1);
+    border-radius: 12px;
+    color: #a78bfa;
+}
+
+/* ============================================================
+   NIVEAUX DE LIGUE
+   ============================================================ */
+.niveau-actuelle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+
+/* Style commun à toutes les ligues */
+.bronze,
+.argent,
+.or,
+.platine,
+.diamant {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 10px 8px;
+    border-radius: 14px;
+    width: 72px;
+    height: 60px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+/* Couleurs spécifiques par ligue */
+.bronze  { border-top: 3px solid #cd7f32; color: #cd7f32; }
+.argent  { border-top: 3px solid #c0c0c0; color: #c0c0c0; }
+.or      { border-top: 3px solid #ffd700; color: #ffd700; }
+.platine { border-top: 3px solid #4fc3f7; color: #4fc3f7; }
+.diamant { border-top: 3px solid #a78bfa; color: #a78bfa; }
+
+.bronze:hover  { transform: translateY(-7px) scale(1.1); box-shadow: 0 10px 24px rgba(205,127,50,0.25); }
+.argent:hover  { transform: translateY(-7px) scale(1.1); box-shadow: 0 10px 24px rgba(192,192,192,0.25); }
+.or:hover      { transform: translateY(-7px) scale(1.1); box-shadow: 0 10px 24px rgba(255,215,0,0.3); }
+.platine:hover { transform: translateY(-7px) scale(1.1); box-shadow: 0 10px 24px rgba(79,195,247,0.25); }
+.diamant:hover { transform: translateY(-7px) scale(1.1); box-shadow: 0 10px 24px rgba(167,139,250,0.3); }
+
+/* ============================================================
+   TEXTES
+   ============================================================ */
+h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+h5 {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    font-weight: 500;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 640px) {
+
+    .ligue-statut {
+        gap: 16px;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .ligue-card {
+        gap: 10px;
+    }
+
+    .xp-user,
+    .classement-user,
+    .consistence-user {
+        min-width: 90px;
+        padding: 14px 12px;
+    }
+
+    .banniere-semaine,
+    .leaderboard {
+        width: 95%;
+    }
+
+    .niveau-actuelle {
+        gap: 6px;
+    }
+
+    .bronze,
+    .argent,
+    .or,
+    .platine,
+    .diamant {
+        width: 58px;
+        height: 52px;
+        font-size: 11px;
+    }
+
+    .position1,
+    .position2,
+    .position3 {
+        width: 48px;
+    }
+
+}

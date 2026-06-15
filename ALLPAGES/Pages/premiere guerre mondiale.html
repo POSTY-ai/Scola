@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bilan de la Première Guerre mondiale</title>
+  <style>
+    :root{
+      --bg:#fafcfe;
+      --card:#ffffff;
+      --accent:blue;
+      --muted:grey;
+      --maxw:1100px;
+    }
+    *{box-sizing:border-box}
+    body{
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      margin:0;
+      padding:24px;
+      background:var(--bg);
+      color:#111;
+      display:flex;
+      flex-direction: column;
+      justify-content:center;
+    }
+    .container{ width:100%; max-width:var(--maxw); }
+    header{ margin-bottom:18px; text-align:left; }
+    h1{ margin:0 0 6px 0; font-size:1.6rem; color:var(--accent);}
+    p.lead{ margin:0; color:var(--muted); }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:18px;
+      margin-top:18px;
+    }
+    @media (max-width:900px){ .grid{ grid-template-columns:1fr; } }
+
+    .card{
+      background:var(--card);
+      border-radius:10px;
+      padding:14px;
+      box-shadow: 0 6px 18px rgba(12,20,50,0.06);
+      border:1px solid rgba(10,10,10,0.03);
+    }
+
+    .media{
+      display:block;
+      width:100%;
+      overflow:hidden;
+      border-radius:8px;
+      border:4px solid #eee;
+      box-sizing:border-box;
+    }
+    .media img{ display:block; width:100%; height:220px; object-fit:cover; }
+
+    .caption{
+      text-align:center;
+      margin-top:8px;
+      font-weight:700;
+      color:var(--accent);
+      font-size:0.95rem;
+    }
+
+    h2{ margin:10px 0; font-size:1.05rem; color:#0f1724; }
+    .explain{ color:#222; line-height:1.5; font-size:0.98rem; }
+
+    ul{ margin:8px 0 8px 18px; }
+    footer{ margin-top:18px; font-size:0.9rem; color:var(--muted); }
+    .sources a{ color:var(--accent); text-decoration:none; }
+    .badge{ display:inline-block; padding:6px 10px; border-radius:999px; background:#ffecec; color:var(--accent); font-weight:700; font-size:0.82rem; margin-bottom:8px;}
+  </style>
+</head>
+<body>
+  <div class="container" role="main">
+    <header>
+      <div class="badge">1914–1918 • Grande Guerre</div>
+      <h1>Bilan de la Première Guerre mondiale</h1>
+      <p class="lead" style="color: white;">Une guerre totale aux conséquences humaines, économiques, sociales et politiques majeures.</p>
+    </header>
+
+    <section class="grid" aria-label="Bilan de la guerre">
+
+      <!-- 1. Pertes humaines -->
+      <article class="card" id="humains">
+        <a class="media" href="#humains" aria-hidden="true">
+          
+        </a>
+        <div class="caption">Destructions et pertes humaines massives</div>
+
+        <h2>1) Bilan humain</h2>
+        <p class="explain">
+          La guerre fait environ <strong>18 millions de morts</strong> (10 millions de soldats, 8 millions de civils) et plus de <strong>20 millions de blessés et mutilés</strong>.
+          Les conditions sanitaires et psychologiques entraînent des traumatismes (les « gueules cassées ») et une génération entière marquée par la violence.
+        </p>
+      </article>
+
+      <!-- 2. Destructions matérielles -->
+      <article class="card" id="materiel">
+        <a class="media" href="#materiel" aria-hidden="true">
+        
+        </a>
+        <div class="caption">Champs de bataille dévastés</div>
+
+        <h2>2) Bilan matériel</h2>
+        <p class="explain">
+          Les régions industrielles d’Europe (Nord-Est de la France, Belgique, etc.) sont <strong>détruites</strong> :
+        </p>
+        <ul>
+          <li>Villes et villages rasés ;</li>
+          <li>Voies ferrées, usines et champs dévastés ;</li>
+          <li>Reconstruction coûteuse et lente dans les années 1920.</li>
+        </ul>
+      </article>
+
+      <!-- 3. Bilan économique -->
+      <article class="card" id="economique">
+        <a class="media" href="#economique" aria-hidden="true">
+         
+        </a>
+        <div class="caption">Dette publique et inflation</div>
+
+        <h2>3) Bilan économique</h2>
+        <p class="explain">
+          L’Europe sort <strong>affaiblie</strong> économiquement :
+        </p>
+        <ul>
+          <li>Dettes publiques colossales (France, Royaume-Uni, Allemagne) ;</li>
+          <li>Inflation et déséquilibres budgétaires ;</li>
+          <li>Montée en puissance des États-Unis, devenus créanciers du monde.</li>
+        </ul>
+      </article>
+
+      <!-- 4. Conséquences sociales -->
+      <article class="card" id="social">
+        <a class="media" href="#social" aria-hidden="true">
+          
+        </a>
+        <div class="caption">Transformation sociale</div>
+
+        <h2>4) Bilan social</h2>
+        <p class="explain">
+          La guerre bouleverse les sociétés :
+        </p>
+        <ul>
+          <li>Entrée massive des femmes dans le monde du travail ;</li>
+          <li>Montée des mouvements pacifistes ;</li>
+          <li>Crises sociales liées aux privations et au deuil de masse.</li>
+        </ul>
+      </article>
+
+      <!-- 5. Bilan politique -->
+      <article class="card" id="politique">
+        <a class="media" href="#politique" aria-hidden="true">
+          
+        </a>
+        <div class="caption">Un nouvel ordre international fragile</div>
+
+        <h2>5) Bilan politique</h2>
+        <p class="explain">
+          La guerre entraîne des bouleversements :
+        </p>
+        <ul>
+          <li>Chute de quatre empires (allemand, austro-hongrois, ottoman, russe) ;</li>
+          <li>Traité de Versailles (1919) qui redessine les frontières mais crée des tensions durables ;</li>
+          <li>Naissance de la Société des Nations (SDN), première tentative de gouvernance mondiale.</li>
+        </ul>
+      </article>
+ <div class="card">
+        <strong style="color: #111;">Sources conseillées</strong>
+        <ul class="sources">
+          <li><a href="https://fr.wikipedia.org/wiki/Premi%C3%A8re_Guerre_mondiale" target="_blank" rel="noopener">Wikipédia — Première Guerre mondiale</a></li>
+          <li><a href="https://www.herodote.net/1914_1918-batailles-48.php" target="_blank" rel="noopener">Herodote.net — La Grande Guerre</a></li>
+          <li><a href="https://www.britannica.com/event/World-War-I" target="_blank" rel="noopener">Encyclopedia Britannica — World War I</a></li>
+        </ul>
+      </div>
+   
+  </div>
+    </section>
+
+     
+  <script src="project.js"></script>
+              <!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/quiz.css">
+    <title>Quiz - Première Guerre mondiale</title>
+</head>
+<body>
+    <div class="quiz-container">
+        <header class="quiz-header">
+            <div class="header-content">
+                
+                <h1 class="quiz-title" style="color: white;">
+                    <i class="fas fa-medal"></i>
+                    Quiz Première Guerre mondiale
+                </h1>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <span class="progress-text" id="progressText">Question 1 / 10</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="quiz-main">
+            <div class="quiz-card" id="quizCard">
+                <div class="question-container">
+                    <div class="question-number" id="questionNumber">Question 1</div>
+                    <h2 class="question-text" id="questionText">Chargement...</h2>
+                </div>
+
+                <div class="answers-container" id="answersContainer">
+                    <!-- Les réponses seront générées par JavaScript -->
+                </div>
+
+                <div class="quiz-controls">
+                    <button class="btn btn-secondary" id="prevBtn" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                        Précédent
+                    </button>
+                    <button class="btn btn-primary" id="nextBtn" disabled>
+                        Suivant
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="results-card hidden" id="resultsCard">
+                <div class="results-header">
+                    <i class="fas fa-trophy results-icon" id="resultsIcon"></i>
+                    <h2 class="results-title" id="resultsTitle">Quiz Terminé!</h2>
+                </div>
+                
+                <div class="score-display">
+                    <div class="score-circle">
+                        <div class="score-text">
+                            <span class="score-number" id="scoreNumber">0</span>
+                            <span class="score-total">/ 10</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="score-details">
+                    <div class="score-item correct">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Bonnes réponses: <strong id="correctCount">0</strong></span>
+                    </div>
+                    <div class="score-item incorrect">
+                        <i class="fas fa-times-circle"></i>
+                        <span>Mauvaises réponses: <strong id="incorrectCount">0</strong></span>
+                    </div>
+                    <div class="score-item percentage">
+                        <i class="fas fa-percentage"></i>
+                        <span>Pourcentage: <strong id="percentageScore">0%</strong></span>
+                    </div>
+                </div>
+
+                <div class="results-message" id="resultsMessage">
+                    Excellent travail!
+                </div>
+
+                <div class="results-actions">
+                    <button class="btn btn-primary" id="restartBtn">
+                        <i class="fas fa-redo"></i>
+                        Recommencer
+                    </button>
+                    <a href="../pages/premiere guerre mondiale.html" class="btn btn-secondary">
+                        <i class="fas fa-home"></i>
+                        Retour
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../javascript/quizbilan1fst.js"></script>
+</body>
+</html>

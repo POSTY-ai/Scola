@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/liguebac.css">
+    <title>Ligue Bac</title>
+</head>
+<body>
+    <div class="ligue-container">
+        <div class="ligue-header">
+            <div class="ligue-statut">
+                <div class="niveau-actuel">
+                    <div class="contenu-niveau">
+                        <h4 id="ligueActuelle">Bronze--Semaine 1</h4>
+                    </div>
+                    </div>
+                    <div class="reinitialisation">
+                        <div class="contenu-reinitialisation">
+                           <h5>Réinitialisation dans :</h5>
+                           <h4 id="countdown">Calcul en cours...</h4>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+       
+        <div class="ligue-card">
+            <div class="xp-user">
+                <div class="contenu-xpuser">
+                    <h5>Mes XP cette<br> semaine</h5>
+                    <h4 id="userXP">0</h4>
+                    <h5 id="xpToday">+0 aujourd'hui</h5>
+                </div>
+            </div>
+            <div class="classement-user">
+                <div class="contenu-classement">
+                     <h5>Mon<br> classement</h5>
+                   <h4 id="userRank">#0</h4>
+                  <h5 id="totalPlayers">Sur 0 eleves</h5>
+                </div>
+            </div>
+             <div class="consistence-user">
+                <div class="contenu-consistence">
+                     <h5>Serie active</h5>
+                    <h4 id="userStreak">0🔥</h4>
+                    <h5>jours consecutifs</h5>
+                </div>
+            </div>
+        </div>
+        <div class="banniere-semaine">
+            <div class="contenu-banniere">
+               
+                <h4> <h5>Theme de la semaine</h5><br>Gouvernements Haïtiens <button id="btnJouer"> <a href="jouer.html" class="jouer" >▶ Jouer</a> </button></h4>
+                <div id="messageJour" style="display:none; color:#ff4757; margin-top:10px; font-size:14px;"></div>
+            </div>
+            <!-- Message affiché si l'élève a déjà joué -->
+
+        </div>
+        <div class="podium-visuel">
+            <h3 style="margin-bottom: 200px;color: gray;">Top 3 de la semaine</h3>
+            <div class="podium-deuxieme">
+               <div class="user1" id="secondPlace">...</div>
+                <div class="position1">2</div>
+            </div>
+            <div class="podium-premier">
+              <div class="user2" id="firstPlace">...</div>
+                <div class="position2">1</div>
+            </div>
+            <div class="podium-troisieme">
+           <div class="user3" id="thirdPlace">...</div>
+                <div class="position3">3</div>
+            </div>
+        </div>
+        <div class="leaderboard" id="leaderboard">
+        </div>
+        <div class="niveau-actuelle">
+            <div class="bronze">Bronze<br>🥉</div>
+            <div class="argent">Argent<br>🥈</div>
+            <div class="or">Or<br>🥇</div>
+            <div class="platine">Platine<br>💎</div>
+            <div class="diamant">Diamant<br>👑</div>
+        </div>
+    </div>
+    <script>
+
+const token = localStorage.getItem("token");
+
+async function chargerLigue() {
+
+    try {
+
+        const response = await fetch(
+            "/api/league/me",
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+
+        const data = await response.json();
+
+        document.getElementById(
+            "userXP"
+        ).textContent = data.xp;
+
+        document.getElementById(
+            "xpToday"
+        ).textContent =
+        "+" + data.xpToday +
+        " aujourd'hui";
+
+        document.getElementById(
+            "userRank"
+        ).textContent =
+        "#" + data.rank;
+
+        document.getElementById(
+            "totalPlayers"
+        ).textContent =
+        "Sur " +
+        data.totalPlayers +
+        " eleves";
+
+        document.getElementById(
+            "userStreak"
+        ).textContent =
+        data.streak + "🔥";
+
+        document.getElementById(
+            "ligueActuelle"
+        ).textContent =
+        data.league;
+
+    }
+
+    catch(err){
+
+        console.log(err);
+
+    }
+
+}
+
+async function chargerTop3(){
+
+    try{
+
+        const response =
+        await fetch(
+            "/api/league/top"
+        );
+
+        const top =
+        await response.json();
+
+        if(top[0])
+            document.getElementById(
+                "firstPlace"
+            ).textContent =
+            top[0].name;
+
+        if(top[1])
+            document.getElementById(
+                "secondPlace"
+            ).textContent =
+            top[1].name;
+
+        if(top[2])
+            document.getElementById(
+                "thirdPlace"
+            ).textContent =
+            top[2].name;
+
+    }
+
+    catch(err){
+
+        console.log(err);
+
+    }
+
+}
+
+async function chargerLeaderboard(){
+
+    try{
+
+        const response =
+        await fetch(
+            "/api/league/leaderboard"
+        );
+
+        const users =
+        await response.json();
+
+        const leaderboard =
+        document.getElementById(
+            "leaderboard"
+        );
+
+        leaderboard.innerHTML = "";
+
+        users.forEach(
+            (user,index)=>{
+
+                const div =
+                document.createElement(
+                    "div"
+                );
+
+                div.className =
+                "user1";
+
+                div.textContent =
+                "#" +
+                (index + 1) +
+                " - " +
+                user.name +
+                " (" +
+                user.weeklyLeague.xp +
+                " XP)";
+
+                leaderboard.appendChild(
+                    div
+                );
+
+            }
+        );
+
+    }
+
+    catch(err){
+
+        console.log(err);
+
+    }
+
+}
+
+chargerLigue();
+chargerTop3();
+chargerLeaderboard();
+
+//acces au quiz
+ async function verifierAccesQuiz() {
+
+    const token = localStorage.getItem("token");
+
+    // Si pas connecté → rediriger vers la connexion
+    if (!token) {
+        window.location.href = "register.html";
+        return;
+    }
+
+    try {
+
+        const response = await fetch("/api/quiz/check", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (!data.canPlay) {
+
+            // ✅ Désactiver le bouton proprement
+            // sans effacer toute la page comme avant
+            const btnJouer = document.querySelector(".banniere-semaine button");
+            if (btnJouer) {
+                btnJouer.disabled = true;
+                btnJouer.style.opacity = "0.5";
+                btnJouer.style.cursor = "not-allowed";
+                btnJouer.innerHTML = "⏳ Déjà joué aujourd'hui";
+            }
+
+            // Afficher un message sous la bannière
+            const msg = document.createElement("p");
+            msg.textContent = "Tu as déjà joué aujourd'hui. Reviens demain pour gagner plus de XP ! 🔥";
+            msg.style.cssText = `
+                color: #ff9800;
+                font-size: 13px;
+                text-align: center;
+                margin-top: 8px;
+                opacity: 0.9;
+            `;
+            document.querySelector(".banniere-semaine").appendChild(msg);
+
+        }
+
+    } catch (err) {
+        console.log("❌ Erreur vérification quiz :", err);
+    }
+
+}
+
+// Appeler dès que la page se charge
+verifierAccesQuiz();
+
+verifierAccesQuiz()
+.then((autorise) => {
+
+    if (autorise) {
+
+        afficherQuestion();
+
+    }
+
+});
+// ============================================================
+// COUNTDOWN — temps restant avant la réinitialisation du vendredi
+// La ligue dure du lundi au vendredi (5 jours)
+// Réinitialisation chaque vendredi à 23h59
+// ============================================================
+
+function calculerCountdown() {
+
+    const maintenant = new Date();
+
+    // Trouver le prochain vendredi à 23h59
+    const finDeSemaine = new Date((2026, 6, 15, 18, 59, 59));
+
+    // getDay() retourne : 0=dimanche, 1=lundi, 2=mardi, 3=mercredi,
+    //                     4=jeudi, 5=vendredi, 6=samedi
+    const jourActuel = maintenant.getDay();
+
+    // Calculer combien de jours jusqu'au vendredi
+    let joursJusquauVendredi;
+
+    if (jourActuel === 5) {
+        // On est vendredi → fin de semaine ce soir
+        joursJusquauVendredi = 0;
+    } else if (jourActuel === 6) {
+        // On est samedi → prochain vendredi dans 6 jours
+        joursJusquauVendredi = 6;
+    } else if (jourActuel === 0) {
+        // On est dimanche → prochain vendredi dans 5 jours
+        joursJusquauVendredi = 5;
+    } else {
+        // Lundi(1) → 4 jours | Mardi(2) → 3 jours | etc.
+        joursJusquauVendredi = 5 - jourActuel;
+    }
+
+    // Définir la date de fin : vendredi à 23h59m59s
+    finDeSemaine.setDate(maintenant.getDate() + joursJusquauVendredi);
+    finDeSemaine.setHours(23, 59, 59, 0);
+
+    // Calculer la différence entre maintenant et la fin
+    const diff = finDeSemaine - maintenant;
+    // diff = nombre de millisecondes restantes
+
+    if (diff <= 0) {
+        // La semaine est terminée
+        document.getElementById("countdown").textContent = "Réinitialisation en cours...";
+        return;
+    }
+
+    // Convertir les millisecondes en jours, heures, minutes, secondes
+    const jours    = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const heures   = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes  = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const secondes = Math.floor((diff % (1000 * 60)) / 1000);
+
+    // Afficher le résultat dans le HTML
+    // padStart(2, "0") = ajoute un zéro devant si le chiffre est < 10
+    // ex: 9 → "09"
+    if (jours > 0) {
+        document.getElementById("countdown").textContent =
+            `${jours}j ${String(heures).padStart(2,"0")}h ${String(minutes).padStart(2,"0")}m`;
+    } else {
+        document.getElementById("countdown").textContent =
+            `${String(heures).padStart(2,"0")}h ${String(minutes).padStart(2,"0")}m ${String(secondes).padStart(2,"0")}s`;
+    }
+
+}
+
+// Calculer immédiatement au chargement
+calculerCountdown();
+
+// Recalculer toutes les secondes avec setInterval
+// setInterval = répète la fonction toutes les 1000ms (1 seconde)
+setInterval(calculerCountdown, 1000);
+
+</script>
+    
+</body>
+</html>

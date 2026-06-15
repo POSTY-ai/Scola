@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="../css/project.css">
+    <title>Modifier mon profil — Scola</title>
+    <style>
+
+        .modifier-container {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 0 20px 60px;
+        }
+
+        /* ====================================================
+           BOUTON RETOUR
+           ==================================================== */
+        .btn-retour {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.6);
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 24px;
+            background: none;
+            border: none;
+            padding: 0;
+            transition: color 0.2s;
+        }
+
+        .btn-retour:hover {
+            color: #ffffff;
+        }
+
+        /* ====================================================
+           AVATAR MODIFIABLE
+           ==================================================== */
+        .avatar-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        /* Cercle principal avec initiales ou photo */
+        .avatar-cercle {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffffff;
+            overflow: hidden;
+            /* overflow:hidden pour que la photo soit bien ronde */
+        }
+
+        .avatar-cercle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* object-fit:cover = remplit le cercle sans déformer l'image */
+        }
+
+        /* Overlay "Modifier" au survol */
+        .avatar-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: rgba(0,0,0,0.55);
+            border-radius: 0 0 50px 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: #ffffff;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .avatar-wrapper:hover .avatar-overlay {
+            opacity: 1;
+        }
+
+        /* Input file caché — déclenché par le clic sur l'avatar */
+        #input-photo {
+            display: none;
+        }
+
+        .avatar-hint {
+            font-size: 13px;
+            color: rgba(255,255,255,0.4);
+        }
+
+        /* ====================================================
+           SECTIONS DE FORMULAIRE
+           ==================================================== */
+        .modifier-section {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 22px 20px;
+            margin-bottom: 14px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-titre {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 16px;
+        }
+
+        /* ====================================================
+           CHAMPS DE SAISIE
+           ==================================================== */
+        .champ-groupe {
+            margin-bottom: 16px;
+        }
+
+        .champ-groupe:last-child {
+            margin-bottom: 0;
+        }
+
+        .champ-label {
+            display: block;
+            font-size: 13px;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 8px;
+        }
+
+        .champ-input {
+            width: 100%;
+            padding: 13px 16px;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 15px;
+            box-sizing: border-box;
+            transition: border-color 0.2s, background 0.2s;
+            font-family: inherit;
+        }
+
+        .champ-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .champ-input::placeholder {
+            color: rgba(255,255,255,0.25);
+        }
+
+        /* Wrapper pour input mot de passe + icône œil */
+        .input-password-wrap {
+            position: relative;
+        }
+
+        .input-password-wrap .champ-input {
+            padding-right: 46px;
+            /* padding à droite pour ne pas cacher le texte sous l'icône */
+        }
+
+        /* Bouton œil pour afficher/cacher le mot de passe */
+        .toggle-mdp {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.4);
+            cursor: pointer;
+            font-size: 15px;
+            padding: 0;
+            transition: color 0.2s;
+        }
+
+        .toggle-mdp:hover {
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* Indicateur de force du mot de passe */
+        .force-mdp {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+        }
+
+        .force-barre {
+            flex: 1;
+            height: 4px;
+            border-radius: 99px;
+            background: rgba(255,255,255,0.1);
+            transition: background 0.3s;
+        }
+
+        /* Couleurs selon la force */
+        .force-barre.faible   { background: #ff4757; }
+        .force-barre.moyen    { background: #ffa502; }
+        .force-barre.fort     { background: #2ed573; }
+
+        .force-texte {
+            font-size: 12px;
+            color: rgba(255,255,255,0.4);
+            margin-top: 6px;
+        }
+
+        /* ====================================================
+           MESSAGES DE RETOUR (succès / erreur)
+           ==================================================== */
+        .message {
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 14px;
+            display: none;
+            /* display:none = caché par défaut, montré après soumission */
+        }
+
+        .message.succes {
+            background: rgba(46,213,115,0.15);
+            border: 1px solid #2ed573;
+            color: #2ed573;
+        }
+
+        .message.erreur {
+            background: rgba(255,71,87,0.15);
+            border: 1px solid #ff4757;
+            color: #ff4757;
+        }
+
+        /* ====================================================
+           BOUTONS DE SAUVEGARDE
+           ==================================================== */
+        .btn-sauvegarder {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+            margin-top: 4px;
+        }
+
+        .btn-sauvegarder:hover {
+            transform: translateY(-2px);
+        }
+
+        /* État chargement du bouton */
+        .btn-sauvegarder:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ====================================================
+           ZONE DANGER — supprimer le compte
+           ==================================================== */
+        .zone-danger {
+            background: rgba(255,71,87,0.05);
+            border: 1px solid rgba(255,71,87,0.2);
+            border-radius: 16px;
+            padding: 22px 20px;
+            margin-bottom: 14px;
+        }
+
+        .zone-danger .section-titre {
+            color: rgba(255,71,87,0.7);
+        }
+
+        .zone-danger p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .btn-supprimer {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            border: 1px solid rgba(255,71,87,0.4);
+            border-radius: 12px;
+            color: #ff4757;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-supprimer:hover {
+            background: rgba(255,71,87,0.1);
+        }
+
+        /* ====================================================
+           MODAL DE CONFIRMATION SUPPRESSION
+           ==================================================== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.75);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-contenu {
+            background: #1a1a2e;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 35px 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .modal-emoji { font-size: 48px; margin-bottom: 16px; }
+        .modal-titre { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+        .modal-texte { font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 24px; line-height: 1.5; }
+
+        .modal-boutons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-annuler {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-annuler:hover { background: rgba(255,255,255,0.1); }
+
+        .btn-confirmer-suppression {
+            flex: 1;
+            padding: 12px;
+            background: #ff4757;
+            border: none;
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-confirmer-suppression:hover { background: #ff3344; }
+
+    </style>
+</head>
+<body>
+
+    <div class="modifier-container">
+
+        <!-- Bouton retour vers le profil -->
+        <button class="btn-retour" onclick="window.location.href='profile.html'">
+            <i class="fa-solid fa-arrow-left"></i>
+            Retour au profil
+        </button>
+
+        <h2 style="font-size:22px; font-weight:700; margin-bottom:24px;">
+            Modifier mon profil
+        </h2>
+
+        <!-- Message global succès / erreur -->
+        <div class="message" id="message-global"></div>
+
+        <!-- ================================================ -->
+        <!-- PHOTO DE PROFIL                                  -->
+        <!-- L'utilisateur clique sur l'avatar pour choisir  -->
+        <!-- une image depuis son appareil                    -->
+        <!-- ================================================ -->
+        <div class="avatar-section">
+            <div class="avatar-wrapper" onclick="document.getElementById('input-photo').click()">
+                <div class="avatar-cercle" id="avatar-cercle">?</div>
+                <div class="avatar-overlay">
+                    <i class="fa-solid fa-camera"></i>&nbsp; Modifier
+                </div>
+            </div>
+            <!-- Input file caché — s'ouvre quand on clique sur l'avatar -->
+            <input type="file" id="input-photo" accept="image/*" onchange="previsualiserPhoto(event)">
+            <span class="avatar-hint">Clique sur l'avatar pour changer la photo</span>
+        </div>
+
+        <!-- ================================================ -->
+        <!-- SECTION 1 — INFORMATIONS PERSONNELLES           -->
+        <!-- ================================================ -->
+        <div class="modifier-section">
+            <div class="section-titre">Informations personnelles</div>
+
+            <div class="champ-groupe">
+                <label class="champ-label" for="input-nom">Nom complet</label>
+                <input
+                    type="text"
+                    id="input-nom"
+                    class="champ-input"
+                    placeholder="Ton nom complet"
+                >
+            </div>
+
+            <div class="champ-groupe">
+                <label class="champ-label" for="input-email">Adresse email</label>
+                <input
+                    type="email"
+                    id="input-email"
+                    class="champ-input"
+                    placeholder="ton@email.com"
+                >
+            </div>
+
+            <div class="message" id="msg-infos"></div>
+
+            <button class="btn-sauvegarder" id="btn-infos" onclick="sauvegarderInfos()">
+                <i class="fa-solid fa-floppy-disk"></i>&nbsp; Sauvegarder les informations
+            </button>
+
+        </div>
+
+        <!-- ================================================ -->
+        <!-- SECTION 2 — CHANGER LE MOT DE PASSE             -->
+        <!-- L'ancien mot de passe est vérifié avant d'accept -->
+        <!-- le nouveau                                        -->
+        <!-- ================================================ -->
+        <div class="modifier-section">
+            <div class="section-titre">Changer le mot de passe</div>
+
+            <!-- Ancien mot de passe -->
+            <div class="champ-groupe">
+                <label class="champ-label" for="input-ancien-mdp">Mot de passe actuel</label>
+                <div class="input-password-wrap">
+                    <input
+                        type="password"
+                        id="input-ancien-mdp"
+                        class="champ-input"
+                        placeholder="Ton mot de passe actuel"
+                    >
+                    <button class="toggle-mdp" onclick="toggleMdp('input-ancien-mdp', this)">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Nouveau mot de passe -->
+            <div class="champ-groupe">
+                <label class="champ-label" for="input-nouveau-mdp">Nouveau mot de passe</label>
+                <div class="input-password-wrap">
+                    <input
+                        type="password"
+                        id="input-nouveau-mdp"
+                        class="champ-input"
+                        placeholder="Minimum 8 caractères"
+                        oninput="verifierForceMdp(this.value)"
+                    >
+                    <button class="toggle-mdp" onclick="toggleMdp('input-nouveau-mdp', this)">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+                <!-- Indicateur de force du mot de passe -->
+                <div class="force-mdp">
+                    <div class="force-barre" id="force-1"></div>
+                    <div class="force-barre" id="force-2"></div>
+                    <div class="force-barre" id="force-3"></div>
+                    <div class="force-barre" id="force-4"></div>
+                </div>
+                <div class="force-texte" id="force-texte">Entrez un mot de passe</div>
+            </div>
+
+            <!-- Confirmer le nouveau mot de passe -->
+            <div class="champ-groupe">
+                <label class="champ-label" for="input-confirmer-mdp">Confirmer le nouveau mot de passe</label>
+                <div class="input-password-wrap">
+                    <input
+                        type="password"
+                        id="input-confirmer-mdp"
+                        class="champ-input"
+                        placeholder="Répète le nouveau mot de passe"
+                    >
+                    <button class="toggle-mdp" onclick="toggleMdp('input-confirmer-mdp', this)">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="message" id="msg-mdp"></div>
+
+            <button class="btn-sauvegarder" id="btn-mdp" onclick="changerMotDePasse()">
+                <i class="fa-solid fa-lock"></i>&nbsp; Changer le mot de passe
+            </button>
+
+        </div>
+
+        <!-- ================================================ -->
+        <!-- ZONE DANGER — supprimer le compte                -->
+        <!-- ================================================ -->
+        <div class="zone-danger">
+            <div class="section-titre">Zone de danger</div>
+            <p>
+                La suppression de ton compte est <strong>irréversible</strong>.
+                Toutes tes données (XP, ligue, badges) seront définitivement perdues.
+            </p>
+            <button class="btn-supprimer" onclick="ouvrirModalSuppression()">
+                <i class="fa-solid fa-trash"></i>&nbsp; Supprimer mon compte
+            </button>
+        </div>
+
+    </div>
+
+    <!-- ================================================ -->
+    <!-- MODAL DE CONFIRMATION — supprimer le compte      -->
+    <!-- ================================================ -->
+    <div class="modal-overlay" id="modal-suppression">
+        <div class="modal-contenu">
+            <div class="modal-emoji">⚠️</div>
+            <div class="modal-titre">Supprimer le compte ?</div>
+            <div class="modal-texte">
+                Cette action est <strong>irréversible</strong>.<br>
+                Tous tes XP, badges et classements seront perdus pour toujours.
+            </div>
+            <div class="modal-boutons">
+                <button class="btn-annuler" onclick="fermerModalSuppression()">
+                    Annuler
+                </button>
+                <button class="btn-confirmer-suppression" onclick="supprimerCompte()">
+                    Oui, supprimer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        // ============================================================
+        // VÉRIFICATION CONNEXION — redirige si pas connecté
+        // ============================================================
+        const token = localStorage.getItem("token");
+        if (!token) window.location.href = "register.html";
+
+        // ============================================================
+        // CHARGER LES DONNÉES ACTUELLES
+        // On pré-remplit les champs avec les infos existantes
+        // ============================================================
+        async function chargerDonnees() {
+
+            try {
+
+                const response = await fetch("/api/profile", {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                const data = await response.json();
+
+                // Pré-remplir les champs avec les valeurs actuelles
+                document.getElementById("input-nom").value   = data.name  || "";
+                document.getElementById("input-email").value = data.email || "";
+
+                // Générer l'avatar avec les initiales
+                const initiales = data.name
+                    .split(" ")
+                    .map(mot => mot[0])
+                    .join("")
+                    .toUpperCase()
+                    .slice(0, 2);
+
+                document.getElementById("avatar-cercle").textContent = initiales;
+
+            } catch (err) {
+                console.log("❌ Erreur chargement :", err);
+            }
+
+        }
+
+        // ============================================================
+        // PRÉVISUALISER LA PHOTO
+        // Quand l'utilisateur choisit une image, elle s'affiche
+        // immédiatement dans l'avatar avant même d'être sauvegardée
+        // ============================================================
+        function previsualiserPhoto(event) {
+
+            const fichier = event.target.files[0];
+            // event.target.files[0] = le premier fichier sélectionné
+
+            if (!fichier) return;
+
+            // Vérifier que c'est bien une image
+            if (!fichier.type.startsWith("image/")) {
+                afficherMessage("msg-infos", "erreur", "Le fichier doit être une image.");
+                return;
+            }
+
+            // Vérifier la taille — max 2MB
+            // 2 * 1024 * 1024 = 2 097 152 octets = 2MB
+            if (fichier.size > 2 * 1024 * 1024) {
+                afficherMessage("msg-infos", "erreur", "L'image ne doit pas dépasser 2MB.");
+                return;
+            }
+
+            // FileReader = outil JS pour lire un fichier local
+            const lecteur = new FileReader();
+            lecteur.onload = (e) => {
+                // e.target.result = l'image convertie en base64 (texte)
+                const avatar = document.getElementById("avatar-cercle");
+                avatar.innerHTML = `<img src="${e.target.result}" alt="Photo de profil">`;
+            };
+            lecteur.readAsDataURL(fichier);
+            // readAsDataURL = lit le fichier et le convertit en URL base64
+
+        }
+
+        // ============================================================
+        // SAUVEGARDER LES INFORMATIONS — nom + email
+        // Envoie une requête PUT vers /api/profile
+        // PUT = méthode HTTP pour modifier une ressource existante
+        // ============================================================
+        async function sauvegarderInfos() {
+
+            const nom   = document.getElementById("input-nom").value.trim();
+            const email = document.getElementById("input-email").value.trim();
+
+            if (!nom || !email) {
+                afficherMessage("msg-infos", "erreur", "Le nom et l'email sont obligatoires.");
+                return;
+            }
+
+            // Validation basique de l'email avec une regex
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                afficherMessage("msg-infos", "erreur", "Adresse email invalide.");
+                return;
+            }
+
+            const btn = document.getElementById("btn-infos");
+            btn.disabled = true;
+            btn.textContent = "Sauvegarde en cours...";
+
+            try {
+
+                const response = await fetch("/api/profile", {
+                    method: "PUT",
+                    // PUT = modifier une ressource existante
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ name: nom, email })
+                    // JSON.stringify = convertit l'objet JS en texte JSON
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    afficherMessage("msg-infos", "succes", "✅ Informations mises à jour !");
+                    // Mettre à jour l'avatar avec les nouvelles initiales
+                    const initiales = nom.split(" ").map(m => m[0]).join("").toUpperCase().slice(0, 2);
+                    const avatar = document.getElementById("avatar-cercle");
+                    if (!avatar.querySelector("img")) {
+                        avatar.textContent = initiales;
+                    }
+                } else {
+                    afficherMessage("msg-infos", "erreur", data.message || "Erreur lors de la mise à jour.");
+                }
+
+            } catch (err) {
+                afficherMessage("msg-infos", "erreur", "Erreur réseau. Réessaie.");
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i>&nbsp; Sauvegarder les informations';
+
+        }
+
+        // ============================================================
+        // AFFICHER / CACHER LE MOT DE PASSE
+        // Bascule entre type="password" et type="text"
+        // ============================================================
+        function toggleMdp(inputId, bouton) {
+
+            const input = document.getElementById(inputId);
+            const icone = bouton.querySelector("i");
+
+            if (input.type === "password") {
+                input.type = "text";
+                // On change l'icône pour indiquer que le mdp est visible
+                icone.className = "fa-solid fa-eye-slash";
+            } else {
+                input.type = "password";
+                icone.className = "fa-solid fa-eye";
+            }
+
+        }
+
+        // ============================================================
+        // VÉRIFIER LA FORCE DU MOT DE PASSE
+        // Colore les barres selon la robustesse du mot de passe
+        // ============================================================
+        function verifierForceMdp(mdp) {
+
+            let force = 0;
+
+            // Chaque condition ajoute 1 point de force
+            if (mdp.length >= 8)        force++; // longueur suffisante
+            if (/[A-Z]/.test(mdp))      force++; // contient une majuscule
+            if (/[0-9]/.test(mdp))      force++; // contient un chiffre
+            if (/[^a-zA-Z0-9]/.test(mdp)) force++; // contient un caractère spécial
+
+            const barres = ["force-1","force-2","force-3","force-4"];
+            const textes = ["", "Faible", "Moyen", "Bon", "Très fort"];
+            const classes = ["", "faible", "faible", "moyen", "fort"];
+
+            // Réinitialiser toutes les barres
+            barres.forEach((id, i) => {
+                const barre = document.getElementById(id);
+                barre.className = "force-barre";
+                // Colorier les barres jusqu'au niveau de force
+                if (i < force) barre.classList.add(classes[force]);
+            });
+
+            document.getElementById("force-texte").textContent = textes[force] || "Entrez un mot de passe";
+
+        }
+
+        // ============================================================
+        // CHANGER LE MOT DE PASSE
+        // Vérifie l'ancien, valide le nouveau, envoie au serveur
+        // ============================================================
+        async function changerMotDePasse() {
+
+            const ancienMdp    = document.getElementById("input-ancien-mdp").value;
+            const nouveauMdp   = document.getElementById("input-nouveau-mdp").value;
+            const confirmerMdp = document.getElementById("input-confirmer-mdp").value;
+
+            // Validations côté client avant d'envoyer au serveur
+            if (!ancienMdp || !nouveauMdp || !confirmerMdp) {
+                afficherMessage("msg-mdp", "erreur", "Tous les champs sont obligatoires.");
+                return;
+            }
+
+            if (nouveauMdp !== confirmerMdp) {
+                afficherMessage("msg-mdp", "erreur", "Les deux nouveaux mots de passe ne correspondent pas.");
+                return;
+            }
+
+            // Vérification des règles de sécurité
+            const mdpRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+            if (!mdpRegex.test(nouveauMdp)) {
+                afficherMessage("msg-mdp", "erreur", "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre.");
+                return;
+            }
+
+            const btn = document.getElementById("btn-mdp");
+            btn.disabled = true;
+            btn.textContent = "Vérification en cours...";
+
+            try {
+
+                const response = await fetch("/api/profile/password", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        ancienMotDePasse: ancienMdp,
+                        nouveauMotDePasse: nouveauMdp
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    afficherMessage("msg-mdp", "succes", "✅ Mot de passe changé avec succès !");
+                    // Vider les champs après succès
+                    document.getElementById("input-ancien-mdp").value   = "";
+                    document.getElementById("input-nouveau-mdp").value  = "";
+                    document.getElementById("input-confirmer-mdp").value = "";
+                } else {
+                    afficherMessage("msg-mdp", "erreur", data.message || "Erreur lors du changement.");
+                }
+
+            } catch (err) {
+                afficherMessage("msg-mdp", "erreur", "Erreur réseau. Réessaie.");
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-lock"></i>&nbsp; Changer le mot de passe';
+
+        }
+
+        // ============================================================
+        // MODAL SUPPRESSION — ouvrir / fermer
+        // ============================================================
+        function ouvrirModalSuppression() {
+            document.getElementById("modal-suppression").style.display = "flex";
+        }
+
+        function fermerModalSuppression() {
+            document.getElementById("modal-suppression").style.display = "none";
+        }
+
+        // Fermer la modal en cliquant sur le fond sombre
+        window.addEventListener("click", (e) => {
+            const modal = document.getElementById("modal-suppression");
+            if (e.target === modal) fermerModalSuppression();
+        });
+
+        // ============================================================
+        // SUPPRIMER LE COMPTE
+        // Envoie une requête DELETE vers /api/profile
+        // DELETE = méthode HTTP pour supprimer une ressource
+        // ============================================================
+        async function supprimerCompte() {
+
+            try {
+
+                const response = await fetch("/api/profile", {
+                    method: "DELETE",
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    // Supprimer le token local et rediriger vers l'accueil
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("user");
+                    window.location.href = "/";
+                } else {
+                    fermerModalSuppression();
+                    afficherMessage("msg-infos", "erreur", "Erreur lors de la suppression.");
+                }
+
+            } catch (err) {
+                fermerModalSuppression();
+                afficherMessage("msg-infos", "erreur", "Erreur réseau. Réessaie.");
+            }
+
+        }
+
+        // ============================================================
+        // AFFICHER UN MESSAGE — succès ou erreur sous un formulaire
+        // idMessage = l'id de la div message à afficher
+        // type = "succes" ou "erreur"
+        // texte = le message à afficher
+        // ============================================================
+        function afficherMessage(idMessage, type, texte) {
+
+            const el = document.getElementById(idMessage);
+            el.textContent = texte;
+            el.className = `message ${type}`;
+            el.style.display = "block";
+
+            // Cacher automatiquement après 5 secondes
+            setTimeout(() => {
+                el.style.display = "none";
+            }, 5000);
+            // setTimeout = exécute la fonction après 5000ms (5 secondes)
+
+        }
+
+        // ============================================================
+        // LANCEMENT
+        // ============================================================
+        chargerDonnees();
+
+    </script>
+
+</body>
+</html>

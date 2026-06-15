@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <title>Quel événement suis-je ? — Scola</title>
+    <style>
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* ====================================================
+           HEADER
+           ==================================================== */
+        .quiz-header {
+            background: rgba(255,255,255,0.04);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            padding: 16px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 860px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-retour {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 20px;
+            padding: 8px 16px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-retour:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.13);
+        }
+
+        .quiz-title {
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            font-weight: 700;
+            text-align: center;
+            flex: 1;
+            color: #ffffff;
+        }
+
+        .progress-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+            min-width: 160px;
+        }
+
+        .progress-text {
+            font-size: 13px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .progress-bar {
+            width: 160px;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #a78bfa, #7c3aed);
+            border-radius: 99px;
+            transition: width 0.5s ease;
+            width: 10%;
+        }
+
+        /* ====================================================
+           ZONE PRINCIPALE
+           ==================================================== */
+        .quiz-main {
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 36px 20px 60px;
+        }
+
+        /* ====================================================
+           CARTE DE JEU
+           ==================================================== */
+        .quiz-card,
+        .results-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(16px);
+            border-radius: 24px;
+            padding: 36px 32px;
+            border: 1px solid rgba(255,255,255,0.09);
+            box-shadow: 0 24px 48px rgba(0,0,0,0.3);
+            animation: entree 0.4s ease;
+        }
+
+        @keyframes entree {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .hidden { display: none !important; }
+
+        /* Numéro de question */
+        .question-number {
+            font-size: 12px;
+            font-weight: 600;
+            color: #a78bfa;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 16px;
+        }
+
+        /* ====================================================
+           INDICES — affichés un par un
+           ==================================================== */
+        .indices-container {
+            margin-bottom: 28px;
+        }
+
+        .indice-titre {
+            font-size: 13px;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        /* Liste des indices dévoilés */
+        .indices-liste {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .indice-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 13px 16px;
+            background: rgba(167,139,250,0.08);
+            border: 1px solid rgba(167,139,250,0.2);
+            border-radius: 12px;
+            font-size: 15px;
+            line-height: 1.5;
+            /* Animation d'apparition de chaque indice */
+            animation: apparitionIndice 0.4s ease;
+        }
+
+        @keyframes apparitionIndice {
+            from { opacity: 0; transform: translateX(-10px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        .indice-numero {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(167,139,250,0.25);
+            color: #a78bfa;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* Bouton pour révéler l'indice suivant */
+        .btn-indice-suivant {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 11px;
+            background: rgba(167,139,250,0.08);
+            border: 1px dashed rgba(167,139,250,0.3);
+            border-radius: 12px;
+            color: #a78bfa;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-indice-suivant:hover {
+            background: rgba(167,139,250,0.15);
+            border-color: rgba(167,139,250,0.5);
+        }
+
+        .btn-indice-suivant:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* ====================================================
+           RÉPONSES (4 choix)
+           ==================================================== */
+        .answers-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .answer-option {
+            background: rgba(255,255,255,0.06);
+            border: 1.5px solid rgba(255,255,255,0.12);
+            border-radius: 14px;
+            padding: 16px 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .answer-option::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+            transition: left 0.4s ease;
+        }
+
+        .answer-option:hover::before { left: 100%; }
+
+        .answer-option:hover {
+            background: rgba(167,139,250,0.12);
+            border-color: rgba(167,139,250,0.4);
+            transform: translateY(-2px);
+        }
+
+        .answer-letter {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+            flex-shrink: 0;
+            transition: background 0.2s;
+        }
+
+        .answer-text {
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.3;
+        }
+
+        /* ✅ Bonne réponse */
+        .answer-option.correct {
+            background: rgba(46,213,115,0.18);
+            border-color: #2ed573;
+            animation: popCorrect 0.4s ease;
+        }
+
+        .answer-option.correct .answer-letter {
+            background: #2ed573;
+            color: #1a1a2e;
+        }
+
+        /* ❌ Mauvaise réponse */
+        .answer-option.incorrect {
+            background: rgba(255,71,87,0.18);
+            border-color: #ff4757;
+            animation: shakeX 0.4s ease;
+        }
+
+        .answer-option.incorrect .answer-letter {
+            background: #ff4757;
+            color: #fff;
+        }
+
+        .answer-option:disabled,
+        .answer-option.disabled { cursor: not-allowed; pointer-events: none; }
+
+        @keyframes popCorrect {
+            0%,100% { transform: scale(1); }
+            40%     { transform: scale(1.03); }
+        }
+
+        @keyframes shakeX {
+            0%,100% { transform: translateX(0); }
+            25%     { transform: translateX(-6px); }
+            75%     { transform: translateX(6px); }
+        }
+
+        /* ====================================================
+           FEEDBACK
+           ==================================================== */
+        .feedback {
+            display: none;
+            padding: 14px 18px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 18px;
+            animation: fadeIn 0.3s ease;
+            line-height: 1.5;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        .feedback.correct {
+            background: rgba(46,213,115,0.12);
+            border: 1px solid rgba(46,213,115,0.35);
+            color: #81f5b0;
+        }
+
+        .feedback.incorrect {
+            background: rgba(255,71,87,0.12);
+            border: 1px solid rgba(255,71,87,0.35);
+            color: #ff8fa3;
+        }
+
+        /* ====================================================
+           BOUTONS NAVIGATION
+           ==================================================== */
+        .quiz-controls {
+            display: flex;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .btn {
+            padding: 13px 26px;
+            border: none;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            min-width: 130px;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #a78bfa, #7c3aed);
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(167,139,250,0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(167,139,250,0.45);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.07);
+            color: #ffffff;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: rgba(255,255,255,0.13);
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* ====================================================
+           RÉSULTATS
+           ==================================================== */
+        .results-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .results-emoji {
+            font-size: 56px;
+            display: block;
+            margin-bottom: 14px;
+            animation: bounceIn 0.5s ease;
+        }
+
+        @keyframes bounceIn {
+            0%   { transform: scale(0.5); opacity: 0; }
+            70%  { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .results-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .score-display {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 28px;
+        }
+
+        .score-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: conic-gradient(#a78bfa 0deg, #a78bfa 0deg, rgba(255,255,255,0.1) 0deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: background 0.8s ease;
+        }
+
+        .score-circle::before {
+            content: '';
+            position: absolute;
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: #16213e;
+        }
+
+        .score-text {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .score-number {
+            display: block;
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #a78bfa;
+        }
+
+        .score-total {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .score-details {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .score-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 16px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 12px;
+            font-size: 15px;
+        }
+
+        .score-item span { flex: 1; }
+        .score-item.correct   i { color: #2ed573; font-size: 18px; }
+        .score-item.incorrect i { color: #ff4757; font-size: 18px; }
+        .score-item.percentage i { color: #a78bfa; font-size: 18px; }
+
+        .results-message {
+            text-align: center;
+            font-size: 15px;
+            padding: 16px 20px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 12px;
+            border-left: 4px solid #a78bfa;
+            margin-bottom: 28px;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .results-actions {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ====================================================
+           RESPONSIVE
+           ==================================================== */
+        @media (max-width: 640px) {
+            .header-content { flex-direction: column; align-items: flex-start; }
+            .progress-container { align-items: flex-start; width: 100%; }
+            .progress-bar { width: 100%; }
+            .quiz-card, .results-card { padding: 24px 16px; }
+            .answers-container { grid-template-columns: 1fr; }
+            .quiz-controls { flex-direction: column-reverse; }
+            .btn { width: 100%; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="quiz-header">
+        <div class="header-content">
+            
+            <h1 class="quiz-title">
+                🤔 Quel événement suis-je ?
+            </h1>
+            <div class="progress-container">
+                <span class="progress-text" id="progressText">Question 1 / 10</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width:10%"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="quiz-main">
+
+        <!-- CARTE DE JEU -->
+        <div class="quiz-card" id="quizCard">
+
+            <div class="question-number" id="questionNumber">Question 1</div>
+
+            <!-- Indices dévoilés progressivement -->
+            <div class="indices-container">
+                <div class="indice-titre">Indices dévoilés :</div>
+                <div class="indices-liste" id="indicesListe"></div>
+                <button class="btn-indice-suivant" id="btnIndiceSuivant" onclick="devoilerIndice()">
+                    <i class="fa-solid fa-eye"></i>
+                    Voir l'indice suivant
+                </button>
+            </div>
+
+            <!-- 4 choix de réponse -->
+            <div class="answers-container" id="answersContainer"></div>
+
+            <!-- Feedback après réponse -->
+            <div class="feedback" id="feedback"></div>
+
+            <!-- Navigation -->
+            <div class="quiz-controls">
+                <button class="btn btn-secondary" id="prevBtn" disabled onclick="questionPrecedente()">
+                    <i class="fa-solid fa-chevron-left"></i>
+                    Précédent
+                </button>
+                <button class="btn btn-primary" id="nextBtn" disabled onclick="questionSuivante()">
+                    Suivant
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+
+        </div>
+
+        <!-- RÉSULTATS -->
+        <div class="results-card hidden" id="resultsCard">
+
+            <div class="results-header">
+                <span class="results-emoji" id="resultsEmoji">🏆</span>
+                <h2 class="results-title" id="resultsTitle">Quiz terminé !</h2>
+            </div>
+
+            <div class="score-display">
+                <div class="score-circle" id="scoreCircle">
+                    <div class="score-text">
+                        <span class="score-number" id="scoreNumber">0</span>
+                        <span class="score-total" id="scoreTotal">/ 10</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="score-details">
+                <div class="score-item correct">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>Bonnes réponses</span>
+                    <strong id="correctCount">0</strong>
+                </div>
+                <div class="score-item incorrect">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                    <span>Mauvaises réponses</span>
+                    <strong id="incorrectCount">0</strong>
+                </div>
+                <div class="score-item percentage">
+                    <i class="fa-solid fa-percent"></i>
+                    <span>Score</span>
+                    <strong id="percentageScore">0%</strong>
+                </div>
+            </div>
+
+            <div class="results-message" id="resultsMessage"></div>
+
+            <div class="results-actions">
+                <button class="btn btn-primary" id="restartBtn" onclick="redemarrer()">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    Recommencer
+                </button>
+                <a href="jeuxeducatifs.html" class="btn btn-secondary">
+                    <i class="fa-solid fa-gamepad"></i>
+                    Autres jeux
+                </a>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+
+        // ============================================================
+        // BANQUE DE QUESTIONS
+        // Chaque question a plusieurs indices dévoilés un par un
+        // Plus l'élève attend d'indices, moins c'est difficile
+        // indices = tableau de phrases du plus vague au plus précis
+        // ============================================================
+
+        const quizData = [
+            {
+                indices: [
+                    "J'ai commencé aux États-Unis.",
+                    "J'ai provoqué la faillite de nombreuses banques.",
+                    "J'ai entraîné un chômage massif.",
+                    "J'ai plongé plusieurs pays dans une crise économique mondiale."
+                ],
+                answers: ["Première Guerre mondiale", "Plan Marshall", "Krach boursier de 1929", "Guerre froide"],
+                correct: 2
+            },
+            {
+                indices: [
+                    "Je suis un accord signé après la Première Guerre mondiale.",
+                    "J'ai imposé de lourdes sanctions à l'Allemagne.",
+                    "J'ai humilié l'Allemagne et limité son armée.",
+                    "De nombreux historiens pensent que j'ai contribué à la montée du nazisme."
+                ],
+                answers: ["OTAN", "Traité de Versailles", "Pacte de Varsovie", "SDN"],
+                correct: 1
+            },
+            {
+                indices: [
+                    "J'ai été créé pour préserver la paix mondiale.",
+                    "Je n'ai pas réussi à empêcher plusieurs tensions militaires.",
+                    "Mon échec a contribué à l'éclatement de la Seconde Guerre mondiale.",
+                    "J'ai été remplacé par l'ONU en 1945."
+                ],
+                answers: ["ONU", "FMI", "SDN", "Union Européenne"],
+                correct: 2
+            },
+            {
+                indices: [
+                    "Je suis une aide financière américaine.",
+                    "J'ai été proposé après la Seconde Guerre mondiale.",
+                    "Mon objectif était de reconstruire les économies européennes dévastées.",
+                    "J'ai aussi permis aux États-Unis de contenir l'influence soviétique en Europe."
+                ],
+                answers: ["Plan Marshall", "Guerre Froide", "OTAN", "New Deal"],
+                correct: 0
+            },
+            {
+                indices: [
+                    "Je suis né après la Seconde Guerre mondiale.",
+                    "J'oppose les États-Unis et l'Union soviétique.",
+                    "Je n'ai jamais donné lieu à un affrontement direct entre les deux superpuissances.",
+                    "Je me traduis par une course aux armements et une guerre idéologique."
+                ],
+                answers: ["Décolonisation", "Guerre de Corée", "Guerre froide", "Assassinat de Mussolini"],
+                correct: 2
+            },
+            {
+                indices: [
+                    "Je suis président d'Haïti de 1930 à 1941.",
+                    "J'ai négocié avec les États-Unis.",
+                    "Sous mon gouvernement, les Marines américains ont quitté le pays.",
+                    "Je suis associé à la fin de l'occupation américaine d'Haïti en 1934."
+                ],
+                answers: ["Dumarsais Estimé", "Sténio Vincent", "Paul Magloire", "Élie Lescot"],
+                correct: 1
+            },
+            {
+                indices: [
+                    "Je suis une organisation internationale fondée après 1945.",
+                    "Mon siège principal se trouve à New York.",
+                    "Je regroupe presque tous les pays du monde.",
+                    "Mon rôle est de maintenir la paix et la sécurité internationales."
+                ],
+                answers: ["SDN", "OTAN", "ONU", "Union Européenne"],
+                correct: 2
+            },
+            {
+                indices: [
+                    "Je représente trois pôles économiques dominants.",
+                    "Je regroupe les États-Unis, l'Union Européenne et le Japon.",
+                    "Je concentre la majorité des échanges commerciaux mondiaux.",
+                    "Je symbolise la domination économique des pays développés."
+                ],
+                answers: ["La Mondialisation", "L'ONU", "La Triade", "Le G7"],
+                correct: 2
+            },
+            {
+                indices: [
+                    "Je suis un phénomène qui relie les pays entre eux.",
+                    "Je touche les échanges économiques, culturels et technologiques.",
+                    "Je suis accéléré par Internet et le transport aérien.",
+                    "Je suis critiqué pour avoir accentué les inégalités entre pays riches et pauvres."
+                ],
+                answers: ["La Triade", "La Mondialisation", "Le Plan Marshall", "La Guerre Froide"],
+                correct: 1
+            },
+            {
+                indices: [
+                    "Je suis le massacre de milliers d'Haïtiens.",
+                    "Cela s'est passé en République Dominicaine.",
+                    "C'est un dictateur dominicain qui en a donné l'ordre.",
+                    "Rafael Trujillo a ordonné ce massacre en octobre 1937."
+                ],
+                answers: ["La Guerre des Cacos", "Le Massacre de 1937", "L'Occupation américaine", "La Révolution de 1946"],
+                correct: 1
+            }
+        ];
+
+        // ============================================================
+        // VARIABLES D'ÉTAT
+        // ============================================================
+
+        let indexQuestion   = 0;
+        let score           = 0;
+        let reponsesUser    = new Array(quizData.length).fill(null);
+        let indiceActuel    = 0;  // combien d'indices révélés pour la question en cours
+        let aRepondu        = false;
+
+        // ============================================================
+        // AFFICHER UNE QUESTION
+        // ============================================================
+
+        function afficherQuestion() {
+
+            aRepondu     = false;
+            indiceActuel = 0;
+
+            const q      = quizData[indexQuestion];
+            const total  = quizData.length;
+            const lettres = ['A', 'B', 'C', 'D'];
+
+            // Mettre à jour la progression
+            document.getElementById("questionNumber").textContent = `Question ${indexQuestion + 1}`;
+            document.getElementById("progressText").textContent   = `Question ${indexQuestion + 1} / ${total}`;
+            document.getElementById("progressFill").style.width   = `${((indexQuestion + 1) / total) * 100}%`;
+
+            // Réinitialiser les indices
+            document.getElementById("indicesListe").innerHTML = "";
+            document.getElementById("btnIndiceSuivant").disabled = false;
+            document.getElementById("btnIndiceSuivant").style.display = "flex";
+
+            // Afficher le premier indice automatiquement
+            devoilerIndice();
+
+            // Réinitialiser le feedback
+            const feedback = document.getElementById("feedback");
+            feedback.style.display = "none";
+            feedback.className     = "feedback";
+
+            // Générer les 4 boutons de réponse
+            const container = document.getElementById("answersContainer");
+            container.innerHTML = "";
+
+            q.answers.forEach((reponse, i) => {
+                const btn = document.createElement("div");
+                btn.className = "answer-option";
+                btn.innerHTML = `
+                    <div class="answer-letter">${lettres[i]}</div>
+                    <div class="answer-text">${reponse}</div>
+                `;
+                btn.onclick = () => selectionnerReponse(i, btn);
+                container.appendChild(btn);
+            });
+
+            // Restaurer la réponse précédente si elle existe
+            if (reponsesUser[indexQuestion] !== null) {
+                const btnsPrecedents = container.querySelectorAll(".answer-option");
+                const rep = reponsesUser[indexQuestion];
+                btnsPrecedents[rep].classList.add(rep === q.correct ? "correct" : "incorrect");
+                if (rep !== q.correct) btnsPrecedents[q.correct].classList.add("correct");
+                btnsPrecedents.forEach(b => b.style.pointerEvents = "none");
+                aRepondu = true;
+            }
+
+            // Boutons navigation
+            document.getElementById("prevBtn").disabled = indexQuestion === 0;
+            document.getElementById("nextBtn").disabled = reponsesUser[indexQuestion] === null;
+
+            const nextBtn = document.getElementById("nextBtn");
+            nextBtn.innerHTML = indexQuestion === total - 1
+                ? 'Terminer <i class="fa-solid fa-flag-checkered"></i>'
+                : 'Suivant <i class="fa-solid fa-chevron-right"></i>';
+
+            // Animation d'entrée
+            const carte = document.getElementById("quizCard");
+            carte.style.animation = "none";
+            carte.offsetHeight;
+            carte.style.animation = "entree 0.4s ease";
+
+        }
+
+        // ============================================================
+        // DÉVOILER UN INDICE
+        // Révèle le prochain indice de la liste
+        // ============================================================
+
+        function devoilerIndice() {
+
+            const q    = quizData[indexQuestion];
+            const liste = document.getElementById("indicesListe");
+            const btn   = document.getElementById("btnIndiceSuivant");
+
+            if (indiceActuel >= q.indices.length) return;
+
+            // Créer et ajouter l'indice à la liste
+            const item = document.createElement("div");
+            item.className = "indice-item";
+            item.innerHTML = `
+                <span class="indice-numero">${indiceActuel + 1}</span>
+                <span>${q.indices[indiceActuel]}</span>
+            `;
+            liste.appendChild(item);
+
+            indiceActuel++;
+
+            // Désactiver le bouton si tous les indices sont révélés
+            if (indiceActuel >= q.indices.length) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Tous les indices révélés';
+            } else {
+                btn.innerHTML = `<i class="fa-solid fa-eye"></i> Voir l'indice suivant (${indiceActuel}/${q.indices.length})`;
+            }
+
+        }
+
+        // ============================================================
+        // SÉLECTIONNER UNE RÉPONSE
+        // ============================================================
+
+        function selectionnerReponse(index, btnClique) {
+
+            if (aRepondu) return;
+            aRepondu = true;
+
+            const q          = quizData[indexQuestion];
+            const estCorrecte = index === q.correct;
+
+            // Enregistrer la réponse
+            reponsesUser[indexQuestion] = index;
+
+            // Désactiver tous les boutons
+            document.querySelectorAll(".answer-option").forEach(b => {
+                b.style.pointerEvents = "none";
+            });
+
+            // Colorer les boutons
+            btnClique.classList.add(estCorrecte ? "correct" : "incorrect");
+            if (!estCorrecte) {
+                document.querySelectorAll(".answer-option")[q.correct].classList.add("correct");
+            }
+
+            if (estCorrecte) score++;
+
+            // Afficher le feedback
+            const feedback = document.getElementById("feedback");
+            feedback.textContent = estCorrecte
+                ? "✅ Bonne réponse !"
+                : `❌ Mauvaise réponse. La bonne réponse était : ${q.answers[q.correct]}`;
+            feedback.className    = `feedback ${estCorrecte ? "correct" : "incorrect"}`;
+            feedback.style.display = "block";
+
+            // Activer le bouton suivant
+            document.getElementById("nextBtn").disabled = false;
+
+        }
+
+        // ============================================================
+        // NAVIGATION
+        // ============================================================
+
+        function questionSuivante() {
+            if (indexQuestion < quizData.length - 1) {
+                indexQuestion++;
+                afficherQuestion();
+            } else {
+                afficherResultats();
+            }
+        }
+
+        function questionPrecedente() {
+            if (indexQuestion > 0) {
+                indexQuestion--;
+                afficherQuestion();
+            }
+        }
+
+        // ============================================================
+        // AFFICHER LES RÉSULTATS
+        // ============================================================
+
+        function afficherResultats() {
+
+            document.getElementById("quizCard").classList.add("hidden");
+            document.getElementById("resultsCard").classList.remove("hidden");
+
+            const total = quizData.length;
+            const pct   = Math.round((score / total) * 100);
+            const mauvaises = total - score;
+
+            let emoji, message;
+            if (pct === 100) {
+                emoji   = "🏆";
+                message = "Parfait ! Tu as trouvé tous les événements. Tu es prêt(e) pour le Bac !";
+            } else if (pct >= 70) {
+                emoji   = "🎉";
+                message = "Très bien ! Tu as de solides connaissances historiques.";
+            } else if (pct >= 50) {
+                emoji   = "👍";
+                message = "Pas mal ! Revois les événements que tu n'as pas reconnus.";
+            } else {
+                emoji   = "📚";
+                message = "Continue à réviser ! Relis tes cours et retente le quiz.";
+            }
+
+            // Mettre à jour le cercle de score
+            const angle = (score / total) * 360;
+            document.getElementById("scoreCircle").style.background =
+                `conic-gradient(#a78bfa 0deg, #a78bfa ${angle}deg, rgba(255,255,255,0.1) ${angle}deg)`;
+
+            document.getElementById("resultsEmoji").textContent    = emoji;
+            document.getElementById("scoreNumber").textContent     = score;
+            document.getElementById("scoreTotal").textContent      = `/ ${total}`;
+            document.getElementById("correctCount").textContent    = score;
+            document.getElementById("incorrectCount").textContent  = mauvaises;
+            document.getElementById("percentageScore").textContent = pct + "%";
+            document.getElementById("resultsMessage").textContent  = message;
+
+        }
+
+        // ============================================================
+        // REDÉMARRER
+        // ============================================================
+
+        function redemarrer() {
+            indexQuestion  = 0;
+            score          = 0;
+            reponsesUser   = new Array(quizData.length).fill(null);
+            aRepondu       = false;
+
+            document.getElementById("resultsCard").classList.add("hidden");
+            document.getElementById("quizCard").classList.remove("hidden");
+
+            afficherQuestion();
+        }
+
+        // ============================================================
+        // LANCEMENT
+        // ============================================================
+        afficherQuestion();
+
+    </script>
+</body>
+</html>

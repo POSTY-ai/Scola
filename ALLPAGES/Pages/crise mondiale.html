@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Crises économiques mondiales</title>
+  <style>
+    :root{
+      --bg:#f9fbff;
+      --card:#fff;
+      --accent:#f77f00;
+      --muted:#555;
+      --maxw:1000px;
+    }
+    *{box-sizing:border-box;}
+    body{
+      font-family:system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      margin:0;
+      padding:24px;
+      background:var(--bg);
+      color:#111;
+      display:flex;
+      justify-content:center;
+    }
+    .container{ max-width:var(--maxw); width:100%; }
+    header{ margin-bottom:18px; }
+    h1{ margin:0 0 6px; font-size:1.6rem; color:var(--accent);}
+    p.lead{ margin:0; color:var(--muted); font-size:1rem; }
+
+    .card{
+      background:var(--card);
+      border-radius:10px;
+      padding:16px;
+      box-shadow:0 6px 18px rgba(12,20,50,0.06);
+      border:1px solid rgba(10,10,10,0.03);
+      margin-bottom:18px;
+    }
+    h2{ margin:10px 0; font-size:1.2rem; color:#0f1724; }
+    .explain{ font-size:0.96rem; line-height:1.5; color:#222; }
+    ul{ margin-left:18px; }
+    .badge{ display:inline-block; padding:6px 10px; border-radius:999px; background:#ffd6b6; color:var(--accent); font-weight:700; font-size:0.82rem; margin-bottom:6px;}
+    footer{ margin-top:20px; font-size:0.9rem; color:var(--muted);}
+    .sources a{ color:var(--accent); text-decoration:none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge">Histoire économique</div>
+      <h1>Crises économiques depuis la Première Guerre mondiale</h1>
+      <p class="lead">Analyse des principales crises économiques et de leurs impacts mondiaux.</p>
+    </header>
+
+    <section>
+
+      <article class="card">
+        <h2>1) La crise de 1929</h2>
+        <p class="explain">
+          - Krach boursier à Wall Street → faillites bancaires → chômage massif.<br>
+          - Impact mondial : effondrement des économies, montée des régimes totalitaires.<br>
+          - Réponse : New Deal aux États-Unis, politiques de relance et protectionnisme.
+        </p>
+      </article>
+
+      <article class="card">
+        <h2>2) Crises des années 1970</h2>
+        <p class="explain">
+          - Chocs pétroliers de 1973 et 1979 → inflation mondiale et stagflation.<br>
+          - Dépendance énergétique des pays industrialisés révélée.<br>
+          - Réponses : politiques monétaires restrictives et diversification énergétique.
+        </p>
+      </article>
+
+      <article class="card">
+        <h2>3) Crise de 1997-1998 : crise asiatique</h2>
+        <p class="explain">
+          - Effondrement des monnaies asiatiques (Thaïlande, Corée, Indonésie).<br>
+          - Contagion financière vers d'autres pays émergents.<br>
+          - Intervention FMI : plans d’ajustement structurel et prêts conditionnels.
+        </p>
+      </article>
+
+      <article class="card">
+        <h2>4) Crise des dot-com (2000-2002)</h2>
+        <p class="explain">
+          - Effondrement des valeurs technologiques sur les marchés boursiers.<br>
+          - Impact limité sur l’économie réelle mais perte de capital importante.<br>
+          - Réformes des régulations boursières et meilleures pratiques financières.
+        </p>
+      </article>
+
+      <article class="card">
+        <h2>5) Crise financière mondiale 2007-2008</h2>
+        <p class="explain">
+          - Effondrement du marché immobilier américain et produits financiers complexes.<br>
+          - Récession mondiale : chômage, faillites bancaires, plans de relance.<br>
+          - Réponse : politiques monétaires expansionnistes, régulation bancaire renforcée.
+        </p>
+      </article>
+
+      <article class="card">
+        <h2>6) Crises récentes et COVID-19</h2>
+        <p class="explain">
+          - Pandémie mondiale → effondrement temporaire de la production et consommation.<br>
+          - Déficits publics massifs pour soutenir les économies.<br>
+          - Accélération des mutations économiques : télétravail, digitalisation, relocalisation.
+        </p>
+      </article>
+
+    </section>
+
+    <footer>
+      <div class="card">
+        <strong>Sources</strong>
+        <ul class="sources">
+          <li><a href="https://fr.wikipedia.org/wiki/Grande_Dépression" target="_blank">Wikipédia — Grande Dépression</a></li>
+          <li><a href="https://fr.wikipedia.org/wiki/Crise_financi%C3%A8re_de_2007-2008" target="_blank">Wikipédia — Crise 2007-2008</a></li>
+          <li><a href="https://www.imf.org/en/Publications/WEO" target="_blank">FMI — Perspectives économiques mondiales</a></li>
+        </ul>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

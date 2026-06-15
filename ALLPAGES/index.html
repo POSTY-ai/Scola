@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="shortcut icon" href="images/IMG_0755.JPG" type="image/x-icon">
+    <link rel="stylesheet" href="css/project.css">
+    <title>Scola</title>
+</head>
+<body>
+    <div class="color">
+        <header class="header-accueil">
+
+            <!-- ================================================ -->
+            <!-- MENU DÉROULANT                                   -->
+            <!-- Les liens sont protégés par project.js           -->
+            <!-- Si l'utilisateur n'est pas connecté, un clic     -->
+            <!-- ouvre la modal au lieu de changer de page        -->
+            <!-- ================================================ -->
+            <div class="deroulant" style="color: blue;">
+                <a href="#" class="linky">
+                    <span class="arrow"><i class="fa-solid fa-bars"></i></span>
+                </a>
+
+                <div class="menuderoulant">
+                    <a href="./pages/sujetsofficiels.html">Les chapitres</a>
+                    <a href="./pages/anciennesepreuves.html">Les anciens examens</a>
+                    <a href="./pages/jeuxeducatifs.html">Jeux éducatifs</a>
+                    <a href="./pages/liguebac.html">Ligue bac</a>
+                </div>
+            </div>
+
+            <!-- LOGO -->
+            <div class="containerLogo">
+                <img
+                    src="images/IMG_0758.PNG"
+                    class="logo"
+                    alt="logo site"
+                    width="80px"
+                    height="80px"
+                    style="position: relative; left:25px;"
+                >
+                <p class="name" style="position: relative; left: 5px;">Scola</p>
+            </div>
+
+            <!-- ================================================ -->
+            <!-- NAVIGATION — BOUTONS CONNEXION/PROFIL            -->
+            <!-- Ces boutons sont gérés dynamiquement par         -->
+            <!-- verifierConnexion() dans project.js              -->
+            <!-- Connecté → Profil + Déconnexion s'affichent      -->
+            <!-- Pas connecté → Connexion + Inscription s'affichent-->
+            <!-- ================================================ -->
+            <nav class="nav-button">
+                <ul>
+                    <!-- Visible si PAS connecté -->
+                    <li class="specialButton1" id="logn-button">
+                        <button class="abc">
+                            <a href="pages/register.html" class="abc2">Connexion</a>
+                        </button>
+                    </li>
+
+                    <!-- Visible si PAS connecté -->
+                    <li class="specialButton2" id="signup-button">
+                        <button class="abc">
+                            <a href="pages/inscription.html" class="abc2">Inscription</a>
+                        </button>
+                    </li>
+
+                    <!-- Visible si connecté — caché par défaut -->
+                    <li class="profile-button" id="profile-button" style="display:none;">
+                        <button class="abc">
+                            <a href="pages/profile.html" class="abc2">Profil</a>
+                        </button>
+                    </li>
+
+                    <!-- Visible si connecté — caché par défaut -->
+                    <li id="logout-button" style="display:none;">
+                        <button class="abc" onclick="logout()">
+                            Déconnexion
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <br>
+        <div id="result"></div>
+
+        <h1 class="titlex" id="titlex">
+            Préparez le bac<br>
+            comme jamais auparavant
+        </h1>
+
+        <p class="titlexx" id="titlexx">
+            Des ressources claires, visuelles et passionnantes<br>
+            pour comprendre les grands chapitres du baccalauréat
+        </p>
+    </div>
+
+    <h1 class="title0000">Explorez les grandes périodes</h1>
+
+    <!-- ======================================================== -->
+    <!-- MODAL D'ACCÈS RESTREINT                                  -->
+    <!-- Cette fenêtre popup s'affiche quand un visiteur non      -->
+    <!-- connecté clique sur un lien du menu déroulant            -->
+    <!-- Elle est cachée par défaut (display:none dans le CSS)    -->
+    <!-- project.js l'ouvre avec ouvrirModal()                    -->
+    <!-- ======================================================== -->
+    <div id="modal-acces" class="modal-overlay">
+        <!-- modal-overlay = le fond sombre derrière la fenêtre -->
+
+        <div class="modal-contenu">
+            <!-- modal-contenu = la fenêtre blanche au centre -->
+
+            <!-- Bouton X pour fermer -->
+            <button class="modal-fermer" onclick="fermerModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- Icône cadenas -->
+            <div class="modal-icone">🔒</div>
+
+            <h2 class="modal-titre">Accès restreint</h2>
+
+            <p class="modal-texte">
+                Tu dois être <strong>connecté</strong> pour accéder à cette section.<br>
+                Rejoins Scola gratuitement !
+            </p>
+
+            <!-- Boutons vers inscription et connexion -->
+            <div class="modal-boutons">
+                <a href="pages/inscription.html" class="modal-btn-inscription">
+                    S'inscrire gratuitement
+                </a>
+                <a href="pages/register.html" class="modal-btn-connexion">
+                    Se connecter
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <nav style="display: flex; justify-content: center; align-items: center;">
+            <p class="copy" id="copy">&copy;2025 - TOUS DROITS RÉSERVÉS</p>
+        </nav>
+    </footer>
+
+    <script src="javascript/project.js"></script>
+    <div id="modal-acces" class="modal-overlay">
+    <div class="modal-contenu">
+        <button class="modal-fermer" onclick="fermerModal()">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="modal-icone">🔒</div>
+        <h2 class="modal-titre">Accès restreint</h2>
+        <p class="modal-texte">
+            Tu dois être <strong>connecté</strong> pour accéder à cette section.<br>
+            Rejoins Scola gratuitement !
+        </p>
+        <div class="modal-boutons">
+            <a href="pages/inscription.html" class="modal-btn-inscription">
+                S'inscrire gratuitement
+            </a>
+            <a href="pages/register.html" class="modal-btn-connexion">
+                Se connecter
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="../css/project.css">
+    <title>Mon Profil — Scola</title>
+    <style>
+
+        /* ====================================================
+           CONTENEUR PRINCIPAL
+           ==================================================== */
+        .profil-container {
+            max-width: 700px;
+            margin: 30px auto;
+            padding: 0 20px 60px;
+        }
+
+        /* ====================================================
+           CARTE HERO — photo + nom + email + ligue
+           ==================================================== */
+        .profil-hero {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 35px 30px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Cercle avec initiales de l'utilisateur */
+        .profil-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+            flex-shrink: 0;
+            /* flex-shrink: 0 = ne rétrécit pas sur mobile */
+        }
+
+        .profil-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .profil-nom {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 4px;
+            /* white-space + overflow + text-overflow = coupe le texte trop long */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .profil-email {
+            font-size: 14px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 10px;
+        }
+
+        /* Badge ligue actuelle */
+        .profil-badge-ligue {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 5px 12px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* Bouton déconnexion en haut à droite */
+        .profil-logout {
+            background: rgba(255,71,87,0.15);
+            border: 1px solid rgba(255,71,87,0.3);
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin-left: 100px;
+            color: #ff4757;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.2s;
+            flex-shrink: 0;
+          
+        }
+
+        .profil-logout:hover {
+            background: rgba(255,71,87,0.3);
+        }
+
+        /* ====================================================
+           GRILLE DE STATISTIQUES — 3 cartes en ligne
+           ==================================================== */
+        .profil-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-carte {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 18px 14px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-icone {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .stat-valeur {
+            font-size: 26px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* ====================================================
+           SECTION GÉNÉRIQUE — titre + contenu
+           ==================================================== */
+        .profil-section {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 22px 20px;
+            margin-bottom: 16px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-titre {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 16px;
+        }
+
+        /* ====================================================
+           BARRE DE PROGRESSION XP vers prochain niveau
+           ==================================================== */
+        .xp-progress-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .xp-label {
+            font-size: 13px;
+            color: rgba(255,255,255,0.6);
+            white-space: nowrap;
+        }
+
+        .xp-barre-fond {
+            flex: 1;
+            height: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .xp-barre-remplie {
+            height: 100%;
+            border-radius: 99px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            /* transition = animation fluide quand le pourcentage change */
+            transition: width 0.6s ease;
+        }
+
+        .xp-pct {
+            font-size: 13px;
+            color: rgba(255,255,255,0.6);
+            white-space: nowrap;
+        }
+
+        /* Texte sous la barre */
+        .xp-sous-barre {
+            font-size: 13px;
+            color: rgba(255,255,255,0.4);
+            margin-top: 4px;
+        }
+
+        /* ====================================================
+           NIVEAUX DE LIGUE — rangée de 5 badges
+           ==================================================== */
+        .niveaux-rangee {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .niveau-item {
+            flex: 1;
+            text-align: center;
+            padding: 12px 6px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.03);
+            transition: all 0.2s;
+        }
+
+        /* Niveau actif = mis en évidence */
+        .niveau-item.actif {
+            border-color: #667eea;
+            background: rgba(102,126,234,0.15);
+        }
+
+        .niveau-emoji {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .niveau-nom {
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .niveau-item.actif .niveau-nom {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        /* ====================================================
+           BADGES / TROPHÉES
+           ==================================================== */
+        .badges-grille {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .badge-item {
+            text-align: center;
+            padding: 14px 8px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.03);
+        }
+
+        /* Badge débloqué = couleur normale */
+        .badge-item.debloque {
+            border-color: rgba(46,213,115,0.3);
+            background: rgba(46,213,115,0.08);
+        }
+
+        /* Badge verrouillé = grisé */
+        .badge-item.verrouille {
+            opacity: 0.35;
+            filter: grayscale(1);
+        }
+
+        .badge-emoji {
+            font-size: 26px;
+            margin-bottom: 6px;
+        }
+
+        .badge-nom {
+            font-size: 11px;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.3;
+        }
+
+        /* ====================================================
+           HISTORIQUE D'ACTIVITÉ — liste des dernières sessions
+           ==================================================== */
+        .activite-liste {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .activite-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 14px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.07);
+        }
+
+        .activite-icone {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(102,126,234,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .activite-info {
+            flex: 1;
+        }
+
+        .activite-titre {
+            font-size: 14px;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .activite-date {
+            font-size: 12px;
+            color: rgba(255,255,255,0.4);
+            margin-top: 2px;
+        }
+
+        .activite-xp {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2ed573;
+        }
+
+        /* ====================================================
+           BOUTON MODIFIER LE PROFIL
+           ==================================================== */
+        .btn-modifier {
+            width: 100%;
+            padding: 14px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-modifier:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* ====================================================
+           ÉTAT CHARGEMENT
+           ==================================================== */
+        .chargement {
+            text-align: center;
+            padding: 40px;
+            color: rgba(255,255,255,0.4);
+            font-size: 15px;
+        }
+
+        /* ====================================================
+           RESPONSIVE MOBILE
+           ==================================================== */
+        @media (max-width: 480px) {
+            .profil-hero {
+                flex-wrap: wrap;
+            }
+            .profil-stats {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+            .badges-grille {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .niveaux-rangee {
+                gap: 4px;
+            }
+            .niveau-item {
+                padding: 8px 4px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="profil-container">
+
+        <!-- État de chargement — caché une fois les données arrivées -->
+        <div class="chargement" id="chargement">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+            Chargement du profil...
+        </div>
+
+        <!-- Contenu du profil — caché pendant le chargement -->
+        <div id="profil-contenu" style="display:none;">
+
+            <!-- ================================================ -->
+            <!-- CARTE HERO — avatar + nom + email + ligue        -->
+            <!-- ================================================ -->
+            <div class="profil-hero">
+
+                <!-- Cercle avec les initiales du nom -->
+                <div class="profil-avatar" id="profil-avatar">?</div>
+
+                <div class="profil-info">
+                    <div class="profil-nom" id="profil-nom">...</div>
+                    <div class="profil-email" id="profil-email">...</div>
+                    <div class="profil-badge-ligue">
+                        <span id="profil-ligue-emoji">🥉</span>
+                        <span id="profil-ligue-nom">Bronze</span>
+                    </div>
+                </div>
+
+                <!-- Bouton déconnexion -->
+                <button class="profil-logout" onclick="logout()">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    Déconnexion
+                </button>
+
+            </div>
+
+            <!-- ================================================ -->
+            <!-- GRILLE DE STATS — XP, Classement, Streak         -->
+            <!-- ================================================ -->
+            <div class="profil-stats">
+
+                <div class="stat-carte">
+                    <div class="stat-icone">⚡</div>
+                    <div class="stat-valeur" id="stat-xp">0</div>
+                    <div class="stat-label">XP cette semaine</div>
+                </div>
+
+                <div class="stat-carte">
+                    <div class="stat-icone">🏆</div>
+                    <div class="stat-valeur" id="stat-rang">#0</div>
+                    <div class="stat-label">Classement</div>
+                </div>
+
+                <div class="stat-carte">
+                    <div class="stat-icone">🔥</div>
+                    <div class="stat-valeur" id="stat-streak">0</div>
+                    <div class="stat-label">Jours consécutifs</div>
+                </div>
+
+            </div>
+
+            <!-- ================================================ -->
+            <!-- PROGRESSION VERS LE PROCHAIN NIVEAU              -->
+            <!-- ================================================ -->
+            <div class="profil-section">
+                <div class="section-titre">Progression vers le prochain niveau</div>
+
+                <div class="xp-progress-wrap">
+                    <span class="xp-label" id="xp-niveau-actuel">Bronze</span>
+                    <div class="xp-barre-fond">
+                        <!-- La largeur est mise à jour dynamiquement par JS -->
+                        <div class="xp-barre-remplie" id="xp-barre" style="width: 0%"></div>
+                    </div>
+                    <span class="xp-pct" id="xp-prochain">Argent</span>
+                </div>
+
+                <div class="xp-sous-barre" id="xp-sous-barre">0 / 500 XP</div>
+
+                <!-- Rangée des 5 niveaux de ligue -->
+                <div class="niveaux-rangee" style="margin-top: 16px;">
+                    <div class="niveau-item" id="niv-bronze">
+                        <div class="niveau-emoji">🥉</div>
+                        <div class="niveau-nom">Bronze</div>
+                    </div>
+                    <div class="niveau-item" id="niv-argent">
+                        <div class="niveau-emoji">🥈</div>
+                        <div class="niveau-nom">Argent</div>
+                    </div>
+                    <div class="niveau-item" id="niv-or">
+                        <div class="niveau-emoji">🥇</div>
+                        <div class="niveau-nom">Or</div>
+                    </div>
+                    <div class="niveau-item" id="niv-platine">
+                        <div class="niveau-emoji">💎</div>
+                        <div class="niveau-nom">Platine</div>
+                    </div>
+                    <div class="niveau-item" id="niv-diamant">
+                        <div class="niveau-emoji">👑</div>
+                        <div class="niveau-nom">Diamant</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ================================================ -->
+            <!-- BADGES / TROPHÉES                                -->
+            <!-- Débloqués automatiquement selon les XP et streak -->
+            <!-- ================================================ -->
+            <div class="profil-section">
+                <div class="section-titre">Badges & Trophées</div>
+
+                <div class="badges-grille" id="badges-grille">
+                    <!-- Rempli dynamiquement par JS selon les stats du joueur -->
+                </div>
+
+            </div>
+
+            <!-- ================================================ -->
+            <!-- DERNIÈRE ACTIVITÉ                                -->
+            <!-- ================================================ -->
+            <div class="profil-section">
+                <div class="section-titre">Dernière activité</div>
+
+                <div class="activite-liste" id="activite-liste">
+                    <!-- Rempli dynamiquement par JS -->
+                </div>
+
+            </div>
+
+            <!-- ================================================ -->
+            <!-- PARAMÈTRES                                       -->
+            <!-- ================================================ -->
+            <div class="profil-section">
+                <div class="section-titre">Paramètres</div>
+
+                <button class="btn-modifier" onclick="window.location.href='modifier-profil.html'">
+                    <i class="fa-solid fa-pen"></i>
+                    Modifier mon profil
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        // ============================================================
+        // VÉRIFICATION DE CONNEXION
+        // Si pas de token → redirige vers la page de connexion
+        // ============================================================
+
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            // Pas connecté = redirige vers la page de connexion
+            window.location.href = "register.html";
+        }
+
+        // ============================================================
+        // CONFIGURATION DES NIVEAUX DE LIGUE
+        // Seuils XP pour chaque niveau et emojis correspondants
+        // ============================================================
+
+        const NIVEAUX = {
+            // chaque niveau a : seuil minimum d'XP, emoji, id du niveau suivant et seuil suivant
+            "Bronze":  { min: 0,    max: 500,  emoji: "🥉", prochain: "Argent",  seuilProchain: 500  },
+            "Argent":  { min: 500,  max: 1000, emoji: "🥈", prochain: "Or",      seuilProchain: 1000 },
+            "Or":      { min: 1000, max: 2000, emoji: "🥇", prochain: "Platine", seuilProchain: 2000 },
+            "Platine": { min: 2000, max: 5000, emoji: "💎", prochain: "Diamant", seuilProchain: 5000 },
+            "Diamant": { min: 5000, max: 5000, emoji: "👑", prochain: null,      seuilProchain: 5000 }
+        };
+
+        // ============================================================
+        // CONFIGURATION DES BADGES
+        // Chaque badge a une condition à vérifier avec les stats du joueur
+        // stats = { xp, streak, rank }
+        // ============================================================
+
+        const BADGES_CONFIG = [
+            {
+                emoji: "🎯",
+                nom: "Premier pas",
+                description: "Gagner ses premiers XP",
+                // condition = fonction qui reçoit les stats et retourne true/false
+                condition: (stats) => stats.xp > 0
+            },
+            {
+                emoji: "🔥",
+                nom: "Série de 3",
+                description: "3 jours consécutifs",
+                condition: (stats) => stats.streak >= 3
+            },
+            {
+                emoji: "⚡",
+                nom: "100 XP",
+                description: "Atteindre 100 XP",
+                condition: (stats) => stats.xp >= 100
+            },
+            {
+                emoji: "🏅",
+                nom: "Top 10",
+                description: "Être dans le top 10",
+                condition: (stats) => stats.rank <= 10 && stats.rank > 0
+            },
+            {
+                emoji: "💪",
+                nom: "Série de 5",
+                description: "5 jours consécutifs",
+                condition: (stats) => stats.streak >= 5
+            },
+            {
+                emoji: "🥈",
+                nom: "Argent",
+                description: "Atteindre la ligue Argent",
+                condition: (stats) => ["Argent","Or","Platine","Diamant"].includes(stats.league)
+            },
+            {
+                emoji: "🥇",
+                nom: "Ligue Or",
+                description: "Atteindre la ligue Or",
+                condition: (stats) => ["Or","Platine","Diamant"].includes(stats.league)
+            },
+            {
+                emoji: "👑",
+                nom: "Champion",
+                description: "Atteindre la ligue Diamant",
+                condition: (stats) => stats.league === "Diamant"
+            }
+        ];
+
+        // ============================================================
+        // CHARGER LE PROFIL — appel API vers /api/league/me
+        // fetch = outil JS pour faire des requêtes HTTP vers le serveur
+        // ============================================================
+
+        async function chargerProfil() {
+
+            try {
+
+                // On envoie le token dans les headers pour prouver qu'on est connecté
+                const response = await fetch("/api/league/me", {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                        // "Bearer " + token = format standard d'authentification JWT
+                    }
+                });
+
+                if (!response.ok) {
+                    // Si le serveur répond avec une erreur (401, 404, 500...)
+                    localStorage.removeItem("token");
+                    window.location.href = "register.html";
+                    return;
+                }
+
+                // .json() = convertit la réponse texte en objet JavaScript
+                const data = await response.json();
+
+                // Une fois les données reçues, on remplit la page
+                remplirProfil(data);
+
+            } catch (err) {
+                console.log("❌ Erreur chargement profil :", err);
+            }
+
+        }
+
+        // ============================================================
+        // REMPLIR LE PROFIL — met à jour tous les éléments HTML
+        // data = { name, email, xp, xpToday, streak, league, rank, totalPlayers }
+        // ============================================================
+
+        function remplirProfil(data) {
+
+            // --- AVATAR : initiales du nom ---
+            // ex: "Jean Baptiste" → "JB"
+            const initiales = data.name
+                .split(" ")                    // sépare en mots ["Jean", "Baptiste"]
+                .map(mot => mot[0])            // prend la 1ère lettre de chaque mot ["J","B"]
+                .join("")                      // recolle "JB"
+                .toUpperCase()
+                .slice(0, 2);                  // max 2 lettres
+            document.getElementById("profil-avatar").textContent = initiales;
+
+            // --- NOM, EMAIL, LIGUE ---
+            document.getElementById("profil-nom").textContent = data.name;
+            document.getElementById("profil-email").textContent = data.email;
+
+            const niveau = NIVEAUX[data.league] || NIVEAUX["Bronze"];
+            document.getElementById("profil-ligue-emoji").textContent = niveau.emoji;
+            document.getElementById("profil-ligue-nom").textContent = data.league;
+
+            // --- STATS ---
+            document.getElementById("stat-xp").textContent = data.xp;
+            document.getElementById("stat-rang").textContent = "#" + data.rank;
+            document.getElementById("stat-streak").textContent = data.streak;
+
+            // --- BARRE DE PROGRESSION XP ---
+            mettreAJourBarre(data.xp, data.league);
+
+            // --- NIVEAUX : mettre en évidence le niveau actuel ---
+            const idsNiveaux = {
+                "Bronze": "niv-bronze",
+                "Argent": "niv-argent",
+                "Or": "niv-or",
+                "Platine": "niv-platine",
+                "Diamant": "niv-diamant"
+            };
+            // On enlève la classe actif de tous, puis on l'ajoute au bon
+            Object.values(idsNiveaux).forEach(id => {
+                document.getElementById(id).classList.remove("actif");
+            });
+            if (idsNiveaux[data.league]) {
+                document.getElementById(idsNiveaux[data.league]).classList.add("actif");
+            }
+
+            // --- BADGES ---
+            genererBadges(data);
+
+            // --- ACTIVITÉ ---
+            genererActivite(data);
+
+            // --- CACHER LE CHARGEMENT, AFFICHER LE PROFIL ---
+            document.getElementById("chargement").style.display = "none";
+            document.getElementById("profil-contenu").style.display = "block";
+
+        }
+
+        // ============================================================
+        // BARRE DE PROGRESSION XP
+        // Calcule le pourcentage d'avancement vers le niveau suivant
+        // ============================================================
+
+        function mettreAJourBarre(xp, league) {
+
+            const niveau = NIVEAUX[league] || NIVEAUX["Bronze"];
+
+            if (niveau.prochain === null) {
+                // Niveau maximum — barre à 100%
+                document.getElementById("xp-barre").style.width = "100%";
+                document.getElementById("xp-sous-barre").textContent = "Niveau maximum atteint 👑";
+                document.getElementById("xp-niveau-actuel").textContent = league;
+                document.getElementById("xp-prochain").textContent = "MAX";
+                return;
+            }
+
+            // Calcul du pourcentage
+            // ex: xp=300, min=0, max=500 → (300-0)/(500-0)*100 = 60%
+            const pourcentage = Math.min(
+                ((xp - niveau.min) / (niveau.max - niveau.min)) * 100,
+                100
+            );
+
+            document.getElementById("xp-barre").style.width = pourcentage + "%";
+            document.getElementById("xp-niveau-actuel").textContent = league;
+            document.getElementById("xp-prochain").textContent = niveau.prochain;
+            document.getElementById("xp-sous-barre").textContent =
+                `${xp} / ${niveau.seuilProchain} XP pour atteindre ${niveau.prochain}`;
+
+        }
+
+        // ============================================================
+        // GÉNÉRATION DES BADGES
+        // Vérifie chaque badge et l'affiche débloqué ou verrouillé
+        // ============================================================
+
+        function genererBadges(data) {
+
+            const grille = document.getElementById("badges-grille");
+            grille.innerHTML = ""; // vider le contenu précédent
+
+            BADGES_CONFIG.forEach(badge => {
+
+                // badge.condition(data) = appelle la fonction condition avec les stats
+                // Retourne true si l'élève a débloqué ce badge, false sinon
+                const debloque = badge.condition(data);
+
+                const div = document.createElement("div");
+                // Classe CSS différente selon si débloqué ou non
+                div.className = `badge-item ${debloque ? "debloque" : "verrouille"}`;
+                div.innerHTML = `
+                    <div class="badge-emoji">${badge.emoji}</div>
+                    <div class="badge-nom">${badge.nom}</div>
+                `;
+
+                // Tooltip au survol — affiche la description du badge
+                div.title = badge.description;
+
+                grille.appendChild(div);
+
+            });
+
+        }
+
+        // ============================================================
+        // GÉNÉRATION DE L'ACTIVITÉ RÉCENTE
+        // Affiche les dernières actions du joueur
+        // ============================================================
+
+        function genererActivite(data) {
+
+            const liste = document.getElementById("activite-liste");
+            liste.innerHTML = "";
+
+            // Si l'utilisateur n'a jamais joué
+            if (!data.xp || data.xp === 0) {
+                liste.innerHTML = `
+                    <div style="text-align:center; color:rgba(255,255,255,0.4); padding:20px; font-size:14px;">
+                        Aucune activité pour l'instant.<br>Lance-toi dans la ligue !
+                    </div>
+                `;
+                return;
+            }
+
+            // Construire la liste d'activités à partir des données disponibles
+            const activites = [];
+
+            if (data.xpToday > 0) {
+                activites.push({
+                    icone: "⚡",
+                    titre: "Session de quiz complétée",
+                    date: "Aujourd'hui",
+                    xp: `+${data.xpToday} XP`
+                });
+            }
+
+            if (data.streak > 0) {
+                activites.push({
+                    icone: "🔥",
+                    titre: `Série active — ${data.streak} jour(s) consécutif(s)`,
+                    date: "Cette semaine",
+                    xp: ""
+                });
+            }
+
+            activites.push({
+                icone: "🏆",
+                titre: `Classé #${data.rank} sur ${data.totalPlayers} élèves`,
+                date: "Cette semaine",
+                xp: ""
+            });
+
+            // Créer un élément HTML pour chaque activité
+            activites.forEach(act => {
+                const div = document.createElement("div");
+                div.className = "activite-item";
+                div.innerHTML = `
+                    <div class="activite-icone">${act.icone}</div>
+                    <div class="activite-info">
+                        <div class="activite-titre">${act.titre}</div>
+                        <div class="activite-date">${act.date}</div>
+                    </div>
+                    ${act.xp ? `<div class="activite-xp">${act.xp}</div>` : ""}
+                `;
+                liste.appendChild(div);
+            });
+
+        }
+
+        // ============================================================
+        // DÉCONNEXION — supprime le token et redirige
+        // ============================================================
+
+        function logout() {
+            localStorage.removeItem("token");
+            // removeItem = supprime la clé du localStorage
+            localStorage.removeItem("user");
+            window.location.href = "/";
+        }
+
+        // ============================================================
+        // LANCEMENT — charger le profil au démarrage de la page
+        // ============================================================
+        chargerProfil();
+
+    </script>
+
+</body>
+</html>

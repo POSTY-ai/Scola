@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>La Mondialisation et ses acteurs</title>
+  <style>
+    :root{
+      --bg:#f9fbff;
+      --card:#fff;
+      --accent:#0077b6;
+      --muted:#555;
+      --maxw:1000px;
+    }
+    *{box-sizing:border-box;}
+    body{
+      font-family:system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      margin:0;
+      padding:24px;
+      background:var(--bg);
+      color:#111;
+      display:flex;
+      flex-direction: column;
+      justify-content:center;
+    }
+    .container{ max-width:var(--maxw); width:100%; }
+    header{ margin-bottom:18px; }
+    h1{ margin:0 0 6px; font-size:1.6rem; color:var(--accent);}
+    p.lead{ margin:0; color:var(--muted); font-size:1rem; }
+
+    .card{
+      background:var(--card);
+      border-radius:10px;
+      padding:16px;
+      box-shadow:0 6px 18px rgba(12,20,50,0.06);
+      border:1px solid rgba(10,10,10,0.03);
+      margin-bottom:18px;
+    }
+    h2{ margin:10px 0; font-size:1.2rem; color:#0f1724; }
+    .explain{ font-size:0.96rem; line-height:1.5; color:#222; }
+    ul{ margin-left:18px; }
+    .badge{ display:inline-block; padding:6px 10px; border-radius:999px; background:#d0e8ff; color:var(--accent); font-weight:700; font-size:0.82rem; margin-bottom:6px;}
+    footer{ margin-top:20px; font-size:0.9rem; color:var(--muted);}
+    .sources a{ color:var(--accent); text-decoration:none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge">Économie mondiale</div>
+      <h1>La Mondialisation et ses acteurs</h1>
+      <p class="lead" style="color: white;">La mondialisation désigne l’intégration croissante des économies, sociétés et cultures à l’échelle mondiale.</p>
+    </header>
+
+    <section>
+
+      <article class="card">
+        <h2>1) Définition de la mondialisation</h2>
+        <p class="explain">
+          La mondialisation est un processus d’ouverture des économies et des sociétés, favorisant la circulation des biens, services, capitaux, informations et personnes à l’échelle mondiale.  
+          Elle touche l’économie, la culture, la politique et l’environnement.
+        </p>
+      </article>
+
+      <article class="card">
+        <h2>2) Les firmes transnationales (FTN)</h2>
+        <p class="explain">
+          Les FTN sont des entreprises qui opèrent dans plusieurs pays. Elles jouent un rôle majeur dans la mondialisation :
+        </p>
+        <ul style="color: black;">
+          <li>Délocalisation de la production pour réduire les coûts ;</li>
+          <li>Investissements directs étrangers (IDE) ;</li>
+          <li>Diffusion de technologies et savoir-faire ;</li>
+          <li>Création de réseaux de distribution mondiaux.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>3) Le Fonds monétaire international (FMI)</h2>
+        <p class="explain">
+          Le FMI intervient dans la mondialisation en soutenant les États en difficulté économique :
+        </p>
+        <ul style="color: black;">
+          <li>Prêts conditionnés à des ajustements structurels ;</li>
+          <li>Réformes économiques pour stabiliser la monnaie et réduire le déficit ;</li>
+          <li>Promotion des politiques de libre-échange et de libéralisation financière.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>4) Conséquences de la mondialisation</h2>
+        <p class="explain">
+          La mondialisation présente des avantages et des limites :
+        </p>
+        <ul style="color: black;">
+          <li>Avantages : croissance économique, accès aux technologies, échanges culturels ;</li>
+          <li>Limites : inégalités, délocalisations, dépendance économique, pression sur l’environnement.</li>
+        </ul>
+      </article>
+
+    </section>
+
+    <footer>
+      <div class="card">
+        <strong>Sources</strong>
+        <ul class="sources">
+          <li><a href="https://fr.wikipedia.org/wiki/Mondialisation" target="_blank">Wikipédia — Mondialisation</a></li>
+          <li><a href="https://www.imf.org/external/index.htm" target="_blank">FMI — Site officiel</a></li>
+          <li><a href="https://www.oecd.org/fr/mondialisation/" target="_blank">OCDE — Mondialisation</a></li>
+        </ul>
+      </div>
+    </footer>
+  </div>
+      
+                <!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/quiz.css">
+    <title>Quiz - La Mondialisation</title>
+</head>
+<body>
+    <div class="quiz-container">
+        <header class="quiz-header">
+            <div class="header-content">
+                
+                <h1 class="quiz-title" style="color: white;">
+                    <i class="fas fa-medal"></i>
+                    Quiz La Mondialisation
+                </h1>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <span class="progress-text" id="progressText">Question 1 / 10</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="quiz-main">
+            <div class="quiz-card" id="quizCard">
+                <div class="question-container">
+                    <div class="question-number" id="questionNumber">Question 1</div>
+                    <h2 class="question-text" id="questionText">Chargement...</h2>
+                </div>
+
+                <div class="answers-container" id="answersContainer">
+                    <!-- Les réponses seront générées par JavaScript -->
+                </div>
+
+                <div class="quiz-controls">
+                    <button class="btn btn-secondary" id="prevBtn" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                        Précédent
+                    </button>
+                    <button class="btn btn-primary" id="nextBtn" disabled>
+                        Suivant
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="results-card hidden" id="resultsCard">
+                <div class="results-header">
+                    <i class="fas fa-trophy results-icon" id="resultsIcon"></i>
+                    <h2 class="results-title" id="resultsTitle">Quiz Terminé!</h2>
+                </div>
+                
+                <div class="score-display">
+                    <div class="score-circle">
+                        <div class="score-text">
+                            <span class="score-number" id="scoreNumber">0</span>
+                            <span class="score-total">/ 10</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="score-details">
+                    <div class="score-item correct">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Bonnes réponses: <strong id="correctCount">0</strong></span>
+                    </div>
+                    <div class="score-item incorrect">
+                        <i class="fas fa-times-circle"></i>
+                        <span>Mauvaises réponses: <strong id="incorrectCount">0</strong></span>
+                    </div>
+                    <div class="score-item percentage">
+                        <i class="fas fa-percentage"></i>
+                        <span>Pourcentage: <strong id="percentageScore">0%</strong></span>
+                    </div>
+                </div>
+
+                <div class="results-message" id="resultsMessage">
+                    Excellent travail!
+                </div>
+
+                <div class="results-actions">
+                    <button class="btn btn-primary" id="restartBtn">
+                        <i class="fas fa-redo"></i>
+                        Recommencer
+                    </button>
+                    <a href="C../pages/mondialisation.html" class="btn btn-secondary">
+                        <i class="fas fa-home"></i>
+                        Retour
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../javascript/quizmondialisation.js"></script>
+</body>
+</html>

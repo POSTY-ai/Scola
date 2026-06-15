@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Influence des États-Unis sur Haïti</title>
+  <style>
+    :root{
+      --bg:#f9fbff;
+      --card:#fff;
+      --accent:#0d4d92;
+      --muted:#555;
+      --maxw:1100px;
+    }
+    *{box-sizing:border-box;}
+    body{
+      font-family:system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      margin:0;
+      padding:24px;
+      background:var(--bg);
+      color:#111;
+      display:flex;
+      flex-direction: column;
+      justify-content:center;
+    }
+    .container{ max-width:var(--maxw); width:100%; }
+    header{ margin-bottom:18px; }
+    h1{ margin:0 0 6px; font-size:1.6rem; color:var(--accent);}
+    p.lead{ margin:0; color:var(--muted); font-size:1rem; }
+
+    .timeline{
+      display:grid;
+      gap:16px;
+      margin-top:20px;
+    }
+    .card{
+      background:var(--card);
+      border-radius:10px;
+      padding:14px;
+      box-shadow:0 6px 18px rgba(12,20,50,0.06);
+      border:1px solid rgba(10,10,10,0.03);
+    }
+    h2{ margin:10px 0; font-size:1.05rem; color:#0f1724; }
+    .explain{ font-size:0.96rem; line-height:1.5; color:#222; }
+    .badge{ display:inline-block; padding:6px 10px; border-radius:999px; background:#eaf0ff; color:var(--accent); font-weight:700; font-size:0.82rem; margin-bottom:6px;}
+    footer{ margin-top:20px; font-size:0.9rem; color:var(--muted);}
+    .sources a{ color:var(--accent); text-decoration:none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge">Relations internationales</div>
+      <h1>Occupation américaine(1915-1934)</h1>
+      <p class="lead" style="color: white;">De l’occupation militaire de 1915 à la présence économique et politique actuelle.</p>
+    </header>
+
+    <section class="timeline">
+
+      <article class="card">
+        <h2>1915–1934 : Occupation militaire</h2>
+        <p class="explain">
+          En 1915, après l’assassinat du président Guillaume Sam, les marines américains
+          occupent Haïti pendant 19 ans.  
+          Conséquences :
+        </p>
+        <ul style="color: black; list-style-type: none;">
+          <li>Contrôle de l’armée et des finances par les États-Unis ;</li>
+          <li>Construction d’infrastructures (routes, écoles, hôpitaux) ;</li>
+          <li>Perte de souveraineté et résistance nationale (Charlemagne Péralte).</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>1934–1957 : Retrait officiel mais influence persistante</h2>
+        <p class="explain">
+          Même après le retrait militaire, Washington conserve une influence à travers l’économie
+          (banques, exportations de sucre, café) et la diplomatie.
+          Les élites politiques haïtiennes restent dépendantes du soutien américain.
+        </p>
+      </article>
+
+      <article class="card">
+        <h2>1957–1986 : Dictatures soutenues</h2>
+        <p class="explain">
+          Les États-Unis soutiennent François Duvalier (Papa Doc) puis Jean-Claude Duvalier (Baby Doc),
+          pour éviter l’expansion du communisme en Caraïbes.  
+          Résultats :
+        </p>
+        <ul style="color: black; list-style-type: none;">
+          <li>Maintien au pouvoir de régimes autoritaires ;</li>
+          <li>Aide militaire et économique conditionnée à l’alignement politique ;</li>
+          <li>Répression des opposants, exils massifs.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>1990–2000 : Interventions politiques et militaires</h2>
+        <p class="explain">
+          Après l’élection de Jean-Bertrand Aristide (1990), un coup d’État militaire renverse le régime.  
+          En 1994, les États-Unis interviennent (Opération Uphold Democracy) pour rétablir Aristide,
+          sous mandat de l’ONU.
+        </p>
+      </article>
+
+      <article class="card">
+        <h2>2000–2010 : Aide humanitaire et ingérences</h2>
+        <p class="explain">
+          Washington joue un rôle central dans la politique haïtienne (départ forcé d’Aristide en 2004).  
+          Après le séisme de 2010, les États-Unis apportent une aide massive mais aussi critiquée
+          pour sa gestion et sa dépendance humanitaire.
+        </p>
+      </article>
+
+      <article class="card">
+        <h2>Depuis 2010 : Influence économique, politique et culturelle</h2>
+        <p class="explain">
+          Aujourd’hui, l’influence américaine en Haïti reste forte :
+        </p>
+        <ul style="color: black; list-style-type: none;">
+          <li>Économique : investissements, aide au développement, zones franches ;</li>
+          <li>Politique : pression diplomatique, rôle dans les élections et transitions ;</li>
+          <li>Culturelle : musique, cinéma, diaspora haïtienne aux États-Unis qui envoie des transferts.</li>
+        </ul>
+      </article>
+
+    </section>
+
+    <footer>
+      <div class="card">
+        <strong>Sources</strong>
+        <ul class="sources"style="list-style-type: none;" >
+          <li><a href="https://fr.wikipedia.org/wiki/Occupation_am%C3%A9ricaine_d%27Ha%C3%AFti" target="_blank">Wikipédia — Occupation américaine d’Haïti</a></li>
+          <li><a href="https://www.state.gov/u-s-relations-with-haiti/" target="_blank">U.S. Department of State — Relations avec Haïti</a></li>
+          <li><a href="https://www.cairn.info/revue-outre-mers-2003-1-page-129.htm" target="_blank">Cairn — Haïti et l’influence américaine</a></li>
+        </ul>
+      </div>
+    </footer>
+  </div>
+    
+                <!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/quiz.css">
+    <title>Quiz - L'occupation americaine d'Haïti</title>
+</head>
+<body>
+    <div class="quiz-container">
+        <header class="quiz-header">
+            <div class="header-content">
+                
+                <h1 class="quiz-title" style="color: white;">
+                    <i class="fas fa-medal"></i>
+                    Quiz L'occupation amercaine d'Haïti
+                </h1>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <span class="progress-text" id="progressText">Question 1 / 10</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="quiz-main">
+            <div class="quiz-card" id="quizCard">
+                <div class="question-container">
+                    <div class="question-number" id="questionNumber">Question 1</div>
+                    <h2 class="question-text" id="questionText">Chargement...</h2>
+                </div>
+
+                <div class="answers-container" id="answersContainer">
+                    <!-- Les réponses seront générées par JavaScript -->
+                </div>
+
+                <div class="quiz-controls">
+                    <button class="btn btn-secondary" id="prevBtn" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                        Précédent
+                    </button>
+                    <button class="btn btn-primary" id="nextBtn" disabled>
+                        Suivant
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="results-card hidden" id="resultsCard">
+                <div class="results-header">
+                    <i class="fas fa-trophy results-icon" id="resultsIcon"></i>
+                    <h2 class="results-title" id="resultsTitle">Quiz Terminé!</h2>
+                </div>
+                
+                <div class="score-display">
+                    <div class="score-circle">
+                        <div class="score-text">
+                            <span class="score-number" id="scoreNumber">0</span>
+                            <span class="score-total">/ 10</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="score-details">
+                    <div class="score-item correct">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Bonnes réponses: <strong id="correctCount">0</strong></span>
+                    </div>
+                    <div class="score-item incorrect">
+                        <i class="fas fa-times-circle"></i>
+                        <span>Mauvaises réponses: <strong id="incorrectCount">0</strong></span>
+                    </div>
+                    <div class="score-item percentage">
+                        <i class="fas fa-percentage"></i>
+                        <span>Pourcentage: <strong id="percentageScore">0%</strong></span>
+                    </div>
+                </div>
+
+                <div class="results-message" id="resultsMessage">
+                    Excellent travail!
+                </div>
+
+                <div class="results-actions">
+                    <button class="btn btn-primary" id="restartBtn">
+                        <i class="fas fa-redo"></i>
+                        Recommencer
+                    </button>
+                    <a href="../pages/occupation americaine sur Haiti.html" class="btn btn-secondary">
+                        <i class="fas fa-home"></i>
+                        Retour
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../javascript/quizoccupationhaiti.js"></script>
+</body>
+</html>

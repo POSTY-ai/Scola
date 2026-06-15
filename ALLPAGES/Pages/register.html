@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/project.css">
+    <title>Connexion</title>
+</head>
+
+<body style="
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    min-height:80vh;
+">
+
+    <header class="header-accueil">
+
+        <div class="containerLogo">
+            <img
+                src="../images/IMG_0758.PNG"
+                class="logo"
+                alt="logo site"
+                width="80px"
+                height="80px"
+                style="position: relative; left:25px;"
+            >
+
+            <p class="name" style="position: relative; left: 5px;">
+                Scola
+            </p>
+        </div>
+
+        <nav>
+            <ul>
+
+                <li class="specialButton1">
+                    <button class="abc">
+                        <a
+                            href="../pages/register.html"
+                            class="abc2"
+                        >
+                            Connexion
+                        </a>
+                    </button>
+                </li>
+
+                <li class="specialButton2">
+                    <button class="abc">
+                        <a
+                            href="../pages/inscription.html"
+                            class="abc2"
+                        >
+                            Inscription
+                        </a>
+                    </button>
+                </li>
+
+            </ul>
+        </nav>
+
+    </header>
+
+    <div class="formulaire">
+
+        <!-- Formulaire de connexion -->
+        <form id="loginForm">
+
+            <h1 style="text-decoration: underline;">
+                Connexion
+            </h1>
+
+            <h4 style="color: gray;">
+                Connecte toi à ton compte
+            </h4>
+
+            <br>
+
+            <label>
+
+                Email :
+
+                <br>
+
+                <input
+                    type="email"
+                    name="email"
+                    required
+                >
+
+            </label>
+
+            <br><br>
+
+            <label>
+
+                Password :
+
+                <br>
+
+                <input
+                    type="password"
+                    name="password"
+                    required
+                >
+
+            </label>
+
+            <br><br>
+
+            <input
+                type="submit"
+                value="Connexion"
+                id="submitButt"
+            >
+
+        </form>
+
+    </div>
+
+<script>
+
+// ================================
+// CONNEXION UTILISATEUR
+// ================================
+
+const loginForm =
+document.getElementById(
+    "loginForm"
+);
+
+loginForm.addEventListener(
+"submit",
+async function(e){
+
+    // Empêche le rechargement de la page
+    e.preventDefault();
+
+    // Récupération des données
+    const email =
+    document.querySelector(
+        'input[name="email"]'
+    ).value;
+
+    const password =
+    document.querySelector(
+        'input[name="password"]'
+    ).value;
+
+    try{
+
+        // Envoie des données au serveur
+        const response =
+        await fetch(
+            "/register",
+            {
+
+                method:"POST",
+
+                headers:{
+                    "Content-Type":
+                    "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    email,
+                    password
+
+                })
+
+            }
+        );
+
+        const data =
+        await response.json();
+
+        // Si connexion réussie
+        if(data.token){
+
+            // Sauvegarde du JWT
+            localStorage.setItem(
+                "token",
+                data.token
+            );
+
+            alert(
+                "Connexion réussie"
+            );
+
+            // Retour accueil
+          window.location.href = "dashboard.html";;
+
+        }else{
+
+            alert(
+                data.message
+            );
+
+        }
+
+    }catch(err){
+
+        console.log(err);
+
+        alert(
+            "Erreur serveur"
+        );
+
+    }
+
+});
+</script>
+
+</body>
+</html>
