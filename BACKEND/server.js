@@ -9,8 +9,19 @@ require("dotenv").config();
 const path = require("path");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+const crypto = require("crypto");
 const User = require("./models/user");
 const cron = require("node-cron");
+
+
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
 
 // ================================
 // MIDDLEWARES
@@ -476,6 +487,143 @@ app.get("/fix-league", async (req, res) => {
     );
 
     res.send("✅ League corrigée");
+
+});
+
+// ================================
+// MOT DE PASSE OUBLIÉ
+// ================================
+
+app.post("/api/reset-password", async (req, res) => {
+
+    try {
+
+        const { email } = req.body;
+
+        const user = await User.findOne({ email });
+
+        if (user) {
+
+            const token = crypto.randomBytes(32).toString("hex");
+
+            user.resetToken = token;
+            user.resetTokenExpiration = Date.now() + 3600000;
+
+            await user.save();
+
+            const resetLink =
+                `https://scola.onrender.com/new-password.html?token=${token}`;
+
+            await transporter.sendMail({
+                from: process.env.EMAIL_USER,
+                to: user.email,
+                subject: "Réinitialisation du mot de passe Scola",
+                html: `
+                    <h2>Réinitialisation du mot de passe</h2>
+                    <p>Clique sur le lien suivant :</p>
+                    <a href="${resetLink}">
+                        Réinitialiser mon mot de passe
+                    </a>
+                `
+            });
+        }
+
+        res.json({
+            message: "Si un compte existe, un email a été envoyé."
+        });
+
+    } catch (err) {
+
+        console.log(err);
+
+        res.status(500).json({
+            message: "Erreur serveur"
+        });
+
+    }
+
+});
+// ================================
+// MOT DE PASSE OUBLIÉ
+// ================================
+
+app.post("/api/reset-password", async (req, res) => {
+
+    try {
+
+        const { email } = req.body;
+
+        const user = await User.findOne({ email });
+
+        // Toujours répondre pareil pour la sécurité
+        if (!user) {
+            return res.json({
+                message: "Si un compte existe, un email a été envoyé."
+            });
+        }
+
+        // Générer un token unique
+        const token = crypto.randomBytes(32).toString("hex");
+
+        // Expire dans 1 heure
+        user.resetToken = token;
+        user.resetTokenExpiration = Date.now() + 3600000;
+
+        await user.save();
+
+        const resetLink =
+            `https://scola.onrender.com/new-password.html?token=${token}`;
+
+        await transporter.sendMail({
+
+            from: process.env.EMAIL_USER,
+            to: user.email,
+
+            subject: "Réinitialisation du mot de passe Scola",
+
+            html: `
+                <h2>Réinitialisation du mot de passe</h2>
+
+                <p>Bonjour ${user.name},</p>
+
+                <p>
+                    Tu as demandé une réinitialisation de ton mot de passe.
+                </p>
+
+                <p>
+                    Clique sur le bouton ci-dessous :
+                </p>
+
+                <a href="${resetLink}"
+                   style="
+                   display:inline-block;
+                   padding:12px 20px;
+                   background:#2563eb;
+                   color:white;
+                   text-decoration:none;
+                   border-radius:6px;">
+                   Réinitialiser mon mot de passe
+                </a>
+
+                <p>
+                    Ce lien expire dans 1 heure.
+                </p>
+            `
+        });
+
+        res.json({
+            message: "Si un compte existe, un email a été envoyé."
+        });
+
+    } catch (err) {
+
+        console.log(err);
+
+        res.status(500).json({
+            message: "Erreur serveur"
+        });
+
+    }
 
 });
 

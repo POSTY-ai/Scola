@@ -76,7 +76,19 @@ weeklyLeague: {
 xpTotal: { type: Number, default: 0 },
 // xpTotal = cumul de tous les XP gagnés depuis l'inscription
 
+resetToken: {
+    type: String,
+    default: null
+},
+
+resetTokenExpiration: {
+    type: Date,
+    default: null
+},
+
 });
+
+
 
 
 // Export du modèle
