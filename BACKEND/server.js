@@ -615,15 +615,16 @@ app.post("/api/reset-password", async (req, res) => {
             message: "Si un compte existe, un email a été envoyé."
         });
 
-    } catch (err) {
+   catch (err) {
 
-        console.log(err);
+    console.error("ERREUR RESET PASSWORD :");
+    console.error(err);
 
-        res.status(500).json({
-            message: "Erreur serveur"
-        });
+    res.status(500).json({
+        error: err.message
+    });
 
-    }
+}
 
 });
 
