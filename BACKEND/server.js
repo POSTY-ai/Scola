@@ -14,11 +14,10 @@ const crypto = require("crypto");
 const User = require("./models/user");
 const cron = require("node-cron");
 
-
 const transporter = nodemailer.createTransport({
     host: "smtp-relay.brevo.com",
-    port: 587,
-    secure: false,
+    port: 465,
+    secure: true,  // true = SSL
     auth: {
         user: process.env.BREVO_USER,
         pass: process.env.BREVO_PASS
