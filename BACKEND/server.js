@@ -19,7 +19,16 @@ const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+        pass: process.env.EMAIL_PASS  // Sans espaces : znrbgrdoczmvdxqz
+    }
+});
+
+// ✅ TEST DE CONNEXION AU DÉMARRAGE — vérifie les logs Render
+transporter.verify((error, success) => {
+    if (error) {
+        console.log("❌ Gmail ERREUR :", error.message);
+    } else {
+        console.log("✅ Gmail prêt à envoyer des emails");
     }
 });
 
