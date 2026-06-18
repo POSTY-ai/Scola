@@ -532,8 +532,7 @@ app.post("/api/reset-password", async (req, res) => {
 
         await user.save();
 
-        const resetLink =
-            `https://scola.onrender.com/new-password.html?token=${token}`;
+        const resetLink = `https://scola.onrender.com/Pages/reset-password.html?token=${token}`;
 
        await sendEmail(
     user.email,
