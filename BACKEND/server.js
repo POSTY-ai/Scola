@@ -13,16 +13,17 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const User = require("./models/user");
 const cron = require("node-cron");
-
-const SibApiV3Sdk = require('@getbrevo/brevo');
+const Brevo = require('@getbrevo/brevo');
 
 // Configuration API Brevo
-const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
-apiInstance.authentications['apiKey'].apiKey = process.env.BREVO_API_KEY;
+const defaultClient = Brevo.ApiClient.instance;
+defaultClient.authentications['api-key'].apiKey = process.env.BREVO_API_KEY;
+
+const apiInstance = new Brevo.TransactionalEmailsApi();
 
 // Fonction d'envoi d'email via API HTTP (pas SMTP)
 async function sendEmail(toEmail, toName, subject, htmlContent) {
-    const email = new SibApiV3Sdk.SendSmtpEmail();
+    const email = new Brevo.SendSmtpEmail();
     email.sender = { name: "Scola", email: "noreply@scola.ht" };
     email.to = [{ email: toEmail, name: toName }];
     email.subject = subject;
