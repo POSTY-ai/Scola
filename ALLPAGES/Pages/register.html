@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <title>Connexion — Scola</title>
+    <style>
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #ffffff;
+        }
+
+        /* ====================================================
+           LOGO EN HAUT
+           ==================================================== */
+        .logo-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 32px;
+            text-decoration: none;
+        }
+
+        .logo-wrap img {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+        }
+
+        .logo-nom {
+            font-size: 24px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+
+        /* ====================================================
+           CARTE DU FORMULAIRE
+           ==================================================== */
+        .carte {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 40px 36px;
+            width: 100%;
+            max-width: 440px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 24px 48px rgba(0,0,0,0.4);
+            animation: entree 0.4s ease;
+        }
+
+        @keyframes entree {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .carte-titre {
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            color: #ffffff;
+        }
+
+        .carte-sous-titre {
+            font-size: 14px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 28px;
+        }
+
+        /* ====================================================
+           CHAMPS DE SAISIE
+           ==================================================== */
+        .champ-groupe {
+            margin-bottom: 18px;
+            position: relative;
+        }
+
+        .champ-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 8px;
+        }
+
+        .champ-wrap {
+            position: relative;
+        }
+
+        .champ-icone {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255,255,255,0.3);
+            font-size: 15px;
+            pointer-events: none;
+        }
+
+        .champ-input {
+            width: 100%;
+            padding: 13px 14px 13px 42px;
+            background: rgba(255,255,255,0.07);
+            border: 1.5px solid rgba(255,255,255,0.12);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 15px;
+            font-family: inherit;
+            transition: border-color 0.2s, background 0.2s;
+            box-sizing: border-box;
+        }
+
+        .champ-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .champ-input::placeholder {
+            color: rgba(255,255,255,0.25);
+        }
+
+        /* Bouton œil mot de passe */
+        .toggle-mdp {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.35);
+            cursor: pointer;
+            font-size: 15px;
+            padding: 0;
+            transition: color 0.2s;
+        }
+
+        .toggle-mdp:hover { color: rgba(255,255,255,0.7); }
+
+        /* ====================================================
+           LIEN MOT DE PASSE OUBLIÉ
+           ==================================================== */
+        .mdp-oublie {
+            display: block;
+            text-align: right;
+            font-size: 12px;
+            color: #a78bfa;
+            text-decoration: none;
+            margin-top: 6px;
+            transition: color 0.2s;
+        }
+
+        .mdp-oublie:hover { color: #c4b5fd; }
+
+        /* ====================================================
+           MESSAGE D'ERREUR / SUCCÈS
+           ==================================================== */
+        .message {
+            display: none;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 18px;
+        }
+
+        .message.erreur {
+            background: rgba(255,71,87,0.15);
+            border: 1px solid rgba(255,71,87,0.35);
+            color: #ff8fa3;
+        }
+
+        .message.succes {
+            background: rgba(46,213,115,0.15);
+            border: 1px solid rgba(46,213,115,0.35);
+            color: #81f5b0;
+        }
+
+        /* ====================================================
+           BOUTON SOUMETTRE
+           ==================================================== */
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+            box-shadow: 0 4px 14px rgba(102,126,234,0.35);
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(102,126,234,0.5);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* ====================================================
+           LIENS BAS DE PAGE
+           ==================================================== */
+        .lien-bas {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 14px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .lien-bas a {
+            color: #a78bfa;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .lien-bas a:hover { color: #c4b5fd; }
+
+        /* Séparateur */
+        .separateur {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 20px 0;
+            color: rgba(255,255,255,0.2);
+            font-size: 13px;
+        }
+
+        .separateur::before,
+        .separateur::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Logo -->
+    <a href="/" class="logo-wrap">
+        <img src="../Images/IMG_0758.PNG" alt="Logo Scola">
+        <span class="logo-nom">Scola</span>
+    </a>
+
+    <!-- Carte formulaire -->
+    <div class="carte">
+
+        <h1 class="carte-titre">Bon retour 👋</h1>
+        <p class="carte-sous-titre">Connecte-toi pour continuer à réviser</p>
+
+        <!-- Message erreur/succès -->
+        <div class="message" id="message"></div>
+
+        <form id="loginForm" autocomplete="off">
+
+            <!-- Email -->
+            <div class="champ-groupe">
+                <label class="champ-label" for="inputEmail">Adresse email</label>
+                <div class="champ-wrap">
+                    <i class="fa-solid fa-envelope champ-icone"></i>
+                    <input
+                        type="email"
+                        id="inputEmail"
+                        name="email"
+                        class="champ-input"
+                        placeholder="nom@gmail.com"
+                        required
+                        autocomplete="email"
+                    >
+                </div>
+            </div>
+
+            <!-- Mot de passe -->
+            <div class="champ-groupe">
+                <label class="champ-label" for="inputMdp">Mot de passe</label>
+                <div class="champ-wrap">
+                    <i class="fa-solid fa-lock champ-icone"></i>
+                    <input
+                        type="password"
+                        id="inputMdp"
+                        name="password"
+                        class="champ-input"
+                        placeholder="Ton mot de passe"
+                        required
+                        style="padding-right: 46px;"
+                    >
+                    <button type="button" class="toggle-mdp" onclick="toggleMdp()">
+                        <i class="fa-solid fa-eye" id="iconeOeil"></i>
+                    </button>
+                </div>
+                <!-- Lien mot de passe oublié juste sous le champ -->
+                <a href="forget-email.html" class="mdp-oublie">
+                    Mot de passe oublié ?
+                </a>
+            </div>
+
+            <!-- Bouton -->
+            <button type="submit" class="btn-submit" id="btnSubmit">
+                <i class="fa-solid fa-right-to-bracket"></i>
+                Se connecter
+            </button>
+
+        </form>
+
+        <div class="separateur">ou</div>
+
+        <div class="lien-bas">
+            Tu n'as pas de compte ?
+            <a href="register.html">S'inscrire gratuitement</a>
+        </div>
+
+    </div>
+
+    <script>
+
+        // ============================================================
+        // AFFICHER / CACHER LE MOT DE PASSE
+        // ============================================================
+        function toggleMdp() {
+            const input = document.getElementById("inputMdp");
+            const icone = document.getElementById("iconeOeil");
+            if (input.type === "password") {
+                input.type = "text";
+                icone.className = "fa-solid fa-eye-slash";
+            } else {
+                input.type = "password";
+                icone.className = "fa-solid fa-eye";
+            }
+        }
+
+        // ============================================================
+        // AFFICHER UN MESSAGE
+        // ============================================================
+        function afficherMessage(type, texte) {
+            const el = document.getElementById("message");
+            el.textContent = texte;
+            el.className = `message ${type}`;
+            el.style.display = "block";
+        }
+
+        // ============================================================
+        // SOUMISSION DU FORMULAIRE
+        // ============================================================
+        document.getElementById("loginForm").addEventListener("submit", async function(e) {
+
+            e.preventDefault();
+
+            const email    = document.getElementById("inputEmail").value.trim();
+            const password = document.getElementById("inputMdp").value;
+
+            // Validation basique
+            if (!email || !password) {
+                afficherMessage("erreur", "Remplis tous les champs.");
+                return;
+            }
+
+            // Désactiver le bouton pendant l'envoi
+            const btn = document.getElementById("btnSubmit");
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Connexion en cours...';
+
+            try {
+
+                // Appel à la route de connexion du backend
+               const response = await fetch("/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+
+                    // Sauvegarde le token JWT dans localStorage
+                    // JWT = JSON Web Token = clé d'authentification que le backend retourne
+                    localStorage.setItem("token", data.token);
+
+                    afficherMessage("succes", "✅ Connexion réussie ! Redirection...");
+
+                    // Redirige vers le tableau de bord après 1.2 secondes
+                    setTimeout(() => {
+                        window.location.href = "dashboard.html";
+                    }, 1200);
+
+                } else {
+                    afficherMessage("erreur", data.message || "Email ou mot de passe incorrect.");
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Se connecter';
+                }
+
+            } catch (err) {
+                console.error(err);
+                afficherMessage("erreur", "Erreur de connexion au serveur. Réessaie.");
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Se connecter';
+            }
+
+        });
+
+    </script>
+
+</body>
+</html>

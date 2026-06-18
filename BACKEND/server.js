@@ -9,29 +9,26 @@ require("dotenv").config();
 const path = require("path");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");
+
 const crypto = require("crypto");
 const User = require("./models/user");
 const cron = require("node-cron");
 
-const transporter = nodemailer.createTransport({
-    host: "smtp-relay.brevo.com",
-    port: 465,
-    secure: true,  // true = SSL
-    auth: {
-        user: process.env.BREVO_USER,
-        pass: process.env.BREVO_PASS
-    }
-});
+const SibApiV3Sdk = require('@getbrevo/brevo');
 
-transporter.verify((error, success) => {
-    if (error) {
-        console.log("❌ Brevo ERREUR :", error.message);
-    } else {
-        console.log("✅ Brevo prêt à envoyer des emails");
-    }
-});
+// Configuration API Brevo
+const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+apiInstance.authentications['apiKey'].apiKey = process.env.BREVO_API_KEY;
 
+// Fonction d'envoi d'email via API HTTP (pas SMTP)
+async function sendEmail(toEmail, toName, subject, htmlContent) {
+    const email = new SibApiV3Sdk.SendSmtpEmail();
+    email.sender = { name: "Scola", email: "noreply@scola.ht" };
+    email.to = [{ email: toEmail, name: toName }];
+    email.subject = subject;
+    email.htmlContent = htmlContent;
+    return await apiInstance.sendTransacEmail(email);
+}
 
 
 // ================================
@@ -532,42 +529,20 @@ app.post("/api/reset-password", async (req, res) => {
         const resetLink =
             `https://scola.onrender.com/new-password.html?token=${token}`;
 
-        await transporter.sendMail({
-
-            from: process.env.EMAIL_USER,
-            to: user.email,
-
-            subject: "Réinitialisation du mot de passe Scola",
-
-            html: `
-                <h2>Réinitialisation du mot de passe</h2>
-
-                <p>Bonjour ${user.name},</p>
-
-                <p>
-                    Tu as demandé une réinitialisation de ton mot de passe.
-                </p>
-
-                <p>
-                    Clique sur le bouton ci-dessous :
-                </p>
-
-                <a href="${resetLink}"
-                   style="
-                   display:inline-block;
-                   padding:12px 20px;
-                   background:#2563eb;
-                   color:white;
-                   text-decoration:none;
-                   border-radius:6px;">
-                   Réinitialiser mon mot de passe
-                </a>
-
-                <p>
-                    Ce lien expire dans 1 heure.
-                </p>
-            `
-        });
+       await sendEmail(
+    user.email,
+    user.name,
+    "Réinitialisation du mot de passe Scola",
+    `
+    <h2>Réinitialisation du mot de passe</h2>
+    <p>Bonjour ${user.name},</p>
+    <p>Clique sur le bouton ci-dessous pour réinitialiser ton mot de passe :</p>
+    <a href="${resetLink}" style="display:inline-block;padding:12px 20px;background:#2563eb;color:white;text-decoration:none;border-radius:6px;">
+        Réinitialiser mon mot de passe
+    </a>
+    <p>Ce lien expire dans 1 heure.</p>
+    `
+);
 
         res.json({
             message: "Si un compte existe, un email a été envoyé."
