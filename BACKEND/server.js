@@ -9,7 +9,7 @@ require("dotenv").config();
 const path = require("path");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
+const cors= require('cors')
 const crypto = require("crypto");
 const User = require("./models/user");
 const cron = require("node-cron");
@@ -40,7 +40,7 @@ async function sendEmail(toEmail, toName, subject, htmlContent) {
 // ================================
 // MIDDLEWARES
 // ================================
-
+app.use(cors({origin:'https://scola.onrender.com'}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "../ALLPAGES")));
@@ -248,39 +248,6 @@ app.get("/api/profile", auth, async (req, res) => {
 
 });
 
-// ================================
-// MODIFIER LE PROFIL
-// Permet de changer le nom de l'utilisateur
-// Route protégée
-// ================================
-
-app.put("/api/profile", auth, async (req, res) => {
-
-    try {
-
-        const { name } = req.body;
-
-
-        if (!name || name.trim() === "") {
-            return res.status(400).json({ message: "Le nom ne peut pas être vide" });
-        }
-
-        // findOneAndUpdate = trouve ET modifie en une seule opération
-        // { new: true } = retourne le document APRÈS modification
-        const user = await User.findOneAndUpdate(
-            { email: req.user.email },
-            { $set: { name: name.trim() } },
-            { new: true }
-        );
-
-        res.json({ message: "Profil mis à jour", name: user.name });
-
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({ message: "Erreur serveur" });
-    }
-
-});
 
 // ================================
 // AJOUTER XP
@@ -295,54 +262,91 @@ app.post("/api/ajouter-xp", auth, async (req, res) => {
         console.log("Points reçus =", points);
 
         const user = await User.findOne({ email: req.user.email });
+
+        if (!user) {
+            return res.status(404).json({ message: "Utilisateur introuvable" });
+        }
+
         console.log("XP avant =", user.weeklyLeague.xp);
 
-        // Ajouter les points
-        user.weeklyLeague.xp = Number(user.weeklyLeague.xp) + points;
-        user.weeklyLeague.xpToday = Number(user.weeklyLeague.xpToday) + points;
+        // ==========================
+        // AJOUT DES XP
+        // ==========================
+
+        user.weeklyLeague.xp =
+            Number(user.weeklyLeague.xp || 0) + points;
+
+        user.weeklyLeague.xpToday =
+            Number(user.weeklyLeague.xpToday || 0) + points;
+
+        // XP total à vie
+        user.xpTotal = Number(user.xpTotal || 0) + points;
 
         console.log("XP après =", user.weeklyLeague.xp);
 
-        // Mise à jour automatique de la ligue selon les seuils XP
-        if (user.weeklyLeague.xp >= 500)  user.weeklyLeague.league = "Argent";
-        if (user.weeklyLeague.xp >= 1000) user.weeklyLeague.league = "Or";
-        if (user.weeklyLeague.xp >= 2000) user.weeklyLeague.league = "Platine";
-        if (user.weeklyLeague.xp >= 5000) user.weeklyLeague.league = "Diamant";
+        // ==========================
+        // MISE À JOUR DE LA LIGUE
+        // ==========================
 
-        // XP de la semaine
-user.weeklyLeague.xp += points;
-user.weeklyLeague.xpToday += points;
-
-// ← AJOUTE CETTE LIGNE — XP total à vie
-user.xpTotal = (user.xpTotal || 0) + points;
-
-        // Calcul du streak (jours consécutifs)
-        const today = new Date();
-        if (!user.weeklyLeague.lastActivity) {
-            user.weeklyLeague.streak = 1;
+        if (user.weeklyLeague.xp >= 5000) {
+            user.weeklyLeague.league = "Diamant";
+        } else if (user.weeklyLeague.xp >= 2000) {
+            user.weeklyLeague.league = "Platine";
+        } else if (user.weeklyLeague.xp >= 1000) {
+            user.weeklyLeague.league = "Or";
+        } else if (user.weeklyLeague.xp >= 500) {
+            user.weeklyLeague.league = "Argent";
         } else {
+            user.weeklyLeague.league = "Bronze";
+        }
+
+        // ==========================
+        // CALCUL DU STREAK
+        // ==========================
+
+        const today = new Date();
+
+        if (!user.weeklyLeague.lastActivity) {
+
+            user.weeklyLeague.streak = 1;
+
+        } else {
+
             const lastDate = new Date(user.weeklyLeague.lastActivity);
-            const diffDays = Math.floor((today - lastDate) / (1000 * 60 * 60 * 24));
-            // diffDays = nombre de jours entre la dernière activité et aujourd'hui
-            if (diffDays === 1) user.weeklyLeague.streak += 1;   // jour suivant = continue le streak
-            else if (diffDays > 1) user.weeklyLeague.streak = 1; // saut = repart à 1
+
+            const diffDays = Math.floor(
+                (today - lastDate) / (1000 * 60 * 60 * 24)
+            );
+
+            if (diffDays === 1) {
+                user.weeklyLeague.streak += 1;
+            } else if (diffDays > 1) {
+                user.weeklyLeague.streak = 1;
+            }
+
         }
 
         user.weeklyLeague.lastActivity = today;
-        user.dailyQuiz.lastPlayed = new Date();
+        user.dailyQuiz.lastPlayed = today;
 
         await user.save();
 
         res.json({
             message: "XP ajoutés avec succès",
             xp: user.weeklyLeague.xp,
+            xpTotal: user.xpTotal,
             league: user.weeklyLeague.league,
             streak: user.weeklyLeague.streak
         });
 
     } catch (err) {
+
         console.log(err);
-        res.status(500).json({ message: "Erreur serveur" });
+
+        res.status(500).json({
+            message: "Erreur serveur"
+        });
+
     }
 
 });
