@@ -187,6 +187,368 @@ function auth(req, res, next) {
     }
 
 }
+// ============================================================
+// ROUTES PREMIUM — À COLLER DANS TON server.js EXISTANT
+// Colle ce bloc après ton middleware "auth" existant
+// ============================================================
+
+
+// ================================
+// MIDDLEWARE PREMIUM
+// Vérifie que l'utilisateur a le bon rôle
+// Utilisation : checkPremium(["pro","ia"]) comme 2e argument d'une route
+// ================================
+
+function checkPremium(rolesAutorises) {
+    return async (req, res, next) => {
+
+        try {
+            const user = await User.findOne({ email: req.user.email });
+
+            if (!user) {
+                return res.status(404).json({ message: "Utilisateur introuvable" });
+            }
+
+            // Si l'abonnement est expiré → on rétrograde automatiquement
+            if (user.premiumExpiry && new Date() > new Date(user.premiumExpiry)) {
+                user.role = "gratuit";
+                user.premiumExpiry = null;
+                await user.save();
+                return res.status(403).json({
+                    locked: true,
+                    message: "Ton abonnement a expiré. Renouvelle pour continuer."
+                });
+            }
+
+            // Vérifie si le rôle est dans la liste autorisée
+            if (!rolesAutorises.includes(user.role)) {
+                return res.status(403).json({
+                    locked: true,
+                    role: user.role,
+                    message: "Cette fonctionnalité est réservée aux membres premium."
+                });
+            }
+
+            req.userDoc = user; // attache le doc complet pour éviter un 2e appel DB
+            next();
+
+        } catch (err) {
+            console.log(err);
+            res.status(500).json({ message: "Erreur serveur" });
+        }
+    };
+}
+
+
+// ================================
+// GET /api/me
+// Retourne le rôle et le statut premium de l'utilisateur connecté
+// Appelé au chargement de chaque page pour adapter l'UI
+// ================================
+
+app.get("/api/me", auth, async (req, res) => {
+
+    try {
+
+        const user = await User.findOne({ email: req.user.email });
+
+        if (!user) return res.status(404).json({ message: "Utilisateur introuvable" });
+
+        // Vérifie expiration à la volée
+        let role = user.role;
+        let premiumExpiry = user.premiumExpiry;
+
+        if (premiumExpiry && new Date() > new Date(premiumExpiry)) {
+            role = "gratuit";
+            premiumExpiry = null;
+            user.role = "gratuit";
+            user.premiumExpiry = null;
+            await user.save();
+        }
+
+        res.json({
+            name: user.name,
+            email: user.email,
+            role,
+            premiumExpiry,
+            isPro: ["pro", "ia"].includes(role),
+            isIA: role === "ia"
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Erreur serveur" });
+    }
+
+});
+
+
+// ================================
+// POST /api/premium/activer
+// Active le premium pour un utilisateur après paiement confirmé
+// En production : appelé après confirmation MonCash/paiement
+// Pour l'instant : route admin manuelle
+// ================================
+
+app.post("/api/premium/activer", auth, async (req, res) => {
+
+    try {
+
+        const { email, tier, dureeJours } = req.body;
+        // tier = "pro" ou "ia"
+        // dureeJours = 30, 90, 365...
+
+        // Vérifie que c'est un admin (ton email)
+        const ADMIN_EMAILS = ["jonathanfortune07@gmail.com"]; // ← ton email admin
+        if (!ADMIN_EMAILS.includes(req.user.email)) {
+            return res.status(403).json({ message: "Accès refusé" });
+        }
+
+        const cible = await User.findOne({ email });
+        if (!cible) return res.status(404).json({ message: "Utilisateur introuvable" });
+
+        // Calcule la date d'expiration
+        const expiry = new Date();
+        expiry.setDate(expiry.getDate() + Number(dureeJours));
+
+        cible.role = tier;
+        cible.premiumExpiry = expiry;
+        await cible.save();
+
+        console.log(`✅ Premium activé pour ${email} — tier: ${tier} — expire: ${expiry}`);
+
+        res.json({
+            message: `Premium ${tier} activé pour ${email}`,
+            expiry
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Erreur serveur" });
+    }
+
+});
+
+
+// ================================
+// GET /api/examens
+// Retourne les anciens examens selon le rôle
+// Gratuit → 3 examens | Pro/IA → tous
+// ================================
+
+app.get("/api/examens", auth, async (req, res) => {
+
+    try {
+
+        const user = await User.findOne({ email: req.user.email });
+
+        // Vérifie expiration
+        if (user.premiumExpiry && new Date() > new Date(user.premiumExpiry)) {
+            user.role = "gratuit";
+            user.premiumExpiry = null;
+            await user.save();
+        }
+
+        // Liste complète des 18 examens (remplace les IDs par tes vrais IDs Google Drive)
+        const tousLesExamens = [
+            { id: 1, titre: "Bac 2024 — Session 1", annee: 2024, driveId: "DRIVE_ID_1", gratuit: true },
+            { id: 2, titre: "Bac 2024 — Session 2", annee: 2024, driveId: "DRIVE_ID_2", gratuit: true },
+            { id: 3, titre: "Bac 2023 — Session 1", annee: 2023, driveId: "DRIVE_ID_3", gratuit: true },
+            { id: 4, titre: "Bac 2023 — Session 2", annee: 2023, driveId: "DRIVE_ID_4", gratuit: false },
+            { id: 5, titre: "Bac 2022 — Session 1", annee: 2022, driveId: "DRIVE_ID_5", gratuit: false },
+            { id: 6, titre: "Bac 2022 — Session 2", annee: 2022, driveId: "DRIVE_ID_6", gratuit: false },
+            { id: 7, titre: "Bac 2021 — Session 1", annee: 2021, driveId: "DRIVE_ID_7", gratuit: false },
+            { id: 8, titre: "Bac 2021 — Session 2", annee: 2021, driveId: "DRIVE_ID_8", gratuit: false },
+            { id: 9, titre: "Bac 2020 — Session 1", annee: 2020, driveId: "DRIVE_ID_9", gratuit: false },
+            { id: 10, titre: "Bac 2020 — Session 2", annee: 2020, driveId: "DRIVE_ID_10", gratuit: false },
+            { id: 11, titre: "Bac 2019 — Session 1", annee: 2019, driveId: "DRIVE_ID_11", gratuit: false },
+            { id: 12, titre: "Bac 2019 — Session 2", annee: 2019, driveId: "DRIVE_ID_12", gratuit: false },
+            { id: 13, titre: "Bac 2018 — Session 1", annee: 2018, driveId: "DRIVE_ID_13", gratuit: false },
+            { id: 14, titre: "Bac 2018 — Session 2", annee: 2018, driveId: "DRIVE_ID_14", gratuit: false },
+            { id: 15, titre: "Bac 2017 — Session 1", annee: 2017, driveId: "DRIVE_ID_15", gratuit: false },
+            { id: 16, titre: "Bac 2017 — Session 2", annee: 2017, driveId: "DRIVE_ID_16", gratuit: false },
+            { id: 17, titre: "Bac 2016 — Session 1", annee: 2016, driveId: "DRIVE_ID_17", gratuit: false },
+            { id: 18, titre: "Bac 2016 — Session 2", annee: 2016, driveId: "DRIVE_ID_18", gratuit: false },
+        ];
+
+        const estPremium = ["pro", "ia"].includes(user.role);
+
+        if (estPremium) {
+            // Pro/IA → tous les examens avec les vrais driveIds
+            return res.json({ role: user.role, examens: tousLesExamens });
+        } else {
+            // Gratuit → seulement les 3 marqués gratuit: true, sans driveId pour les autres
+            const examensGratuits = tousLesExamens.map(e => ({
+                ...e,
+                driveId: e.gratuit ? e.driveId : null,
+                locked: !e.gratuit
+            }));
+            return res.json({ role: user.role, examens: examensGratuits });
+        }
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Erreur serveur" });
+    }
+
+});
+
+
+// ================================
+// GET /api/quiz/check (MODIFIÉ)
+// Gratuit → max 3 quiz/jour
+// Pro/IA → illimité
+// ================================
+
+app.get("/api/quiz/check-pro", auth, async (req, res) => {
+
+    try {
+
+        const user = await User.findOne({ email: req.user.email });
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        // Pro/IA → toujours peut jouer
+        if (["pro", "ia"].includes(user.role)) {
+            return res.json({ canPlay: true, role: user.role, limite: false });
+        }
+
+        // Gratuit → vérifie le compteur journalier
+        const LIMITE_GRATUIT = 3;
+
+        // Reset le compteur si c'est un nouveau jour
+        if (user.dailyQuiz.lastCountReset) {
+            const lastReset = new Date(user.dailyQuiz.lastCountReset);
+            lastReset.setHours(0, 0, 0, 0);
+            if (lastReset.getTime() !== today.getTime()) {
+                user.dailyQuiz.countToday = 0;
+                user.dailyQuiz.lastCountReset = today;
+                await user.save();
+            }
+        } else {
+            user.dailyQuiz.lastCountReset = today;
+            await user.save();
+        }
+
+        if (user.dailyQuiz.countToday >= LIMITE_GRATUIT) {
+            return res.json({
+                canPlay: false,
+                role: "gratuit",
+                limite: true,
+                message: `Tu as atteint ta limite de ${LIMITE_GRATUIT} quiz aujourd'hui. Passe à Pro pour jouer sans limite !`
+            });
+        }
+
+        res.json({
+            canPlay: true,
+            role: "gratuit",
+            limite: false,
+            restants: LIMITE_GRATUIT - user.dailyQuiz.countToday
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Erreur serveur" });
+    }
+
+});
+
+
+// ================================
+// POST /api/quiz/increment
+// Incrémente le compteur de quiz joués (appelé après chaque quiz)
+// ================================
+
+app.post("/api/quiz/increment", auth, async (req, res) => {
+
+    try {
+
+        const user = await User.findOne({ email: req.user.email });
+
+        // Pro/IA → on ne compte pas
+        if (["pro", "ia"].includes(user.role)) {
+            return res.json({ message: "OK" });
+        }
+
+        user.dailyQuiz.countToday = (user.dailyQuiz.countToday || 0) + 1;
+        await user.save();
+
+        res.json({ countToday: user.dailyQuiz.countToday });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Erreur serveur" });
+    }
+
+});
+
+
+// ================================
+// GET /api/chapitres/:id
+// Retourne le contenu d'un chapitre selon le rôle
+// Gratuit → introduction seulement
+// Pro/IA → contenu complet
+// ================================
+
+app.get("/api/chapitres/:id", auth, async (req, res) => {
+
+    try {
+
+        const user = await User.findOne({ email: req.user.email });
+        const estPremium = ["pro", "ia"].includes(user.role);
+
+        // Simule une base de chapitres (adapte selon ta structure réelle)
+        // En production, tu tireras ça de MongoDB
+        const chapitre = {
+            id: req.params.id,
+            titre: "Chapitre demandé",
+            introduction: "Contenu d'introduction disponible pour tous...",
+            contenuComplet: estPremium
+                ? "Contenu complet avec exercices, résumés et quiz..."
+                : null,
+            locked: !estPremium
+        };
+
+        res.json({ role: user.role, chapitre });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Erreur serveur" });
+    }
+
+});
+
+
+// ================================
+// POST /api/premium/desactiver (admin)
+// Rétrograde un utilisateur vers gratuit
+// ================================
+
+app.post("/api/premium/desactiver", auth, async (req, res) => {
+
+    try {
+
+        const ADMIN_EMAILS = ["jonathanfortune07@gmail.com"];
+        if (!ADMIN_EMAILS.includes(req.user.email)) {
+            return res.status(403).json({ message: "Accès refusé" });
+        }
+
+        const { email } = req.body;
+        const cible = await User.findOne({ email });
+        if (!cible) return res.status(404).json({ message: "Utilisateur introuvable" });
+
+        cible.role = "gratuit";
+        cible.premiumExpiry = null;
+        await cible.save();
+
+        res.json({ message: `Premium désactivé pour ${email}` });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Erreur serveur" });
+    }
+
+});
 
 // ================================
 // DASHBOARD
@@ -717,6 +1079,101 @@ app.delete("/api/profile", auth, async (req, res) => {
 
         console.log("🗑️ Compte supprimé :", req.user.email);
         res.json({ message: "Compte supprimé avec succès" });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Erreur serveur" });
+    }
+
+});
+// ============================================================
+// ROUTE SIMULATION PAIEMENT — À COLLER DANS server.js
+// Simule un paiement MonCash et active le premium
+// En production : remplace par la vraie vérification MonCash
+// ============================================================
+
+
+// ================================
+// POST /api/paiement/simuler
+// Simule un paiement réussi et active le premium
+// ================================
+
+app.post("/api/paiement/simuler", auth, async (req, res) => {
+
+    try {
+
+        const { tier, montant } = req.body;
+
+        // Vérifie que le tier est valide
+        if (!["pro", "ia"].includes(tier)) {
+            return res.status(400).json({ message: "Tier invalide" });
+        }
+
+        // Vérifie que le montant correspond au tier
+        const prixAttendus = { pro: 500, ia: 800 };
+        if (montant !== prixAttendus[tier]) {
+            return res.status(400).json({ message: "Montant incorrect" });
+        }
+
+        const user = await User.findOne({ email: req.user.email });
+        if (!user) return res.status(404).json({ message: "Utilisateur introuvable" });
+
+        // Calcule la date d'expiration (30 jours)
+        const expiry = new Date();
+        expiry.setDate(expiry.getDate() + 30);
+
+        // Active le premium
+        user.role = tier;
+        user.premiumExpiry = expiry;
+        await user.save();
+
+        // Génère un faux ID de transaction pour la simulation
+        const fakeTransactionId = "SIM-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8).toUpperCase();
+
+        console.log(`✅ [SIMULATION] Premium ${tier} activé pour ${req.user.email} — expire: ${expiry}`);
+
+        res.json({
+            message: "Paiement simulé avec succès",
+            transactionId: fakeTransactionId,
+            tier,
+            expiry,
+            role: user.role
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Erreur serveur" });
+    }
+
+});
+
+
+// ================================
+// GET /api/paiement/statut
+// Vérifie le statut premium de l'utilisateur
+// Appelé après retour de la page paiement
+// ================================
+
+app.get("/api/paiement/statut", auth, async (req, res) => {
+
+    try {
+
+        const user = await User.findOne({ email: req.user.email });
+        if (!user) return res.status(404).json({ message: "Utilisateur introuvable" });
+
+        // Vérifie expiration
+        if (user.premiumExpiry && new Date() > new Date(user.premiumExpiry)) {
+            user.role = "gratuit";
+            user.premiumExpiry = null;
+            await user.save();
+        }
+
+        res.json({
+            role: user.role,
+            premiumExpiry: user.premiumExpiry,
+            isPro: ["pro", "ia"].includes(user.role),
+            isIA: user.role === "ia"
+        });
 
     } catch (err) {
         console.log(err);

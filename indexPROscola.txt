@@ -1,0 +1,401 @@
+<!-- ========================================================== -->
+<!-- SECTION PREMIUM — À coller juste avant le <footer>        -->
+<!-- dans ton index.html (page avant connexion)                 -->
+<!-- ========================================================== -->
+
+<section class="premium-section" id="premium">
+
+    <div class="premium-header">
+        <span class="premium-eyebrow">Nos offres</span>
+        <h2 class="premium-titre" style="color:white;">Bienvenue sur Scola</h2>
+        <p class="premium-sous-titre">Commence gratuitement. Passe au niveau supérieur quand tu es prêt.</p>
+    </div>
+
+    <div class="premium-grille">
+
+        <!-- ── CARTE GRATUIT ── -->
+        <div class="plan-carte plan-gratuit">
+            <div class="plan-top">
+                <span class="plan-nom">Scola Gratuit</span>
+                <div class="plan-prix">
+                    <span class="plan-montant">0</span>
+                    <span class="plan-unite">HTG</span>
+                </div>
+                <p class="plan-desc">L'essentiel pour commencer ta préparation.</p>
+            </div>
+            <ul class="plan-features">
+                <li><i class="fa-solid fa-check"></i> Accès aux chapitres du Bac</li>
+                <li><i class="fa-solid fa-check"></i> Quiz hebdomadaires Ligue Bac</li>
+                <li><i class="fa-solid fa-check"></i> Jeux éducatifs</li>
+                <li><i class="fa-solid fa-check"></i> Classement général</li>
+                <li class="feature-off"><i class="fa-solid fa-xmark"></i> Anciens examens complets</li>
+                <li class="feature-off"><i class="fa-solid fa-xmark"></i> Corrections détaillées</li>
+                <li class="feature-off"><i class="fa-solid fa-xmark"></i> Statistiques avancées</li>
+            </ul>
+            <a href="Pages/inscription.html" class="plan-btn plan-btn-outline">Commencer gratuitement</a>
+        </div>
+
+        <!-- ── CARTE PRO (mise en avant) ── -->
+        <div class="plan-carte plan-pro plan-featured">
+            <div class="plan-badge-popular">⭐ Le plus populaire</div>
+            <div class="plan-top">
+                <span class="plan-nom">Scola Pro</span>
+                <div class="plan-prix">
+                    <span class="plan-montant">500</span>
+                    <span class="plan-unite">HTG / mois</span>
+                </div>
+                <p class="plan-desc">Tout ce qu'il faut pour décrocher ton Bac.</p>
+            </div>
+            <ul class="plan-features">
+                <li><i class="fa-solid fa-check"></i> Tout ce qui est inclus dans Gratuit</li>
+                <li><i class="fa-solid fa-check"></i> Accès illimité aux anciens examens</li>
+                <li><i class="fa-solid fa-check"></i> Corrections avec explications</li>
+                <li><i class="fa-solid fa-check"></i> Quiz personnalisés selon tes faiblesses</li>
+                <li><i class="fa-solid fa-check"></i> Statistiques avancées de progression</li>
+                <li><i class="fa-solid fa-check"></i> Mode examen blanc chronométré</li>
+                <li class="feature-off"><i class="fa-solid fa-xmark"></i> Assistant IA intégré</li>
+            </ul>
+            <a href="Pages/inscription.html" class="plan-btn plan-btn-pro">Passer à Pro</a>
+        </div>
+
+        <!-- ── CARTE CLASSE ── -->
+      
+
+        <!-- ── CARTE IA ── -->
+        <div class="plan-carte plan-ia">
+            <div class="plan-badge-soon">IA = Rapide</div>
+            <div class="plan-top">
+                <span class="plan-nom">Scola IA</span>
+                <div class="plan-prix">
+                    <span class="plan-montant">800</span>
+                    <span class="plan-unite">HTG / mois</span>
+                </div>
+                <p class="plan-desc">Add-on IA — à combiner avec Pro ou Classe.</p>
+            </div>
+            <ul class="plan-features">
+                <li><i class="fa-solid fa-check"></i> Assistant IA intégré 24h/24</li>
+                <li><i class="fa-solid fa-check"></i> Explications selon ton niveau détecté</li>
+                <li><i class="fa-solid fa-check"></i> Génération de fiches de révision</li>
+                <li><i class="fa-solid fa-check"></i> Correction automatique des réponses</li>
+                <li><i class="fa-solid fa-check"></i> Questions sur toutes les matières Bac</li>
+            </ul>
+            <a href="Pages/inscription.html" class="plan-btn plan-btn-pro">IA Disponible</a>
+        </div>
+
+    </div>
+
+    <!-- COMPARAISON RAPIDE -->
+    <div class="premium-comparaison">
+        <p class="comparaison-titre">Tu hésites encore ?</p>
+        <p class="comparaison-texte">
+            Les étudiants Scola Pro obtiennent en moyenne <strong>+ de  points</strong>  au Bac.
+            Commence avec le plan Gratuit, upgrade à tout moment.
+        </p>
+        <a href="Pages/inscription.html" class="comparaison-cta">Créer mon compte gratuitement →</a>
+    </div>
+
+</section>
+
+
+<!-- ========================================================== -->
+<!-- CSS PREMIUM — À coller dans ton fichier project.css        -->
+<!-- ========================================================== -->
+<style>
+body {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: #F2F2F2;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+    
+}
+/* ── SECTION WRAPPER ── */
+.premium-section {
+    padding: 80px 20px 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* ── HEADER ── */
+.premium-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.premium-eyebrow {
+    display: inline-block;
+    background: #e8f0fe;
+    color: #1a56db;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+}
+
+.premium-titre {
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 12px;
+    line-height: 1.2;
+}
+
+.premium-sous-titre {
+    font-size: 17px;
+    color: #64748b;
+    margin: 0;
+}
+
+/* ── GRILLE ── */
+.premium-grille {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    align-items: start;
+}
+
+/* ── CARTE DE BASE ── */
+.plan-carte {
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 28px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.plan-carte:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+}
+
+/* ── CARTE PRO (featured) ── */
+.plan-featured {
+    border: 2.5px solid #1a56db;
+    transform: scale(1.03);
+    box-shadow: 0 8px 32px rgba(26, 86, 219, 0.15);
+}
+
+.plan-featured:hover {
+    transform: scale(1.03) translateY(-4px);
+}
+
+/* ── BADGES ── */
+.plan-badge-popular,
+.plan-badge-soon {
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+.plan-badge-popular {
+    background: #1a56db;
+    color: #ffffff;
+}
+
+.plan-badge-soon {
+    background: #7c3aed;
+    color: #ffffff;
+}
+
+/* ── PLAN TOP ── */
+.plan-top {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.plan-nom {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.plan-pro .plan-nom { color: #1a56db; }
+.plan-classe .plan-nom { color: #b45309; }
+.plan-ia .plan-nom { color: #7c3aed; }
+
+.plan-prix {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.plan-montant {
+    font-size: 36px;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1;
+}
+
+.plan-unite {
+    font-size: 14px;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.plan-desc {
+    font-size: 14px;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* ── FEATURES ── */
+.plan-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.plan-features li {
+    font-size: 14px;
+    color: #334155;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.plan-features li i.fa-check {
+    color: #16a34a;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.plan-features li.feature-off {
+    color: #94a3b8;
+}
+
+.plan-features li.feature-off i.fa-xmark {
+    color: #cbd5e1;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+/* ── BOUTONS ── */
+.plan-btn {
+    display: block;
+    text-align: center;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.plan-btn-outline {
+    background: transparent;
+    border: 1.5px solid #e2e8f0;
+    color: #0f172a;
+}
+
+.plan-btn-outline:hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+}
+
+.plan-btn-pro {
+    background: #1a56db;
+    color: #ffffff;
+}
+
+.plan-btn-pro:hover {
+    background: #1447c0;
+}
+
+.plan-btn-disabled {
+    background: #f1f5f9;
+    color: #94a3b8;
+    cursor: not-allowed;
+    width: 100%;
+}
+
+/* ── COMPARAISON ── */
+.premium-comparaison {
+    margin-top: 50px;
+    background: linear-gradient(135deg, #f0f7ff 0%, #e8f0fe 100%);
+    border: 1px solid #c7d9f8;
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+}
+
+.comparaison-titre {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 10px;
+}
+
+.comparaison-texte {
+    font-size: 15px;
+    color: #475569;
+    margin: 0 0 20px;
+}
+
+.comparaison-texte strong {
+    color: #1a56db;
+}
+
+.comparaison-cta {
+    display: inline-block;
+    background: #0f172a;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 13px 28px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    transition: background 0.2s ease;
+}
+
+.comparaison-cta:hover {
+    background: #1e293b;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+    .premium-grille {
+        grid-template-columns: 1fr;
+    }
+
+    .plan-featured {
+        transform: scale(1);
+    }
+
+    .plan-featured:hover {
+        transform: translateY(-4px);
+    }
+
+    .premium-section {
+        padding: 50px 16px 40px;
+    }
+
+    .premium-comparaison {
+        padding: 24px 16px;
+    }
+}
+
+</style>

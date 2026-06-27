@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="../Css/project.css">
+    <title>Anciens Examens — Scola</title>
+    <style>
+
+        .examens-page {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px 20px 60px;
+        }
+
+        .btn-retour {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.6);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 28px;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 20px;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-retour:hover { color: #fff; background: rgba(255,255,255,0.12); }
+
+        .page-titre {
+            font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        .page-sous-titre {
+            font-size: 15px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 30px;
+        }
+
+        /* ── BANNIÈRE PRO ── */
+        .banniere-pro {
+            display: none;
+            background: linear-gradient(135deg, #1e3a5f, #1a56db);
+            border: 1px solid rgba(79,142,247,0.3);
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .banniere-pro-texte { font-size: 14px; color: #bfdbfe; }
+        .banniere-pro-texte strong { color: #fff; }
+        .banniere-pro-btn {
+            background: #fff;
+            color: #1a56db;
+            border: none;
+            border-radius: 8px;
+            padding: 9px 18px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        /* ── FILTRES ── */
+        .filtres {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .filtre-btn {
+            padding: 8px 18px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.7);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filtre-btn:hover, .filtre-btn.actif {
+            background: #667eea;
+            border-color: #667eea;
+            color: #fff;
+        }
+
+        /* ── GRILLE ── */
+        .examens-grille {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        /* ── CARTE ── */
+        .examen-carte {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 18px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+        .examen-carte:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+            border-color: rgba(102,126,234,0.3);
+        }
+
+        /* ── CARTE VERROUILLÉE ── */
+        .examen-carte.locked {
+            opacity: 0.65;
+            cursor: pointer;
+        }
+        .examen-carte.locked:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255,193,7,0.3);
+        }
+        .lock-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(10,15,30,0.55);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            z-index: 2;
+            backdrop-filter: blur(1px);
+            border-radius: 18px;
+        }
+        .lock-overlay .lock-icon { font-size: 32px; }
+        .lock-overlay .lock-label {
+            background: #f59e0b;
+            color: #000;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+        }
+        .lock-overlay .lock-sub {
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .examen-miniature {
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            position: relative;
+            overflow: hidden;
+        }
+        .miniature-ses  { background: linear-gradient(135deg,#667eea,#764ba2); }
+        .miniature-lla  { background: linear-gradient(135deg,#f093fb,#f5576c); }
+        .miniature-smp  { background: linear-gradient(135deg,#4facfe,#00f2fe); }
+        .miniature-svt  { background: linear-gradient(135deg,#43e97b,#38f9d7); }
+        .miniature-multi{ background: linear-gradient(135deg,#fa709a,#fee140); }
+
+        .examen-annee-badge {
+            position: absolute;
+            top: 12px; right: 12px;
+            background: rgba(0,0,0,0.35);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            backdrop-filter: blur(6px);
+        }
+
+        /* Badge PRO sur la miniature */
+        .badge-pro-carte {
+            position: absolute;
+            top: 12px; left: 12px;
+            background: linear-gradient(135deg,#f59e0b,#d97706);
+            color: #000;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 3px 9px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            z-index: 1;
+        }
+
+        .examen-info { padding: 18px 16px; }
+        .examen-titre {
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+        .examen-filieres {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+        .filiere-tag {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 9px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .tag-ses { background:rgba(102,126,234,0.2); color:#a5b4fc; }
+        .tag-lla { background:rgba(240,147,251,0.2); color:#f0abfc; }
+        .tag-smp { background:rgba(79,172,254,0.2);  color:#7dd3fc; }
+        .tag-svt { background:rgba(67,233,123,0.2);  color:#86efac; }
+
+        .examen-actions { display:flex; gap:8px; }
+
+        .btn-voir {
+            flex: 1;
+            padding: 10px;
+            background: #667eea;
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .btn-voir:hover { background:#5a67d8; transform:translateY(-1px); }
+
+        /* Bouton correction — visible uniquement Pro */
+        .btn-correction {
+            flex: 1;
+            padding: 10px;
+            background: linear-gradient(135deg,#f59e0b,#d97706);
+            border: none;
+            border-radius: 10px;
+            color: #000;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+        .btn-correction:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        .btn-telecharger {
+            padding: 10px 14px;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            color: rgba(255,255,255,0.7);
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+        .btn-telecharger:hover { background:rgba(255,255,255,0.13); color:#fff; }
+
+        /* ── CHRONOMÈTRE MODE EXAMEN (Pro) ── */
+        .chrono-bar {
+            display: none;
+            background: rgba(245,158,11,0.1);
+            border: 1px solid rgba(245,158,11,0.3);
+            border-radius: 10px;
+            padding: 10px 16px;
+            margin-bottom: 16px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .chrono-bar.visible { display: flex; }
+        .chrono-temps {
+            font-size: 22px;
+            font-weight: 800;
+            color: #f59e0b;
+            font-variant-numeric: tabular-nums;
+        }
+        .chrono-label { font-size: 13px; color: rgba(255,255,255,0.5); }
+        .chrono-btns { display: flex; gap: 8px; }
+        .chrono-btn {
+            background: rgba(245,158,11,0.15);
+            border: 1px solid rgba(245,158,11,0.3);
+            border-radius: 8px;
+            padding: 7px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #f59e0b;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .chrono-btn:hover { background: rgba(245,158,11,0.25); }
+        .chrono-btn.stop { color: #f87171; border-color: rgba(248,113,113,0.3); background: rgba(248,113,113,0.1); }
+
+        /* ── VISIONNEUSE PDF ── */
+        .visionneuse-overlay {
+            display: none;
+            position: fixed;
+            top:0; left:0;
+            width:100%; height:100%;
+            background: rgba(0,0,0,0.88);
+            z-index: 9999;
+            flex-direction: column;
+        }
+        .visionneuse-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            background: rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            flex-shrink: 0;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .visionneuse-titre { font-size: 15px; font-weight: 600; color: #fff; }
+        .visionneuse-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+
+        /* Bouton correction dans la visionneuse */
+        .btn-correction-visionneuse {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg,#f59e0b,#d97706);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .btn-correction-visionneuse:hover { opacity: 0.9; }
+        .btn-correction-visionneuse.visible { display: flex; }
+
+        /* Bouton chrono dans la visionneuse */
+        .btn-chrono-visionneuse {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            background: rgba(245,158,11,0.15);
+            border: 1px solid rgba(245,158,11,0.3);
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #f59e0b;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-chrono-visionneuse:hover { background: rgba(245,158,11,0.25); }
+        .btn-chrono-visionneuse.visible { display: flex; }
+
+        .btn-fermer {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .btn-fermer:hover { background: rgba(255,71,87,0.3); }
+
+        .visionneuse-iframe { flex:1; width:100%; border:none; }
+        .visionneuse-loading {
+            position: absolute;
+            top:50%; left:50%;
+            transform: translate(-50%,-50%);
+            text-align: center;
+            color: rgba(255,255,255,0.5);
+            font-size: 15px;
+            pointer-events: none;
+        }
+
+        /* ── MODAL CORRECTION ── */
+        .correction-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 99999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .correction-overlay.visible { display: flex; }
+
+        .correction-modal {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 700px;
+            max-height: 88vh;
+            overflow-y: auto;
+            padding: 32px;
+            position: relative;
+        }
+
+        .correction-modal::-webkit-scrollbar { width: 6px; }
+        .correction-modal::-webkit-scrollbar-track { background: #0f172a; }
+        .correction-modal::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+
+        .correction-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            gap: 16px;
+        }
+        .correction-titre-block {}
+        .correction-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg,#f59e0b,#d97706);
+            color: #000;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 8px;
+        }
+        .correction-titre {
+            font-size: 20px;
+            font-weight: 800;
+            color: #f8fafc;
+            line-height: 1.3;
+        }
+        .correction-fermer {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background 0.2s;
+        }
+        .correction-fermer:hover { background: rgba(255,71,87,0.3); }
+
+        /* Questions de correction */
+        .correction-questions { display: flex; flex-direction: column; gap: 16px; }
+
+        .question-bloc {
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        .question-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .question-header:hover { background: rgba(255,255,255,0.03); }
+
+        .question-num {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .question-num-badge {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            background: #1e293b;
+            color: #94a3b8;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .question-texte {
+            font-size: 14px;
+            font-weight: 600;
+            color: #e2e8f0;
+            line-height: 1.4;
+        }
+        .question-chevron {
+            color: #475569;
+            font-size: 13px;
+            transition: transform 0.3s;
+        }
+        .question-header.ouvert .question-chevron {
+            transform: rotate(180deg);
+        }
+        .question-header.ouvert .question-num-badge {
+            background: #16a34a;
+            color: #fff;
+        }
+
+        .question-reponse {
+            display: none;
+            padding: 0 18px 18px;
+            border-top: 1px solid #1e293b;
+        }
+        .question-reponse.visible { display: block; }
+
+        .reponse-bonne {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(22,163,74,0.1);
+            border: 1px solid rgba(22,163,74,0.3);
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin: 14px 0 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #86efac;
+        }
+        .reponse-bonne i { color: #16a34a; }
+
+        .reponse-explication {
+            font-size: 13px;
+            color: #94a3b8;
+            line-height: 1.7;
+        }
+        .reponse-explication strong { color: #cbd5e1; }
+
+        /* Points clés */
+        .points-cles {
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .point-cle {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+        .point-cle::before {
+            content: "→";
+            color: #667eea;
+            flex-shrink: 0;
+            font-weight: 700;
+        }
+
+        /* Score correction */
+        .correction-score {
+            margin-top: 24px;
+            background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1));
+            border: 1px solid rgba(102,126,234,0.2);
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .correction-score-texte { font-size: 14px; color: #94a3b8; }
+        .correction-score-texte strong { color: #f8fafc; display: block; font-size: 16px; }
+        .btn-quiz-examen {
+            background: #667eea;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 18px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+        .btn-quiz-examen:hover { background: #5a67d8; }
+
+        /* ── MODAL UPGRADE ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 999999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.visible { display: flex; }
+        .modal-contenu {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 20px;
+            padding: 40px 32px;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+        }
+        .modal-fermer {
+            position: absolute;
+            top: 16px; right: 16px;
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .upgrade-emoji { font-size: 48px; margin-bottom: 16px; }
+        .upgrade-titre { font-size: 20px; font-weight: 800; color: #f8fafc; margin-bottom: 8px; }
+        .upgrade-prix { font-size: 22px; font-weight: 800; color: #f59e0b; margin-bottom: 14px; }
+        .upgrade-texte { font-size: 14px; color: #64748b; margin-bottom: 20px; line-height: 1.6; }
+        .upgrade-liste {
+            list-style: none; padding: 0; margin: 0 0 24px;
+            text-align: left; display: flex; flex-direction: column; gap: 10px;
+        }
+        .upgrade-liste li {
+            font-size: 13px; color: #cbd5e1;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .upgrade-liste li i { color: #16a34a; }
+        .upgrade-cta {
+            display: block;
+            background: #f59e0b; color: #000;
+            text-decoration: none;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-size: 15px; font-weight: 800;
+            transition: opacity 0.2s;
+        }
+        .upgrade-cta:hover { opacity: 0.9; }
+
+        .aucun-resultat {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 50px 20px;
+            color: rgba(255,255,255,0.4);
+            font-size: 15px;
+        }
+
+        @media (max-width: 480px) {
+            .examens-grille { grid-template-columns: 1fr; }
+            .correction-modal { padding: 24px 16px; }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="examens-page">
+
+    <a href="../index.html" class="btn-retour">
+        <i class="fa-solid fa-arrow-left"></i>
+        Retour à l'accueil
+    </a>
+
+    <h1 class="page-titre">📄 Anciens examens du Bac</h1>
+    <p class="page-sous-titre">Consulte et télécharge les sujets officiels des années précédentes</p>
+
+    <!-- BANNIÈRE PRO (visible uniquement aux gratuits) -->
+    <div class="banniere-pro" id="banniere-pro">
+        <div class="banniere-pro-texte">
+            <strong>⭐ Passe à Scola Pro</strong> — Débloque les 10 examens verrouillés
+            + corrections détaillées question par question + mode examen chronométré.
+        </div>
+        <a href="paiement.html?tier=pro" class="banniere-pro-btn">Passer Pro — 500 HTG</a>
+    </div>
+
+    <!-- CHRONOMÈTRE MODE EXAMEN (Pro uniquement) -->
+    <div class="chrono-bar" id="chrono-bar">
+        <div>
+            <div class="chrono-label">⏱ Mode examen chronométré</div>
+            <div class="chrono-temps" id="chrono-temps">3:00:00</div>
+        </div>
+        <div class="chrono-btns">
+            <button class="chrono-btn" id="chrono-toggle" onclick="toggleChrono()">
+                <i class="fa-solid fa-play"></i> Démarrer
+            </button>
+            <button class="chrono-btn stop" onclick="stopChrono()">
+                <i class="fa-solid fa-stop"></i> Arrêter
+            </button>
+        </div>
+    </div>
+
+    <!-- FILTRES -->
+    <div class="filtres">
+        <button class="filtre-btn actif" onclick="filtrer('tous', this)">Tous les examens</button>
+        <button class="filtre-btn" onclick="filtrer('SES', this)">SES</button>
+        <button class="filtre-btn" onclick="filtrer('LLA', this)">LLA</button>
+        <button class="filtre-btn" onclick="filtrer('SMP', this)">SMP</button>
+        <button class="filtre-btn" onclick="filtrer('SVT', this)">SVT</button>
+    </div>
+
+    <div class="examens-grille" id="examens-grille"></div>
+
+</div>
+
+<!-- ── VISIONNEUSE PDF ── -->
+<div class="visionneuse-overlay" id="visionneuse">
+    <div class="visionneuse-header">
+        <div class="visionneuse-titre" id="visionneuse-titre">Examen</div>
+        <div class="visionneuse-actions">
+            <!-- Bouton correction Pro -->
+            <button class="btn-correction-visionneuse" id="btn-correction-header" onclick="">
+                <i class="fa-solid fa-star"></i> Voir la correction
+            </button>
+            <!-- Bouton chrono Pro -->
+            <button class="btn-chrono-visionneuse" id="btn-chrono-header" onclick="toggleChronoBar()">
+                <i class="fa-solid fa-stopwatch"></i> Mode examen
+            </button>
+            <a id="btn-dl-visionneuse" href="#" target="_blank" class="btn-telecharger" title="Télécharger">
+                <i class="fa-solid fa-download"></i>
+            </a>
+            <button class="btn-fermer" onclick="fermerVisionneuse()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+    </div>
+    <div class="visionneuse-loading">
+        <i class="fa-solid fa-circle-notch fa-spin" style="font-size:28px;margin-bottom:10px;"></i><br>
+        Chargement du PDF...
+    </div>
+    <iframe class="visionneuse-iframe" id="visionneuse-iframe" src="" allowfullscreen></iframe>
+</div>
+
+<!-- ── MODAL CORRECTION ── -->
+<div class="correction-overlay" id="correction-overlay">
+    <div class="correction-modal">
+        <div class="correction-header">
+            <div class="correction-titre-block">
+                <div class="correction-badge">
+                    <i class="fa-solid fa-star"></i> Correction Pro
+                </div>
+                <div class="correction-titre" id="correction-titre">Correction de l'examen</div>
+            </div>
+            <button class="correction-fermer" onclick="fermerCorrection()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="correction-questions" id="correction-questions"></div>
+        <div class="correction-score">
+            <div class="correction-score-texte">
+                <strong>Quiz basé sur cet examen</strong>
+                Teste tes connaissances avec des questions tirées de cette feuille
+            </div>
+            <button class="btn-quiz-examen" id="btn-quiz-examen">
+                <i class="fa-solid fa-bolt"></i> Faire le quiz
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ── MODAL UPGRADE ── -->
+<div class="modal-overlay" id="modal-upgrade">
+    <div class="modal-contenu">
+        <button class="modal-fermer" onclick="fermerUpgrade()">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="upgrade-emoji">⭐</div>
+        <div class="upgrade-titre">Contenu Pro</div>
+        <div class="upgrade-prix">500 HTG / mois</div>
+        <p class="upgrade-texte">Débloque tous les examens + corrections détaillées + mode chronométré.</p>
+        <ul class="upgrade-liste">
+            <li><i class="fa-solid fa-check"></i> Accès aux 10 examens verrouillés</li>
+            <li><i class="fa-solid fa-check"></i> Correction question par question</li>
+            <li><i class="fa-solid fa-check"></i> Mode examen chronométré (3h)</li>
+            <li><i class="fa-solid fa-check"></i> Quiz généré depuis chaque examen</li>
+        </ul>
+        <a href="paiement.html?tier=pro" class="upgrade-cta">Passer à Pro — 500 HTG</a>
+    </div>
+</div>
+
+<script>
+
+// ============================================================
+// DONNÉES EXAMENS
+// Pro = true → examen réservé aux membres Pro
+// corrections = tableau de questions avec réponses et explications
+// ============================================================
+
+const examens = [
+    {
+        titre: "Examen du Bac 2025",
+        annee: "2025",
+        filieres: ["SES","LLA","SMP","SVT"],
+        miniature: "miniature-multi",
+        emoji: "📋",
+        driveId: "1ef3ir-SlvMyEBHibxdm174l1qr9YmR7B",
+        pro: false, // Gratuit — visible par tous
+        corrections: [
+            {
+                question: "Quelles sont les causes principales de la Première Guerre mondiale ?",
+                reponse: "Le nationalisme exacerbé, les alliances militaires (Triple Entente vs Triple Alliance), l'impérialisme colonial et l'assassinat de l'Archiduc François-Ferdinand.",
+                explication: "La guerre éclate le 28 juillet 1914 suite à un enchaînement de facteurs structurels et d'un élément déclencheur. Les alliances transforment un conflit local en guerre mondiale.",
+                points: ["Nationalisme : chaque nation voulait s'affirmer face aux autres", "Alliances : la Triple Entente (France, Royaume-Uni, Russie) contre la Triple Alliance (Allemagne, Autriche-Hongrie, Italie)", "Impérialisme : rivalité pour les colonies en Afrique et en Asie", "Élément déclencheur : assassinat de François-Ferdinand à Sarajevo (28 juin 1914)"]
+            },
+            {
+                question: "Quelles sont les conséquences du Traité de Versailles (1919) ?",
+                reponse: "L'Allemagne perd des territoires, paie des réparations énormes (132 milliards de marks-or) et voit son armée réduite à 100 000 hommes.",
+                explication: "Le Traité humilie l'Allemagne au point de créer un terreau fertile pour la montée du nazisme. C'est la thèse de l'historien John Maynard Keynes dans 'Les Conséquences économiques de la paix'.",
+                points: ["Perte de l'Alsace-Lorraine au profit de la France", "Perte des colonies allemandes", "Article 231 : clause de culpabilité de guerre imposée à l'Allemagne", "Réparations : 132 milliards de marks-or — économie allemande asphyxiée"]
+            },
+            {
+                question: "Qu'est-ce que la Société des Nations (SDN) et pourquoi a-t-elle échoué ?",
+                reponse: "La SDN est une organisation internationale créée en 1919 pour maintenir la paix. Elle échoue car les États-Unis refusent d'y adhérer et elle n'a aucun pouvoir militaire réel.",
+                explication: "L'absence des États-Unis, initiateur du projet (Wilson), prive la SDN de sa principale force. Sans armée propre, elle ne peut pas imposer ses décisions aux États agresseurs.",
+                points: ["Créée par le Traité de Versailles en 1919", "Les USA refusent d'y adhérer (Sénat américain contre Wilson)", "Aucune armée propre = pas de force de contrainte", "Incapable de stopper les agressions de l'Italie en Éthiopie (1935) ou du Japon en Mandchourie (1931)"]
+            }
+        ]
+    },
+    {
+        titre: "Examen du Bac 2022 — LLA, SES",
+        annee: "2022",
+        filieres: ["LLA","SES"],
+        miniature: "miniature-lla",
+        emoji: "📖",
+        driveId: "1VS-vb-c1V-ILHJTo1eGshYZ4Ox7U_bRm",
+        pro: false,
+        corrections: [
+            {
+                question: "Expliquez le concept de mondialisation économique.",
+                reponse: "La mondialisation est le processus d'intégration croissante des économies nationales à travers les échanges commerciaux, les flux financiers et les migrations.",
+                explication: "La mondialisation s'accélère après 1945 avec les accords de Bretton Woods et se renforce avec la chute du mur de Berlin en 1989. Elle crée des interdépendances entre économies.",
+                points: ["Libre-échange : suppression progressive des barrières douanières (GATT, puis OMC)", "Firmes Multinationales (FMN) : acteurs clés qui délocalisent la production", "Flux financiers : capitaux circulent librement depuis les années 1980 (dérégulation)", "Triade : USA, Europe, Japon dominent les échanges mondiaux"]
+            },
+            {
+                question: "Quelles sont les caractéristiques de la Guerre froide ?",
+                reponse: "Conflit indirect entre USA et URSS (1947–1991) sans affrontement militaire direct, marqué par la course aux armements, la course à l'espace et les guerres par procuration.",
+                explication: "Le terme 'froide' signifie qu'il n'y a pas de guerre directe entre les deux superpuissances, mais un affrontement idéologique, économique et diplomatique permanent.",
+                points: ["Idéologies opposées : capitalisme libéral vs communisme soviétique", "Course aux armements : bombes atomiques, missiles balistiques", "Guerres par procuration : Corée (1950-53), Vietnam (1955-75)", "Détente : période d'apaisement dans les années 1970 (SALT I et II)"]
+            }
+        ]
+    },
+    {
+        titre: "Examen du Bac 2022 — LLA, SES (Session 2)",
+        annee: "2022",
+        filieres: ["LLA","SES"],
+        miniature: "miniature-ses",
+        emoji: "📊",
+        driveId: "1UR7PR0jt9Z2G6xxsGmMm8SDFtcvEsV7i",
+        pro: true,
+        corrections: [
+            {
+                question: "Analysez l'ascension économique des États-Unis au XXe siècle.",
+                reponse: "Les USA deviennent la 1ère puissance mondiale après la 1ère Guerre mondiale grâce à leur industrie, leur position de créancier et le Plan Marshall.",
+                explication: "L'Europe détruite par deux guerres mondiales laisse les USA indemnes sur leur territoire, ce qui leur permet de dominer économiquement la planète dès 1945.",
+                points: ["1ère GM : USA prêtent aux Alliés → deviennent créanciers du monde", "Années 1920 : 'Roaring Twenties' — boom industriel (Ford, Taylor)", "1945 : USA = 50% du PIB mondial", "Plan Marshall : aide à la reconstruction européenne = marché pour les produits américains"]
+            },
+            {
+                question: "Quelles sont les causes de la crise économique de 1929 ?",
+                reponse: "Spéculation boursière excessive, surproduction industrielle et agricole, crédit facile et absence de régulation bancaire conduisent au krach du 24 octobre 1929.",
+                explication: "Le 'Black Thursday' marque l'effondrement de la Bourse de Wall Street. La crise se propage au monde entier par le retrait des capitaux américains d'Europe.",
+                points: ["Spéculation : achat d'actions à crédit — bulle financière", "Surproduction : l'offre dépasse la demande, les prix s'effondrent", "Protectionnisme américain : loi Smoot-Hawley (1930) aggrave la crise mondiale", "Chômage massif : 25% de chômeurs aux USA en 1933"]
+            }
+        ]
+    },
+    {
+        titre: "Examen du Bac 2022 — SMP, SVT",
+        annee: "2022",
+        filieres: ["SMP","SVT"],
+        miniature: "miniature-smp",
+        emoji: "🔬",
+        driveId: "1vXvPtkZ3tvYhvRQ3pmCU_tQeJ6WJjirB",
+        pro: true,
+        corrections: [
+            {
+                question: "Expliquez l'ascension économique du Japon après la 2nde Guerre mondiale.",
+                reponse: "Le Japon se relève grâce à la réforme agraire, l'aide américaine, une politique d'exportations agressive et un fort taux d'épargne national.",
+                explication: "Malgré les bombes atomiques de Hiroshima et Nagasaki, le Japon devient en 30 ans la 2e économie mondiale grâce à sa discipline, son éducation et sa technologie.",
+                points: ["Réforme Dodge (1949) : stabilisation monétaire et budget équilibré", "Guerre de Corée (1950-53) : commandes américaines relancent l'industrie japonaise", "MITI : ministère pilotant l'économie vers les secteurs stratégiques", "Keiretsu : conglomérats industriels (Toyota, Sony, Mitsubishi) très compétitifs"]
+            }
+        ]
+    },
+    {
+        titre: "Examen du Bac 2022 — SMP, SVT (Session 2)",
+        annee: "2022",
+        filieres: ["SMP","SVT"],
+        miniature: "miniature-svt",
+        emoji: "🌿",
+        driveId: "1fI9uThwwV1-NqDQQOkGYdvM0-mbZqUBh",
+        pro: true,
+        corrections: [
+            {
+                question: "Qu'est-ce que la Triade économique mondiale ?",
+                reponse: "La Triade désigne les trois pôles dominants de l'économie mondiale : États-Unis, Europe occidentale et Japon — qui concentrent l'essentiel des échanges et des investissements.",
+                explication: "Le terme est théorisé par Kenichi Ohmae en 1985. Ces trois pôles représentent environ 85% du PIB mondial et 70% des échanges commerciaux dans les années 1990.",
+                points: ["USA : 1ère puissance militaire et économique", "Europe : le marché commun crée un espace économique intégré", "Japon : champion de l'électronique et de l'automobile", "Pays émergents (BRICS) remettent en cause cette domination depuis les années 2000"]
+            }
+        ]
+    },
+    {
+        titre: "Examen du Bac 2021 — SES, LLA",
+        annee: "2021",
+        filieres: ["SES","LLA"],
+        miniature: "miniature-multi",
+        emoji: "📝",
+        driveId: "15fWRwMwgx2tejri36CumErAN7AO-u_mz",
+        pro: true,
+        corrections: [
+            {
+                question: "Analysez l'occupation américaine en Haïti (1915–1934).",
+                reponse: "Les USA occupent Haïti de 1915 à 1934 sous prétexte d'instabilité politique. Ils contrôlent les finances, l'armée et les douanes haïtiennes.",
+                explication: "L'assassinat du président Vilbrun Guillaume Sam en 1915 sert de prétexte à l'intervention. L'objectif réel est de protéger les intérêts économiques américains et de contrôler les Caraïbes.",
+                points: ["1915 : assassinat du président Sam → débarquement des Marines", "Gendarmerie d'Haïti : armée contrôlée par les USA", "Contrôle des douanes et des finances haïtiennes", "Résistance : Charlemagne Péralte mène la guérilla Caco (1918-1919)", "1934 : retrait américain sous Roosevelt (politique de bon voisinage)"]
+            }
+        ]
+    },
+    {
+        titre: "Examen du Bac 2018 — LLA, SVT, SMP",
+        annee: "2018",
+        filieres: ["LLA","SVT","SMP"],
+        miniature: "miniature-svt",
+        emoji: "🧬",
+        driveId: "1g9JlcjlJsfkLe9g7vZVSZut8OCVEMPe8",
+        pro: true,
+        corrections: [
+            {
+                question: "Expliquez le Plan Marshall et son impact sur l'Europe.",
+                reponse: "Le Plan Marshall (1947) est un programme d'aide économique américain de 13 milliards de dollars destiné à reconstruire les économies européennes dévastées par la 2nde GM.",
+                explication: "Au-delà de l'aide humanitaire, le Plan Marshall sert les intérêts américains en créant un marché solvable pour les exportations USA et en freinant l'expansion communiste.",
+                points: ["Annoncé par le Secrétaire d'État George Marshall en juin 1947", "13 milliards de dollars d'aide sur 4 ans (1948-1952)", "16 pays européens bénéficiaires — URSS et satellites refusent", "Crée l'OECE (ancêtre de l'OCDE) pour coordonner la reconstruction", "Renforce l'influence politique et économique américaine en Europe"]
+            }
+        ]
+    },
+    {
+        titre: "Examen du Bac 2018 — SES",
+        annee: "2018",
+        filieres: ["SES"],
+        miniature: "miniature-ses",
+        emoji: "💹",
+        driveId: "1eMph9y7BaEn98jQNRmssCd70stW1H8vM",
+        pro: true,
+        corrections: [
+            {
+                question: "Quelles sont les caractéristiques de la présidence de Sténio Vincent (1930–1941) ?",
+                reponse: "Vincent négocie le départ des troupes américaines (1934), renforce le pouvoir exécutif et maintient des relations étroites avec les États-Unis malgré une politique nationaliste.",
+                explication: "Sa présidence marque la fin de l'occupation américaine mais aussi un renforcement autoritaire du pouvoir. Il modifie la Constitution pour prolonger son mandat.",
+                points: ["1934 : départ définitif des Marines américains", "Nationalisation partielle des institutions contrôlées par les USA", "Modification constitutionnelle pour prolonger son pouvoir", "Massacre des Haïtiens en République Dominicaine (1937) — réaction timide de Vincent"]
+            }
+        ]
+    },
+    {
+        titre: "Examen SES — Filière économique",
+        annee: "—",
+        filieres: ["SES"],
+        miniature: "miniature-ses",
+        emoji: "📈",
+        driveId: "1YNruEpWmQPAr7B_4ZoUp66srxzTul10O",
+        pro: true,
+        corrections: [
+            {
+                question: "Expliquez la domination économique des États-Unis sur le monde.",
+                reponse: "Les USA dominent grâce au dollar (monnaie de réserve mondiale), leurs firmes multinationales, leur supériorité militaire et leur soft power culturel.",
+                explication: "Les accords de Bretton Woods (1944) ont fait du dollar la monnaie de référence internationale, donnant aux USA un 'privilège exorbitant' selon le mot du ministre Valéry Giscard d'Estaing.",
+                points: ["Dollar = monnaie de réserve mondiale depuis Bretton Woods (1944)", "FMN américaines dominent : Apple, Google, Amazon, Microsoft", "Soft power : Hollywood, réseaux sociaux, culture pop", "Puissance militaire : budget défense = 40% du budget mondial total"]
+            }
+        ]
+    },
+    {
+        titre: "Examen SMP, SVT — Sciences",
+        annee: "—",
+        filieres: ["SMP","SVT"],
+        miniature: "miniature-smp",
+        emoji: "⚗️",
+        driveId: "1vcyADa3sadMskUmmEYn0hdBNiG9b7LnN",
+        pro: true,
+        corrections: [
+            {
+                question: "Qu'est-ce que la mondialisation et quels en sont les acteurs ?",
+                reponse: "La mondialisation est l'intégration croissante des économies, cultures et sociétés à l'échelle mondiale. Ses acteurs sont les États, les FMN, les ONG et les organisations internationales.",
+                explication: "La mondialisation contemporaine s'accélère avec Internet et la libéralisation des échanges. Elle crée des opportunités mais aussi des inégalités croissantes entre pays riches et pays pauvres.",
+                points: ["États : régulent les échanges et signent les accords commerciaux", "FMN : moteurs de la mondialisation économique (Toyota, Samsung, Total)", "ONG : acteurs non-étatiques (Greenpeace, Médecins Sans Frontières)", "Organisations internationales : OMC, FMI, Banque mondiale régulent les flux"]
+            }
+        ]
+    }
+];
+
+// ============================================================
+// ÉTAT GLOBAL
+// ============================================================
+const couleurFiliere = { SES:"tag-ses", LLA:"tag-lla", SMP:"tag-smp", SVT:"tag-svt" };
+let roleUtilisateur = "gratuit"; // sera mis à jour via /api/me
+let examenCourant = null;
+
+// ============================================================
+// CHARGER LE RÔLE UTILISATEUR
+// ============================================================
+async function chargerRole() {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+        const res = await fetch("/api/me", {
+            headers: { "Authorization": "Bearer " + token }
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        roleUtilisateur = data.role;
+
+        // Si gratuit → afficher la bannière Pro
+        if (!["pro","ia"].includes(roleUtilisateur)) {
+            document.getElementById("banniere-pro").style.display = "flex";
+        }
+
+        // Si Pro → afficher le chrono
+        if (["pro","ia"].includes(roleUtilisateur)) {
+            document.getElementById("chrono-bar").classList.add("visible");
+            document.getElementById("btn-correction-header").classList.add("visible");
+            document.getElementById("btn-chrono-header").classList.add("visible");
+        }
+
+    } catch(e) { console.log(e); }
+}
+
+// ============================================================
+// URLS GOOGLE DRIVE
+// ============================================================
+function urlPreview(id) { return `https://drive.google.com/file/d/${id}/preview`; }
+function urlTelechargement(id) { return `https://drive.google.com/uc?export=download&id=${id}`; }
+
+// ============================================================
+// GÉNÉRER LES CARTES
+// ============================================================
+function genererCartes(liste) {
+    const grille = document.getElementById("examens-grille");
+    grille.innerHTML = "";
+
+    if (!liste.length) {
+        grille.innerHTML = `<div class="aucun-resultat"><i class="fa-solid fa-folder-open" style="font-size:36px;margin-bottom:12px;display:block;"></i>Aucun examen trouvé.</div>`;
+        return;
+    }
+
+    const estPro = ["pro","ia"].includes(roleUtilisateur);
+
+    liste.forEach((examen, i) => {
+        const estVerrouille = examen.pro && !estPro;
+        const badgesFilieres = examen.filieres.map(f =>
+            `<span class="filiere-tag ${couleurFiliere[f]||''}">${f}</span>`
+        ).join("");
+
+        const carte = document.createElement("div");
+        carte.className = "examen-carte" + (estVerrouille ? " locked" : "");
+        carte.setAttribute("data-filieres", examen.filieres.join(","));
+
+        let actionsHTML = "";
+
+        if (estVerrouille) {
+            // Carte verrouillée
+            actionsHTML = `
+                <button class="btn-voir" onclick="ouvrirUpgrade()" style="background:#334155;color:#64748b;cursor:pointer;">
+                    <i class="fa-solid fa-lock"></i> Réservé Pro
+                </button>`;
+        } else {
+            // Carte débloquée
+            actionsHTML = `
+                <button class="btn-voir" onclick="ouvrirVisionneuse('${examen.driveId}','${examen.titre.replace(/'/g,"\\'")}', ${i})">
+                    <i class="fa-solid fa-eye"></i> Consulter
+                </button>`;
+            if (estPro) {
+                actionsHTML += `
+                <button class="btn-correction" onclick="ouvrirCorrection(${i})">
+                    <i class="fa-solid fa-star"></i> Correction
+                </button>`;
+            }
+            actionsHTML += `
+                <a class="btn-telecharger" href="${urlTelechargement(examen.driveId)}" target="_blank" title="Télécharger">
+                    <i class="fa-solid fa-download"></i>
+                </a>`;
+        }
+
+        carte.innerHTML = `
+            ${estVerrouille ? `
+            <div class="lock-overlay" onclick="ouvrirUpgrade()">
+                <span class="lock-icon">🔒</span>
+                <span class="lock-label">PRO</span>
+                <span class="lock-sub">Cliquer pour débloquer</span>
+            </div>` : ""}
+            <div class="examen-miniature ${examen.miniature}">
+                <span>${examen.emoji}</span>
+                <span class="examen-annee-badge">${examen.annee}</span>
+                ${examen.pro ? '<span class="badge-pro-carte">⭐ PRO</span>' : ""}
+            </div>
+            <div class="examen-info">
+                <div class="examen-titre">${examen.titre}</div>
+                <div class="examen-filieres">${badgesFilieres}</div>
+                <div class="examen-actions">${actionsHTML}</div>
+            </div>`;
+
+        carte.style.animationDelay = `${i * 0.06}s`;
+        grille.appendChild(carte);
+    });
+}
+
+// ============================================================
+// FILTRER
+// ============================================================
+function filtrer(filiere, btn) {
+    document.querySelectorAll(".filtre-btn").forEach(b => b.classList.remove("actif"));
+    btn.classList.add("actif");
+    const res = filiere === "tous" ? examens : examens.filter(e => e.filieres.includes(filiere));
+    genererCartes(res);
+}
+
+// ============================================================
+// VISIONNEUSE PDF
+// ============================================================
+function ouvrirVisionneuse(driveId, titre, index) {
+    examenCourant = index;
+    const overlay = document.getElementById("visionneuse");
+    const iframe  = document.getElementById("visionneuse-iframe");
+
+    document.getElementById("visionneuse-titre").textContent = titre;
+    document.getElementById("btn-dl-visionneuse").href = urlTelechargement(driveId);
+
+    // Bouton correction dans la visionneuse — seulement si Pro
+    const btnCorr = document.getElementById("btn-correction-header");
+    if (["pro","ia"].includes(roleUtilisateur)) {
+        btnCorr.classList.add("visible");
+        btnCorr.onclick = () => ouvrirCorrection(index);
+    }
+
+    iframe.src = "";
+    overlay.style.display = "flex";
+    document.body.style.overflow = "hidden";
+    setTimeout(() => { iframe.src = urlPreview(driveId); }, 200);
+}
+
+function fermerVisionneuse() {
+    document.getElementById("visionneuse").style.display = "none";
+    document.getElementById("visionneuse-iframe").src = "";
+    document.body.style.overflow = "";
+}
+
+document.addEventListener("keydown", e => { if (e.key === "Escape") fermerVisionneuse(); });
+document.getElementById("visionneuse").addEventListener("click", e => {
+    if (e.target === document.getElementById("visionneuse")) fermerVisionneuse();
+});
+
+// ============================================================
+// CORRECTION DÉTAILLÉE (Pro)
+// ============================================================
+function ouvrirCorrection(index) {
+    const examen = examens[index];
+    if (!examen) return;
+
+    document.getElementById("correction-titre").textContent = "Correction — " + examen.titre;
+
+    const container = document.getElementById("correction-questions");
+    container.innerHTML = "";
+
+    examen.corrections.forEach((item, i) => {
+        const bloc = document.createElement("div");
+        bloc.className = "question-bloc";
+        bloc.innerHTML = `
+            <div class="question-header" onclick="toggleQuestion(this)">
+                <div class="question-num">
+                    <div class="question-num-badge">${i+1}</div>
+                    <div class="question-texte">${item.question}</div>
+                </div>
+                <i class="fa-solid fa-chevron-down question-chevron"></i>
+            </div>
+            <div class="question-reponse">
+                <div class="reponse-bonne">
+                    <i class="fa-solid fa-check-circle"></i>
+                    ${item.reponse}
+                </div>
+                <div class="reponse-explication">${item.explication}</div>
+                ${item.points ? `
+                <div class="points-cles">
+                    ${item.points.map(p => `<div class="point-cle">${p}</div>`).join("")}
+                </div>` : ""}
+            </div>`;
+        container.appendChild(bloc);
+    });
+
+    // Bouton quiz lié à cet examen
+    document.getElementById("btn-quiz-examen").onclick = () => {
+        alert(`Quiz basé sur "${examen.titre}" — fonctionnalité en cours de déploiement !`);
+    };
+
+    document.getElementById("correction-overlay").classList.add("visible");
+    document.body.style.overflow = "hidden";
+}
+
+function toggleQuestion(header) {
+    header.classList.toggle("ouvert");
+    const reponse = header.nextElementSibling;
+    reponse.classList.toggle("visible");
+}
+
+function fermerCorrection() {
+    document.getElementById("correction-overlay").classList.remove("visible");
+    document.body.style.overflow = "";
+}
+
+document.getElementById("correction-overlay").addEventListener("click", e => {
+    if (e.target === document.getElementById("correction-overlay")) fermerCorrection();
+});
+
+// ============================================================
+// CHRONOMÈTRE MODE EXAMEN (3h = 10800 secondes)
+// ============================================================
+let chronoInterval = null;
+let chronoSecondes = 10800; // 3 heures
+let chronoActif = false;
+
+function toggleChrono() {
+    if (!chronoActif) {
+        chronoActif = true;
+        const btn = document.getElementById("chrono-toggle");
+        btn.innerHTML = '<i class="fa-solid fa-pause"></i> Pause';
+        chronoInterval = setInterval(() => {
+            if (chronoSecondes <= 0) {
+                stopChrono();
+                document.getElementById("chrono-temps").textContent = "Temps écoulé !";
+                return;
+            }
+            chronoSecondes--;
+            mettreAJourChrono();
+        }, 1000);
+    } else {
+        chronoActif = false;
+        clearInterval(chronoInterval);
+        const btn = document.getElementById("chrono-toggle");
+        btn.innerHTML = '<i class="fa-solid fa-play"></i> Reprendre';
+    }
+}
+
+function stopChrono() {
+    chronoActif = false;
+    clearInterval(chronoInterval);
+    chronoSecondes = 10800;
+    mettreAJourChrono();
+    document.getElementById("chrono-toggle").innerHTML = '<i class="fa-solid fa-play"></i> Démarrer';
+}
+
+function mettreAJourChrono() {
+    const h = Math.floor(chronoSecondes / 3600);
+    const m = Math.floor((chronoSecondes % 3600) / 60);
+    const s = chronoSecondes % 60;
+    document.getElementById("chrono-temps").textContent =
+        `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+}
+
+function toggleChronoBar() {
+    document.getElementById("chrono-bar").classList.toggle("visible");
+}
+
+// ============================================================
+// MODAL UPGRADE
+// ============================================================
+function ouvrirUpgrade() {
+    document.getElementById("modal-upgrade").classList.add("visible");
+}
+function fermerUpgrade() {
+    document.getElementById("modal-upgrade").classList.remove("visible");
+}
+document.getElementById("modal-upgrade").addEventListener("click", e => {
+    if (e.target === document.getElementById("modal-upgrade")) fermerUpgrade();
+});
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener("DOMContentLoaded", async () => {
+    await chargerRole();
+    genererCartes(examens);
+});
+
+</script>
+</body>
+</html>

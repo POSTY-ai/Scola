@@ -18,6 +18,22 @@ const userSchema = new mongoose.Schema({
         required: true
     },
 
+    // ================================
+    // SYSTÈME PREMIUM
+    // role = "gratuit" | "pro" | "ia"
+    // premiumExpiry = date d'expiration de l'abonnement
+    // ================================
+    role: {
+        type: String,
+        enum: ["gratuit", "pro", "ia"],
+        default: "gratuit"
+    },
+
+    premiumExpiry: {
+        type: Date,
+        default: null
+    },
+
     weeklyLeague: {
 
         xp: {
@@ -52,6 +68,17 @@ const userSchema = new mongoose.Schema({
         lastPlayed: {
             type: Date,
             default: null
+        },
+
+        // Nombre de quiz joués aujourd'hui (pour limiter les gratuits)
+        countToday: {
+            type: Number,
+            default: 0
+        },
+
+        lastCountReset: {
+            type: Date,
+            default: null
         }
 
     },
@@ -72,6 +99,6 @@ const userSchema = new mongoose.Schema({
         default: null
     }
 
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model("User", userSchema);

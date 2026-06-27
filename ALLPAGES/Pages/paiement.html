@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <title>Paiement — Scola</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #0f172a;
+            font-family: 'Inter', -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+            color: #f8fafc;
+        }
+
+        /* ── LOGO ── */
+        .logo-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 32px;
+        }
+        .logo-bar span {
+            font-size: 22px;
+            font-weight: 800;
+            color: #f8fafc;
+        }
+        .logo-bar .dot { color: #3b82f6; }
+
+        /* ── CARTE PRINCIPALE ── */
+        .card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 20px;
+            padding: 36px 32px;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+        }
+
+        /* ── ÉTAPES ── */
+        .etapes {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            margin-bottom: 32px;
+        }
+        .etape {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .etape-num {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #334155;
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .etape-num.active {
+            background: #3b82f6;
+            color: #fff;
+        }
+        .etape-num.done {
+            background: #16a34a;
+            color: #fff;
+        }
+        .etape-label {
+            font-size: 11px;
+            color: #64748b;
+            font-weight: 500;
+        }
+        .etape-label.active { color: #3b82f6; }
+        .etape-label.done { color: #16a34a; }
+        .etape-ligne {
+            width: 50px;
+            height: 2px;
+            background: #334155;
+            margin-bottom: 18px;
+            transition: background 0.3s;
+        }
+        .etape-ligne.done { background: #16a34a; }
+
+        /* ── RÉSUMÉ COMMANDE ── */
+        .resumé {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .resumé-gauche { display: flex; flex-direction: column; gap: 4px; }
+        .resumé-plan {
+            font-size: 15px;
+            font-weight: 700;
+            color: #f8fafc;
+        }
+        .resumé-plan span { color: #3b82f6; }
+        .resumé-duree { font-size: 13px; color: #64748b; }
+        .resumé-prix {
+            font-size: 22px;
+            font-weight: 800;
+            color: #3b82f6;
+        }
+        .resumé-prix small {
+            font-size: 13px;
+            font-weight: 500;
+            color: #64748b;
+        }
+
+        /* ── ÉCRANS ── */
+        .ecran { display: none; }
+        .ecran.visible { display: block; }
+
+        /* ── FORMULAIRE ── */
+        .form-titre {
+            font-size: 17px;
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 6px;
+        }
+        .form-sous-titre {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 20px;
+        }
+
+        .field { margin-bottom: 16px; }
+        .field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+        .field-input-wrap {
+            position: relative;
+        }
+        .field-input-wrap i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 15px;
+        }
+        .field input {
+            width: 100%;
+            background: #0f172a;
+            border: 1.5px solid #334155;
+            border-radius: 10px;
+            padding: 13px 14px 13px 42px;
+            font-size: 15px;
+            color: #f8fafc;
+            outline: none;
+            transition: border-color 0.2s;
+            letter-spacing: 1px;
+        }
+        .field input:focus {
+            border-color: #3b82f6;
+        }
+        .field input::placeholder { color: #475569; letter-spacing: 0; }
+
+        /* ── PIN DOTS ── */
+        .pin-dots {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin: 16px 0 20px;
+        }
+        .pin-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid #334155;
+            background: transparent;
+            transition: all 0.2s;
+        }
+        .pin-dot.filled {
+            background: #3b82f6;
+            border-color: #3b82f6;
+        }
+
+        .pin-clavier {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .pin-btn {
+            background: #0f172a;
+            border: 1.5px solid #334155;
+            border-radius: 10px;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #f8fafc;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: center;
+        }
+        .pin-btn:hover { background: #1e293b; border-color: #3b82f6; }
+        .pin-btn:active { transform: scale(0.95); }
+        .pin-btn.effacer {
+            font-size: 13px;
+            color: #64748b;
+        }
+        .pin-btn.vide { visibility: hidden; }
+
+        /* ── BOUTON PRINCIPAL ── */
+        .btn-payer {
+            width: 100%;
+            background: #3b82f6;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-payer:hover { background: #2563eb; }
+        .btn-payer:disabled {
+            background: #334155;
+            color: #64748b;
+            cursor: not-allowed;
+        }
+        .btn-payer.loading {
+            background: #1d4ed8;
+            cursor: wait;
+        }
+
+        /* ── CHARGEMENT ── */
+        .ecran-chargement {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .spinner {
+            width: 56px;
+            height: 56px;
+            border: 4px solid #334155;
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .chargement-titre {
+            font-size: 17px;
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 8px;
+        }
+        .chargement-texte {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.6;
+        }
+        .chargement-etapes {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            text-align: left;
+        }
+        .chargement-etape {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: #64748b;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.4s;
+        }
+        .chargement-etape.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .chargement-etape i { width: 18px; text-align: center; }
+        .chargement-etape.ok { color: #16a34a; }
+        .chargement-etape.ok i { color: #16a34a; }
+
+        /* ── SUCCÈS ── */
+        .ecran-succes { text-align: center; padding: 10px 0; }
+        .succes-cercle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 36px;
+            animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes pop {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+        .succes-titre {
+            font-size: 22px;
+            font-weight: 800;
+            color: #f8fafc;
+            margin-bottom: 8px;
+        }
+        .succes-texte {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+        .succes-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+        .btn-dashboard {
+            width: 100%;
+            background: #3b82f6;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            transition: background 0.2s;
+        }
+        .btn-dashboard:hover { background: #2563eb; }
+
+        /* ── ERREUR ── */
+        .msg-erreur {
+            background: #450a0a;
+            border: 1px solid #dc2626;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 13px;
+            color: #fca5a5;
+            margin-bottom: 14px;
+            display: none;
+        }
+
+        /* ── SÉCURITÉ ── */
+        .securite {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #475569;
+            margin-top: 20px;
+        }
+        .securite i { color: #16a34a; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 480px) {
+            .card { padding: 28px 20px; }
+            .pin-btn { padding: 14px; font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="logo-bar">
+        <span>Scola<span class="dot">.</span></span>
+    </div>
+
+    <div class="card">
+
+        <!-- ÉTAPES -->
+        <div class="etapes">
+            <div class="etape">
+                <div class="etape-num active" id="num1">1</div>
+                <div class="etape-label active" id="lbl1">Numéro</div>
+            </div>
+            <div class="etape-ligne" id="ligne1"></div>
+            <div class="etape">
+                <div class="etape-num" id="num2">2</div>
+                <div class="etape-label" id="lbl2">PIN</div>
+            </div>
+            <div class="etape-ligne" id="ligne2"></div>
+            <div class="etape">
+                <div class="etape-num" id="num3">3</div>
+                <div class="etape-label" id="lbl3">Confirmé</div>
+            </div>
+        </div>
+
+        <!-- RÉSUMÉ COMMANDE -->
+        <div class="resumé" id="resume-commande">
+            <div class="resumé-gauche">
+                <div class="resumé-plan">Scola <span id="plan-nom">Pro</span></div>
+                <div class="resumé-duree">Abonnement 30 jours</div>
+            </div>
+            <div class="resumé-prix">
+                <span id="plan-prix">500</span>
+                <small> HTG</small>
+            </div>
+        </div>
+
+        <!-- ── ÉCRAN 1 : NUMÉRO ── -->
+        <div class="ecran visible" id="ecran-numero">
+            <div class="form-titre">Ton numéro MonCash</div>
+            <div class="form-sous-titre">Entre le numéro Digicel associé à ton compte MonCash</div>
+
+            <div class="field">
+                <label>Numéro de téléphone</label>
+                <div class="field-input-wrap">
+                    <i class="fa-solid fa-phone"></i>
+                    <input
+                        type="tel"
+                        id="input-numero"
+                        placeholder="509-XXXX-XXXX"
+                        maxlength="13"
+                    >
+                </div>
+            </div>
+
+            <div class="msg-erreur" id="err-numero">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                Entre un numéro valide (ex: 509-3456-7890)
+            </div>
+
+            <button class="btn-payer" id="btn-continuer" onclick="allerEtape2()">
+                <i class="fa-solid fa-arrow-right"></i>
+                Continuer
+            </button>
+        </div>
+
+        <!-- ── ÉCRAN 2 : PIN ── -->
+        <div class="ecran" id="ecran-pin">
+            <div class="form-titre">Entre ton code PIN</div>
+            <div class="form-sous-titre" id="pin-sous-titre">Code à 4 chiffres de ton compte MonCash</div>
+
+            <div class="pin-dots">
+                <div class="pin-dot" id="dot0"></div>
+                <div class="pin-dot" id="dot1"></div>
+                <div class="pin-dot" id="dot2"></div>
+                <div class="pin-dot" id="dot3"></div>
+            </div>
+
+            <div class="pin-clavier">
+                <button class="pin-btn" onclick="tapperPin('1')">1</button>
+                <button class="pin-btn" onclick="tapperPin('2')">2</button>
+                <button class="pin-btn" onclick="tapperPin('3')">3</button>
+                <button class="pin-btn" onclick="tapperPin('4')">4</button>
+                <button class="pin-btn" onclick="tapperPin('5')">5</button>
+                <button class="pin-btn" onclick="tapperPin('6')">6</button>
+                <button class="pin-btn" onclick="tapperPin('7')">7</button>
+                <button class="pin-btn" onclick="tapperPin('8')">8</button>
+                <button class="pin-btn" onclick="tapperPin('9')">9</button>
+                <button class="pin-btn vide"></button>
+                <button class="pin-btn" onclick="tapperPin('0')">0</button>
+                <button class="pin-btn effacer" onclick="effacerPin()">
+                    <i class="fa-solid fa-delete-left"></i>
+                </button>
+            </div>
+
+            <div class="msg-erreur" id="err-pin">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                PIN incorrect. Utilise n'importe quel code à 4 chiffres pour simuler.
+            </div>
+
+            <button class="btn-payer" id="btn-payer" onclick="confirmerPaiement()" disabled>
+                <i class="fa-solid fa-lock"></i>
+                Payer <span id="btn-montant">500</span> HTG
+            </button>
+        </div>
+
+        <!-- ── ÉCRAN 3 : CHARGEMENT ── -->
+        <div class="ecran" id="ecran-chargement">
+            <div class="ecran-chargement">
+                <div class="spinner"></div>
+                <div class="chargement-titre">Traitement en cours…</div>
+                <div class="chargement-texte">Ne ferme pas cette fenêtre</div>
+                <div class="chargement-etapes">
+                    <div class="chargement-etape" id="step1">
+                        <i class="fa-solid fa-circle-notch fa-spin"></i>
+                        Vérification du numéro MonCash…
+                    </div>
+                    <div class="chargement-etape" id="step2">
+                        <i class="fa-solid fa-circle-notch fa-spin"></i>
+                        Validation du paiement…
+                    </div>
+                    <div class="chargement-etape" id="step3">
+                        <i class="fa-solid fa-circle-notch fa-spin"></i>
+                        Activation de Scola Pro…
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── ÉCRAN 4 : SUCCÈS ── -->
+        <div class="ecran" id="ecran-succes">
+            <div class="ecran-succes">
+                <div class="succes-cercle">✓</div>
+                <div class="succes-titre">Paiement réussi !</div>
+                <p class="succes-texte">
+                    Ton abonnement <strong id="succes-plan">Scola Pro</strong> est activé.<br>
+                    Tu as maintenant accès à toutes les fonctionnalités premium pendant <strong>30 jours</strong>.
+                </p>
+                <div class="succes-badge">
+                    <i class="fa-solid fa-star"></i>
+                    <span id="succes-badge-txt">Membre Pro</span>
+                </div>
+                <a href="dashboard-paiement.html" class="btn-dashboard">
+                    <i class="fa-solid fa-house-chimney"></i>
+                    Aller sur mon dashboard
+                </a>
+            </div>
+        </div>
+
+        <!-- SÉCURITÉ -->
+        <div class="securite" id="securite-bar">
+            <i class="fa-solid fa-shield-halved"></i>
+            Paiement sécurisé via MonCash · Scola
+        </div>
+
+    </div>
+
+    <script>
+        // ============================================================
+        // INITIALISATION — récupère le tier depuis l'URL
+        // Ex: paiement.html?tier=pro ou paiement.html?tier=ia
+        // ============================================================
+        const params = new URLSearchParams(window.location.search);
+        const tier = params.get("tier") || "pro";
+        const prix = tier === "ia" ? 800 : 500;
+        const planNom = tier === "ia" ? "IA" : "Pro";
+
+        // Remplir les infos de la commande
+        document.getElementById("plan-nom").textContent = planNom;
+        document.getElementById("plan-prix").textContent = prix;
+        document.getElementById("btn-montant").textContent = prix;
+        document.getElementById("succes-plan").textContent = `Scola ${planNom}`;
+        document.getElementById("succes-badge-txt").textContent = `Membre ${planNom}`;
+
+        // ============================================================
+        // ÉTAT PIN
+        // ============================================================
+        let pinCode = "";
+
+        function tapperPin(chiffre) {
+            if (pinCode.length >= 4) return;
+            pinCode += chiffre;
+            mettreAJourDots();
+            if (pinCode.length === 4) {
+                document.getElementById("btn-payer").disabled = false;
+            }
+        }
+
+        function effacerPin() {
+            pinCode = pinCode.slice(0, -1);
+            mettreAJourDots();
+            document.getElementById("btn-payer").disabled = pinCode.length < 4;
+            document.getElementById("err-pin").style.display = "none";
+        }
+
+        function mettreAJourDots() {
+            for (let i = 0; i < 4; i++) {
+                const dot = document.getElementById(`dot${i}`);
+                dot.classList.toggle("filled", i < pinCode.length);
+            }
+        }
+
+        // ============================================================
+        // ÉTAPE 1 → ÉTAPE 2
+        // ============================================================
+        function allerEtape2() {
+            const numero = document.getElementById("input-numero").value.trim();
+            const errEl = document.getElementById("err-numero");
+
+            // Validation simple — au moins 8 chiffres
+            const chiffres = numero.replace(/\D/g, "");
+            if (chiffres.length < 8) {
+                errEl.style.display = "block";
+                return;
+            }
+
+            errEl.style.display = "none";
+
+            // Mise à jour étapes
+            document.getElementById("num1").classList.remove("active");
+            document.getElementById("num1").classList.add("done");
+            document.getElementById("num1").innerHTML = '<i class="fa-solid fa-check" style="font-size:12px"></i>';
+            document.getElementById("lbl1").classList.remove("active");
+            document.getElementById("lbl1").classList.add("done");
+            document.getElementById("ligne1").classList.add("done");
+            document.getElementById("num2").classList.add("active");
+            document.getElementById("lbl2").classList.add("active");
+
+            afficherEcran("ecran-pin");
+
+            // Affiche le numéro masqué dans le sous-titre
+            const masque = chiffres.slice(0, 3) + "-****-" + chiffres.slice(-4);
+            document.getElementById("pin-sous-titre").textContent =
+                `Code PIN pour le numéro ${masque}`;
+        }
+
+        // ============================================================
+        // CONFIRMER LE PAIEMENT (simulation)
+        // ============================================================
+        async function confirmerPaiement() {
+            if (pinCode.length < 4) return;
+
+            // Mise à jour étapes
+            document.getElementById("num2").classList.remove("active");
+            document.getElementById("num2").classList.add("done");
+            document.getElementById("num2").innerHTML = '<i class="fa-solid fa-check" style="font-size:12px"></i>';
+            document.getElementById("lbl2").classList.remove("active");
+            document.getElementById("lbl2").classList.add("done");
+            document.getElementById("ligne2").classList.add("done");
+            document.getElementById("num3").classList.add("active");
+            document.getElementById("lbl3").classList.add("active");
+
+            afficherEcran("ecran-chargement");
+            document.getElementById("securite-bar").style.display = "none";
+
+            // ── Simulation des étapes de traitement ──
+            await attendreEtAfficher("step1", 800);
+            await attendreEtAfficher("step2", 1400);
+            await attendreEtAfficher("step3", 900);
+
+            // ── Appel backend pour activer le premium ──
+            try {
+                const token = localStorage.getItem("token");
+                const res = await fetch("/api/paiement/simuler", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": "Bearer " + token,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ tier, montant: prix })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    // Succès
+                    document.getElementById("num3").classList.remove("active");
+                    document.getElementById("num3").classList.add("done");
+                    document.getElementById("num3").innerHTML = '<i class="fa-solid fa-check" style="font-size:12px"></i>';
+                    document.getElementById("lbl3").classList.remove("active");
+                    document.getElementById("lbl3").classList.add("done");
+
+                    afficherEcran("ecran-succes");
+                } else {
+                    afficherEcranErreur(data.message);
+                }
+
+            } catch (err) {
+                afficherEcranErreur("Erreur de connexion. Réessaie.");
+            }
+        }
+
+        // ── Utilitaires ──
+        function afficherEcran(id) {
+            document.querySelectorAll(".ecran").forEach(e => e.classList.remove("visible"));
+            document.getElementById(id).classList.add("visible");
+        }
+
+        async function attendreEtAfficher(stepId, delai) {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    const el = document.getElementById(stepId);
+                    el.classList.add("visible");
+                    setTimeout(() => {
+                        el.classList.add("ok");
+                        el.querySelector("i").className = "fa-solid fa-check";
+                        resolve();
+                    }, delai * 0.6);
+                }, delai);
+            });
+        }
+
+        function afficherEcranErreur(msg) {
+            afficherEcran("ecran-pin");
+            pinCode = "";
+            mettreAJourDots();
+            document.getElementById("btn-payer").disabled = true;
+            const errEl = document.getElementById("err-pin");
+            errEl.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${msg}`;
+            errEl.style.display = "block";
+        }
+
+        // Format numéro automatique
+        document.getElementById("input-numero").addEventListener("input", function() {
+            let val = this.value.replace(/\D/g, "");
+            if (val.length > 11) val = val.slice(0, 11);
+            if (val.length > 7) {
+                this.value = val.slice(0,3) + "-" + val.slice(3,7) + "-" + val.slice(7);
+            } else if (val.length > 3) {
+                this.value = val.slice(0,3) + "-" + val.slice(3);
+            } else {
+                this.value = val;
+            }
+        });
+
+        // Enter sur le champ numéro
+        document.getElementById("input-numero").addEventListener("keydown", function(e) {
+            if (e.key === "Enter") allerEtape2();
+        });
+    </script>
+</body>
+</html>

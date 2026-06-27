@@ -184,3 +184,356 @@ window.addEventListener('click', (e) => {
         fermerModal();
     }
 });
+// ============================================================
+// SYSTÈME PREMIUM FRONTEND — À COLLER À LA FIN DE project.js
+// ============================================================
+// Ce bloc gère côté navigateur :
+// 1. Récupération du rôle depuis le backend
+// 2. Affichage des cadenas sur le contenu bloqué
+// 3. Modal d'upgrade quand un gratuit clique sur du contenu Pro
+// 4. Vérification de limite quiz avant de lancer une partie
+// ============================================================
+
+
+// ============================================================
+// RÉCUPÉRATION DU RÔLE UTILISATEUR
+// Appelée au chargement de la page si l'utilisateur est connecté
+// Stocke le rôle dans une variable globale utilisée partout
+// ============================================================
+
+let roleUtilisateur = "gratuit"; // valeur par défaut
+
+async function chargerRoleUtilisateur() {
+
+    const token = localStorage.getItem("token");
+    if (!token) return; // pas connecté, pas besoin de vérifier
+
+    try {
+
+        const res = await fetch("/api/me", {
+            headers: { "Authorization": "Bearer " + token }
+        });
+
+        if (!res.ok) return;
+
+        const data = await res.json();
+        roleUtilisateur = data.role; // "gratuit", "pro", ou "ia"
+
+        // Lance l'adaptation de l'interface selon le rôle
+        adapterInterfaceSelonRole(data);
+
+    } catch (err) {
+        console.log("Erreur récupération rôle :", err);
+    }
+
+}
+
+
+// ============================================================
+// ADAPTATION DE L'INTERFACE
+// Reçoit les données du /api/me et adapte tous les éléments
+// ============================================================
+
+function adapterInterfaceSelonRole(data) {
+
+    const { role, isPro, isIA, premiumExpiry } = data;
+
+    // ── Badge premium dans le header (si l'élément existe) ──
+    const badgeEl = document.getElementById("badge-role");
+    if (badgeEl) {
+        if (isIA) {
+            badgeEl.textContent = "⚡ IA";
+            badgeEl.className = "badge-ia";
+        } else if (isPro) {
+            badgeEl.textContent = "⭐ Pro";
+            badgeEl.className = "badge-pro";
+        } else {
+            badgeEl.textContent = "Gratuit";
+            badgeEl.className = "badge-gratuit";
+        }
+        badgeEl.style.display = "inline-block";
+    }
+
+    // ── Cadenas sur les examens (page anciennesepreuves.html) ──
+    const cartesExamens = document.querySelectorAll(".exam-card[data-locked='true']");
+    cartesExamens.forEach(carte => {
+        if (!isPro) {
+            // Ajoute l'overlay cadenas sur les cartes bloquées
+            if (!carte.querySelector(".lock-overlay")) {
+                const overlay = document.createElement("div");
+                overlay.className = "lock-overlay";
+                overlay.innerHTML = `
+                    <span class="lock-icon">🔒</span>
+                    <span class="lock-text">Pro</span>
+                `;
+                carte.appendChild(overlay);
+                carte.classList.add("exam-locked");
+
+                // Remplace le clic par la modal d'upgrade
+                carte.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    ouvrirModalUpgrade("pro");
+                });
+            }
+        }
+    });
+
+    // ── Cadenas sur les jeux (page jeuxeducatifs.html) ──
+    const jeuxBloques = document.querySelectorAll(".jeu-card[data-premium='true']");
+    jeuxBloques.forEach(jeu => {
+        if (!isPro) {
+            jeu.classList.add("jeu-locked");
+            const overlay = document.createElement("div");
+            overlay.className = "lock-overlay";
+            overlay.innerHTML = `<span class="lock-icon">🔒</span><span class="lock-text">Pro</span>`;
+            jeu.appendChild(overlay);
+            jeu.addEventListener("click", (e) => {
+                e.preventDefault();
+                ouvrirModalUpgrade("pro");
+            });
+        }
+    });
+
+    // ── Bouton chatbot IA (si présent sur la page) ──
+    const chatbotBtn = document.getElementById("chatbot-btn");
+    if (chatbotBtn && !isIA) {
+        chatbotBtn.classList.add("btn-locked");
+        chatbotBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            ouvrirModalUpgrade("ia");
+        });
+    }
+
+    // ── Bannière Pro dans la Ligue Bac ──
+    const banniereQuiz = document.getElementById("banniere-limite-quiz");
+    if (banniereQuiz && !isPro) {
+        banniereQuiz.style.display = "block";
+    }
+
+}
+
+
+// ============================================================
+// VÉRIFICATION LIMITE QUIZ
+// À appeler AVANT de lancer un quiz (dans liguebac.html / jouer.html)
+// Retourne true si l'utilisateur peut jouer, false sinon
+// ============================================================
+
+async function verifierLimiteQuiz() {
+
+    const token = localStorage.getItem("token");
+    if (!token) return false;
+
+    try {
+
+        const res = await fetch("/api/quiz/check-pro", {
+            headers: { "Authorization": "Bearer " + token }
+        });
+
+        const data = await res.json();
+
+        if (!data.canPlay) {
+            // Affiche le message de limite avec la modal d'upgrade
+            ouvrirModalUpgradeLimite(data.message);
+            return false;
+        }
+
+        // Si gratuit, affiche le nombre de quiz restants
+        if (data.role === "gratuit" && data.restants !== undefined) {
+            const infoEl = document.getElementById("quiz-restants");
+            if (infoEl) {
+                infoEl.textContent = `Quiz restants aujourd'hui : ${data.restants}/3`;
+                infoEl.style.display = "block";
+            }
+        }
+
+        return true;
+
+    } catch (err) {
+        console.log("Erreur vérification quiz :", err);
+        return false;
+    }
+
+}
+
+
+// ============================================================
+// INCREMENT QUIZ
+// À appeler APRÈS qu'un quiz soit terminé pour compter
+// ============================================================
+
+async function incrementerQuizJoue() {
+
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+        await fetch("/api/quiz/increment", {
+            method: "POST",
+            headers: { "Authorization": "Bearer " + token }
+        });
+    } catch (err) {
+        console.log("Erreur increment quiz :", err);
+    }
+
+}
+
+
+// ============================================================
+// CHARGER LES EXAMENS DYNAMIQUEMENT
+// Pour la page anciennesepreuves.html
+// Appelle le backend qui filtre selon le rôle
+// ============================================================
+
+async function chargerExamens() {
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+        ouvrirModal(); // redirige vers connexion
+        return;
+    }
+
+    try {
+
+        const res = await fetch("/api/examens", {
+            headers: { "Authorization": "Bearer " + token }
+        });
+
+        const data = await res.json();
+        const grille = document.getElementById("examens-grille");
+        if (!grille) return;
+
+        grille.innerHTML = "";
+
+        data.examens.forEach(examen => {
+
+            const carte = document.createElement("div");
+            carte.className = "exam-card" + (examen.locked ? " exam-locked" : "");
+            carte.dataset.locked = examen.locked ? "true" : "false";
+
+            if (examen.locked) {
+                // Carte verrouillée — affiche cadenas
+                carte.innerHTML = `
+                    <div class="exam-icon">📄</div>
+                    <h3>${examen.titre}</h3>
+                    <div class="lock-overlay">
+                        <span class="lock-icon">🔒</span>
+                        <span class="lock-text">Pro</span>
+                    </div>
+                `;
+                carte.addEventListener("click", () => ouvrirModalUpgrade("pro"));
+            } else {
+                // Carte débloquée — ouvre le PDF
+                carte.innerHTML = `
+                    <div class="exam-icon">📄</div>
+                    <h3>${examen.titre}</h3>
+                    <span class="exam-tag">${examen.annee}</span>
+                `;
+                carte.addEventListener("click", () => ouvrirExamen(examen.driveId));
+            }
+
+            grille.appendChild(carte);
+
+        });
+
+    } catch (err) {
+        console.log("Erreur chargement examens :", err);
+    }
+
+}
+
+
+// ============================================================
+// VISIONNEUSE PDF (Google Drive iframe)
+// ============================================================
+
+function ouvrirExamen(driveId) {
+    const url = `https://drive.google.com/file/d/${driveId}/preview`;
+    document.getElementById("examFrame").src = url;
+    document.getElementById("examModal").style.display = "flex";
+}
+
+function fermerExamen() {
+    document.getElementById("examFrame").src = "";
+    document.getElementById("examModal").style.display = "none";
+}
+
+// Fermer en cliquant hors de la modal
+const examModalEl = document.getElementById("examModal");
+if (examModalEl) {
+    examModalEl.addEventListener("click", function(e) {
+        if (e.target === this) fermerExamen();
+    });
+}
+
+
+// ============================================================
+// MODAL D'UPGRADE — s'affiche quand un gratuit clique sur Pro
+// ============================================================
+
+function ouvrirModalUpgrade(tier) {
+
+    const modal = document.getElementById("modal-upgrade");
+    if (!modal) return;
+
+    const titreEl = modal.querySelector(".upgrade-titre");
+    const prixEl  = modal.querySelector(".upgrade-prix");
+    const btnEl   = modal.querySelector(".upgrade-cta");
+
+    if (tier === "ia") {
+        if (titreEl) titreEl.textContent = "Passe à Scola IA ⚡";
+        if (prixEl)  prixEl.textContent  = "800 HTG / mois";
+        if (btnEl)   btnEl.textContent   = "Obtenir Scola IA";
+    } else {
+        if (titreEl) titreEl.textContent = "Passe à Scola Pro ⭐";
+        if (prixEl)  prixEl.textContent  = "500 HTG / mois";
+        if (btnEl)   btnEl.textContent   = "Obtenir Scola Pro";
+    }
+
+    modal.style.display = "flex";
+
+}
+
+function ouvrirModalUpgradeLimite(message) {
+
+    const modal = document.getElementById("modal-upgrade");
+    if (!modal) return;
+
+    const titreEl = modal.querySelector(".upgrade-titre");
+    const texteEl = modal.querySelector(".upgrade-texte");
+
+    if (titreEl) titreEl.textContent = "Limite atteinte 🚫";
+    if (texteEl) texteEl.textContent = message || "Tu as atteint ta limite quotidienne. Passe à Pro pour jouer sans limite !";
+
+    modal.style.display = "flex";
+
+}
+
+function fermerModalUpgrade() {
+    const modal = document.getElementById("modal-upgrade");
+    if (modal) modal.style.display = "none";
+}
+
+// Fermer en cliquant dehors
+window.addEventListener("click", (e) => {
+    const modal = document.getElementById("modal-upgrade");
+    if (modal && e.target === modal) fermerModalUpgrade();
+});
+
+
+// ============================================================
+// INITIALISATION AU CHARGEMENT DE LA PAGE
+// ============================================================
+
+document.addEventListener("DOMContentLoaded", async () => {
+
+    // Charge le rôle si connecté
+    await chargerRoleUtilisateur();
+
+    // Si on est sur la page examens, charge les examens filtrés
+    if (document.getElementById("examens-grille")) {
+        chargerExamens();
+    }
+
+});

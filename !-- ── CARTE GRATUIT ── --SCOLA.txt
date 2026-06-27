@@ -1,0 +1,21 @@
+ <!-- ── CARTE GRATUIT ── -->
+        <div class="plan-carte plan-gratuit">
+            <div class="plan-top">
+                <span class="plan-nom">Scola Gratuit</span>
+                <div class="plan-prix">
+                    <span class="plan-montant">0</span>
+                    <span class="plan-unite">HTG</span>
+                </div>
+                <p class="plan-desc">L'essentiel pour commencer ta préparation.</p>
+            </div>
+            <ul class="plan-features">
+                <li><i class="fa-solid fa-check"></i> Accès aux chapitres du Bac</li>
+                <li><i class="fa-solid fa-check"></i> Quiz hebdomadaires Ligue Bac</li>
+                <li><i class="fa-solid fa-check"></i> Jeux éducatifs</li>
+                <li><i class="fa-solid fa-check"></i> Classement général</li>
+                <li class="feature-off"><i class="fa-solid fa-xmark"></i> Anciens examens complets</li>
+                <li class="feature-off"><i class="fa-solid fa-xmark"></i> Corrections détaillées</li>
+                <li class="feature-off"><i class="fa-solid fa-xmark"></i> Statistiques avancées</li>
+            </ul>
+            <a href="Pages/inscription.html" class="plan-btn plan-btn-outline">Commencer gratuitement</a>
+        </div>
