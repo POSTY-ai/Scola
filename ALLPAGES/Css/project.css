@@ -197,8 +197,10 @@ body {
 
 .plans-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(240px, 1fr));
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
     gap: 22px;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 .plan-card {
@@ -298,13 +300,440 @@ body {
     background: linear-gradient(135deg, #a855f7, #7c3aed);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
     .hero-home {
         grid-template-columns: 1fr;
+        margin: 30px auto 15px;
+        padding: 20px 15px;
+    }
+
+    .hero-copy {
+        padding: 20px;
+    }
+
+    .plans-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .header-accueil {
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px 15px;
+    }
+
+    .containerLogo {
+        order: 2;
+        min-width: auto;
+    }
+
+    .deroulant {
+        order: 1;
+        width: 100%;
+        gap: 8px;
+    }
+
+    nav {
+        order: 3;
+        width: 100%;
+    }
+
+    nav ul {
+        gap: 8px;
+    }
+
+    #container1 {
+        gap: 20px;
+        padding: 0 15px;
+    }
+
+    .firstww {
+        height: 180px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-home {
+        grid-template-columns: 1fr;
+        margin: 25px auto 10px;
+        padding: 15px 12px;
+    }
+
+    .hero-copy {
+        padding: 18px;
+    }
+
+    .hero-stats {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-top: 20px;
+    }
+
+    .stat-item {
+        padding: 14px 10px;
     }
 
     .plans-grid {
         grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .plan-card {
+        padding: 18px 16px;
+    }
+
+    .plan-card h3 {
+        margin: 14px 0 10px;
+    }
+
+    .plan-badge {
+        font-size: 10px;
+        padding: 5px 10px;
+    }
+
+    .plan-card li {
+        font-size: 13px;
+    }
+
+    .mini-card {
+        padding: 20px 16px;
+    }
+
+    .mini-card h3 {
+        font-size: 1.5rem;
+    }
+
+    .title0000 {
+        font-size: clamp(1.4rem, 3vw, 2rem);
+        margin: 35px 15px 30px;
+    }
+
+    #container1 {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 0 12px;
+    }
+
+    .col {
+        padding: 18px;
+    }
+
+    .firstww {
+        height: 160px;
+        margin-bottom: 15px;
+    }
+
+    .title00, .title02, .title03 {
+        font-size: clamp(1rem, 2vw, 1.2rem);
+    }
+
+    .para1, .para2, .para3 {
+        font-size: 13px;
+    }
+
+    .firstworldwar {
+        max-width: 150px;
+    }
+
+    .firstworldwar:focus {
+        max-width: 180px;
+    }
+
+    .titlex {
+        font-size: clamp(1.5rem, 4vw, 2.4rem);
+        margin: 30px 15px 15px;
+    }
+
+    .titlexx {
+        font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+        margin-bottom: 35px;
+        padding: 0 15px;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .primary-btn, .secondary-btn {
+        width: 100%;
+        padding: 12px 16px;
+    }
+
+    footer {
+        margin: 40px 12px 15px;
+        padding: 18px 12px;
+    }
+
+    .color, .colorPropos, .colorContact {
+        margin: 12px auto;
+        padding: 18px 15px 25px;
+        max-width: 98%;
+    }
+
+    #result a {
+        max-width: 90%;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-accueil {
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px 12px;
+    }
+
+    .containerLogo {
+        gap: 10px;
+    }
+
+    .logo {
+        width: 60px !important;
+        height: 60px !important;
+        left: 10px !important;
+    }
+
+    .name {
+        font-size: clamp(1.2rem, 3.5vw, 1.6rem);
+    }
+
+    nav ul {
+        gap: 5px;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    nav li {
+        width: 100%;
+    }
+
+    .abc, #submitButt, .linky {
+        width: 100%;
+        padding: 10px 12px;
+        font-size: 13px;
+        white-space: normal;
+    }
+
+    .deroulant {
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .firstworldwar {
+        max-width: 100%;
+        height: 36px;
+    }
+
+    .firstworldwar:focus {
+        max-width: 100%;
+    }
+
+    .hero-home {
+        margin: 20px auto 8px;
+        padding: 12px 10px;
+        gap: 15px;
+    }
+
+    .hero-copy {
+        padding: 15px;
+    }
+
+    .hero-badge {
+        font-size: 10px;
+        padding: 6px 10px;
+    }
+
+    .titlex {
+        font-size: clamp(1.3rem, 3.5vw, 2rem);
+        margin: 20px 10px 10px;
+    }
+
+    .titlexx {
+        font-size: clamp(0.85rem, 2vw, 1rem);
+        margin-bottom: 25px;
+        padding: 0 10px;
+    }
+
+    .hero-stats {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .stat-item {
+        padding: 12px 8px;
+        font-size: 0.9rem;
+    }
+
+    .stat-item strong {
+        font-size: 1.3rem;
+        margin-bottom: 4px;
+    }
+
+    .stat-item span {
+        font-size: 0.75rem;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .primary-btn, .secondary-btn {
+        width: 100%;
+        padding: 11px 14px;
+        font-size: 14px;
+    }
+
+    .mini-card {
+        padding: 16px 12px;
+    }
+
+    .mini-card h3 {
+        font-size: 1.3rem;
+        margin: 12px 0 8px;
+    }
+
+    .mini-card p {
+        font-size: 12px;
+        margin-bottom: 12px;
+    }
+
+    .mini-card a {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .section-heading h2 {
+        font-size: clamp(1.5rem, 2.8vw, 2rem);
+    }
+
+    .plans-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .plan-card {
+        padding: 16px 12px;
+    }
+
+    .plan-card h3 {
+        font-size: clamp(1.2rem, 2vw, 1.6rem);
+        margin: 12px 0 8px;
+    }
+
+    .plan-card p {
+        font-size: 12px;
+        margin-bottom: 12px;
+    }
+
+    .plan-card ul {
+        margin: 0 0 16px;
+        gap: 8px;
+    }
+
+    .plan-card li {
+        font-size: 12px;
+        padding-left: 16px;
+    }
+
+    .plan-button {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+
+    .title0000 {
+        font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+        margin: 25px 10px 20px;
+    }
+
+    #container1 {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 0 10px;
+    }
+
+    .link1, .link2, .link3 {
+        border-radius: 15px;
+    }
+
+    .col {
+        padding: 14px;
+    }
+
+    .firstww {
+        height: 140px;
+        margin-bottom: 12px;
+        border-radius: 10px;
+    }
+
+    .title00, .title02, .title03 {
+        font-size: clamp(0.9rem, 2vw, 1.1rem);
+        margin-bottom: 10px;
+    }
+
+    .para1, .para2, .para3 {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    footer {
+        margin: 30px 10px 10px;
+        padding: 14px 10px;
+        border-radius: 12px;
+    }
+
+    .copy {
+        font-size: clamp(12px, 2vw, 16px);
+    }
+
+    .color, .colorPropos, .colorContact, .containerSujet {
+        margin: 10px auto;
+        padding: 14px 12px 20px;
+        max-width: 98%;
+        border-radius: 15px;
+    }
+
+    .about-title, .contact-title, .contact-info, .titreSujet {
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+
+    .about-text, .contact-text {
+        font-size: 13px;
+    }
+
+    .list {
+        flex-direction: column;
+        gap: 8px;
+        padding: 12px;
+    }
+
+    .sujet1, .sujet2, .sujet3, .sujet4, .sujet5, .sujet6, .sujet7, .sujet8, .sujet9, .sujet10,
+    .sujet11, .sujet12, .sujet13, .sujet14, .sujet15, .sujet16, .sujet17, .sujet18, .sujet19, .sujet20,
+    .sujet21, .sujet22, .sujet23, .sujet24, .sujet25, .sujet26 {
+        padding: 8px 12px;
+        font-size: 12px;
+        width: 100%;
+    }
+
+    #result a {
+        max-width: 95%;
+        font-size: 13px;
+        padding: 12px;
+        margin: 8px auto;
+    }
+
+    form {
+        padding: 0 10px;
+    }
+
+    .formulaire, .edu-head {
+        max-width: 95%;
+        padding: 18px 12px;
+        width: 100%;
     }
 }
 .formulaire{
