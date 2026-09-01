@@ -134,55 +134,15 @@ function logout() {
 }
 
 // ============================================================
-// PROTECTION DU MENU DÉROULANT
-// Si l'utilisateur clique sur un lien du menu sans être connecté,
-// on annule la navigation et on affiche la modal d'accès restreint
+// MENU DÉROULANT — accessible pour tous, sans blocage inutile
 // ============================================================
 const lienMenu = document.querySelectorAll('.menuderoulant a');
-// querySelectorAll = sélectionne TOUS les liens du menu
-// Retourne une NodeList (liste de tous les éléments trouvés)
 
 lienMenu.forEach((lien) => {
-    // forEach = on applique la même logique à chaque lien du menu
-
-    lien.addEventListener('click', (e) => {
-
-        if (!token) {
-            // ❌ Pas de token = pas connecté
-            e.preventDefault();
-            // preventDefault() = annule le comportement par défaut du lien
-            // Sans ça, le navigateur changerait de page normalement
-
-            ouvrirModal(); // affiche la fenêtre popup
-        }
-        // ✅ Token présent = connecté, le lien fonctionne normalement
+    lien.addEventListener('click', () => {
+        // Le menu reste accessible même sans compte, mais les contenus premium
+        // restent gérés côté backend si nécessaire.
     });
-});
-
-// ============================================================
-// MODAL — fenêtre popup d'accès restreint
-// ouvrirModal() est appelée quand un visiteur non connecté
-// clique sur un lien du menu déroulant
-// ============================================================
-function ouvrirModal() {
-    const modal = document.getElementById('modal-acces');
-    if (modal) modal.style.display = 'flex';
-    // flex = permet de centrer le contenu de la modal
-}
-
-function fermerModal() {
-    const modal = document.getElementById('modal-acces');
-    if (modal) modal.style.display = 'none';
-}
-
-// Fermer la modal en cliquant sur le fond sombre (en dehors de la fenêtre blanche)
-window.addEventListener('click', (e) => {
-    const modal = document.getElementById('modal-acces');
-    if (modal && e.target === modal) {
-        // e.target = l'élément exact cliqué
-        // Si c'est le fond sombre (pas la fenêtre intérieure), on ferme
-        fermerModal();
-    }
 });
 // ============================================================
 // SYSTÈME PREMIUM FRONTEND — À COLLER À LA FIN DE project.js

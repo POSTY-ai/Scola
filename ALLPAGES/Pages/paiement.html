@@ -393,6 +393,15 @@
             .card { padding: 28px 20px; }
             .pin-btn { padding: 14px; font-size: 16px; }
         }
+
+         body{
+    background-image: url('../Images/scola-wave-background.svg');
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+}
     </style>
 </head>
 <body>
@@ -409,11 +418,14 @@
                 <div class="etape-num active" id="num1">1</div>
                 <div class="etape-label active" id="lbl1">Numéro</div>
             </div>
+
             <div class="etape-ligne" id="ligne1"></div>
+
             <div class="etape">
                 <div class="etape-num" id="num2">2</div>
                 <div class="etape-label" id="lbl2">PIN</div>
             </div>
+
             <div class="etape-ligne" id="ligne2"></div>
             <div class="etape">
                 <div class="etape-num" id="num3">3</div>
@@ -560,8 +572,8 @@
         // ============================================================
         const params = new URLSearchParams(window.location.search);
         const tier = params.get("tier") || "pro";
-        const prix = tier === "ia" ? 800 : 500;
-        const planNom = tier === "ia" ? "IA" : "Pro";
+        const prix = tier === "starter" ? 250 : tier === "ia" ? 750 : 500;
+        const planNom = tier === "starter" ? "Starter" : tier === "ia" ? "IA" : "Pro";
 
         // Remplir les infos de la commande
         document.getElementById("plan-nom").textContent = planNom;

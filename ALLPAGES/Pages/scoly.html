@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ScolyAI — Scola</title>
+  <link rel="stylesheet" href="../Css/project.css" />
+  <style>
+    body {
+      background-image: url('../Images/scola-wave-background.svg');
+      background-size: cover;
+      background-position: center bottom;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      color: white;
+    }
+
+    .ai-shell {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px 40px;
+    }
+
+    .ai-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .ai-brand {
+      font-size: 1.8rem;
+      font-weight: 800;
+    }
+
+    .ai-badge {
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-weight: 700;
+    }
+
+    .ai-card {
+      background: rgba(9, 15, 27, 0.42);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 24px;
+      padding: 22px;
+      backdrop-filter: blur(11px);
+    }
+
+    .chat-box {
+      height: 420px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .msg {
+      max-width: 75%;
+      padding: 12px 14px;
+      border-radius: 16px;
+      line-height: 1.6;
+      font-size: 0.96rem;
+    }
+
+    .msg.user {
+      align-self: flex-end;
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
+      border-bottom-right-radius: 6px;
+    }
+
+    .msg.ai {
+      align-self: flex-start;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: white;
+      border-bottom-left-radius: 6px;
+    }
+
+    .chat-form {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .chat-form input {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.06);
+      color: white;
+      border-radius: 14px;
+      padding: 16px 18px;
+      font-size: 1rem;
+    }
+
+    .chat-form input::placeholder {
+      color: rgba(255,255,255,0.7);
+    }
+
+    .chat-form button {
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #a855f7, #7c3aed);
+      color: white;
+      font-weight: 700;
+      padding: 0 22px;
+      cursor: pointer;
+    }
+
+    .quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .quick-actions button {
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.04);
+      color: white;
+      border-radius: 999px;
+      padding: 9px 14px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 700px) {
+      .chat-form {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="ai-shell">
+    <div class="ai-topbar">
+      <div class="ai-brand">ScolyAI 🤖</div>
+      <div class="ai-badge">Assistant historique</div>
+    </div>
+
+    <div class="ai-card">
+      <div class="chat-box" id="chatBox">
+        <div class="msg ai">Salut ! Je peux t’expliquer un sujet, te résumer une leçon, ou t’aider à préparer un quiz sur l’histoire.</div>
+      </div>
+
+      <div class="quick-actions">
+        <button type="button" data-question="Explique-moi en 3 points la Première Guerre mondiale">Première Guerre mondiale</button>
+        <button type="button" data-question="Quel est le rôle du Plan Marshall ?">Plan Marshall</button>
+        <button type="button" data-question="Résume-moi la Guerre froide en 5 lignes">Guerre froide</button>
+      </div>
+
+      <form class="chat-form" id="chatForm">
+        <input id="questionInput" type="text" placeholder="Pose une question sur l’histoire ou les révisions…" />
+        <button type="submit">Envoyer</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const chatBox = document.getElementById('chatBox');
+    const chatForm = document.getElementById('chatForm');
+    const questionInput = document.getElementById('questionInput');
+
+    function addMessage(text, sender = 'ai') {
+      const message = document.createElement('div');
+      message.className = `msg ${sender}`;
+      message.textContent = text;
+      chatBox.appendChild(message);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function getAiReply(question) {
+      const q = question.toLowerCase();
+
+      if (q.includes('premiere guerre') || q.includes('1ere guerre')) {
+        return 'La Première Guerre mondiale (1914–1918) a été provoquée par les rivalités européennes, le nationalisme, les alliances et les tensions coloniales. Elle a opposé surtout les Alliés et les Puissances centrales, et elle a profondément transformé l’Europe et le monde.';
+      }
+
+      if (q.includes('plan marshall')) {
+        return 'Le Plan Marshall, lancé en 1947, était une aide économique américaine à l’Europe après la Seconde Guerre mondiale. Il visait à reconstruire les économies, freiner le communisme et renforcer l’influence des États-Unis dans le monde.';
+      }
+
+      if (q.includes('guerre froide')) {
+        return 'La Guerre froide (1947–1991) a opposé les États-Unis et l’URSS sans affrontement direct majeur entre eux. Elle s’est exprimée par la course aux armements, les alliances, la propagande et l’influence idéologique sur le monde.';
+      }
+
+      if (q.includes('haïti') || q.includes('haiti')) {
+        return 'Haïti a connu plusieurs périodes décisives : l’occupation américaine, la dictature de Sténio Vincent, l’émergence de mouvements politiques et la lutte pour la souveraineté nationale. L’histoire haïtienne se comprend mieux en regardant les tensions politiques, sociales et économiques.';
+      }
+
+      if (q.includes('résume') || q.includes('resume')) {
+        return 'Pour résumer : l’histoire du XXe siècle est marquée par deux guerres mondiales, la Guerre froide, la mondialisation et les transformations économiques. Le cœur de l’étude est de comprendre les causes, les acteurs et les conséquences de ces événements.';
+      }
+
+      return 'Voici une piste de réponse : commence par définir le contexte, puis explique les causes, les acteurs, les événements principaux et les conséquences. Si tu veux, je peux aussi te faire un résumé plus court, plus détaillé ou sous forme de fiches.';
+    }
+
+    chatForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      const question = questionInput.value.trim();
+      if (!question) return;
+
+      addMessage(question, 'user');
+      questionInput.value = '';
+
+      setTimeout(() => {
+        addMessage(getAiReply(question), 'ai');
+      }, 400);
+    });
+
+    document.querySelectorAll('[data-question]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const question = button.dataset.question;
+        addMessage(question, 'user');
+        setTimeout(() => {
+          addMessage(getAiReply(question), 'ai');
+        }, 300);
+      });
+    });
+  </script>
+</body>
+</html>

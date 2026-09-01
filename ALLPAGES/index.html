@@ -4,35 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
     <link rel="shortcut icon" href="Images/IMG_0755.JPG" type="image/x-icon">
-    <link rel="stylesheet" href="Css/project.css">
+    <link rel="stylesheet" href="../Css/project.css">
+
     <title>Scola</title>
+
+    
 </head>
 <body>
     <div class="color">
         <header class="header-accueil">
-
-            <!-- ================================================ -->
-            <!-- MENU DÉROULANT                                   -->
-            <!-- Les liens sont protégés par project.js           -->
-            <!-- Si l'utilisateur n'est pas connecté, un clic     -->
-            <!-- ouvre la modal au lieu de changer de page        -->
-            <!-- ================================================ -->
             <div class="deroulant" style="color: blue;">
-                <a href="#" class="linky">
+                <a href="#" class="linky" aria-label="Ouvrir le menu">
                     <span class="arrow"><i class="fa-solid fa-bars"></i></span>
                 </a>
-
                 <div class="menuderoulant">
-                    <a href="./Pages/sujetsofficiels.html">Les chapitres</a>
-                    <a href="./Pages/anciennesepreuves.html">Les anciens examens</a>
-                    <a href="./Pages/jeuxeducatifs.html">Jeux éducatifs</a>
-                    <a href="./Pages/liguebac.html">Ligue bac</a>
+                    <a href="Pages/sujetsofficiels.html">Les chapitres</a>
+                    <a href="Pages/anciennesepreuves.html">Les anciens examens</a>
+                    <a href="Pages/jeuxeducatifs.html">Jeux éducatifs</a>
+                    <a href="Pages/liguebac.html">Ligue bac</a>
                 </div>
-                 <input type="search" class="firstworldwar" id="searchbar" placeholder="Rechercher"/>
+
+                <input type="search" class="firstworldwar" id="searchbar" placeholder="Rechercher"/>
             </div>
 
-            <!-- LOGO -->
             <div class="containerLogo">
                 <img
                     src="Images/IMG_0758.PNG"
@@ -42,157 +38,224 @@
                     height="80px"
                     style="position: relative; left:25px;"
                 >
+
                 <p class="name" style="position: relative; left: 5px;">Scola</p>
             </div>
 
-            <!-- ================================================ -->
-            <!-- NAVIGATION — BOUTONS CONNEXION/PROFIL            -->
-            <!-- Ces boutons sont gérés dynamiquement par         -->
-            <!-- verifierConnexion() dans project.js              -->
-            <!-- Connecté → Profil + Déconnexion s'affichent      -->
-            <!-- Pas connecté → Connexion + Inscription s'affichent-->
-            <!-- ================================================ -->
-            <nav class="nav-button">
+            <nav>
                 <ul>
-                    <!-- Visible si PAS connecté -->
+                    <li class="moveup">
+                        <a href="index.html" class="abc">
+                            <i class="fa-solid fa-house-chimney"></i>
+                        </a>
+                    </li>
                     <li class="specialButton1" id="logn-button">
-                        <button class="abc">
-                            <a href="Pages/register.html" class="abc2">Connexion</a>
-                        </button>
+                        <button class="abc" id="abc"><a href="Pages/connexion.html" class="abc2" id="abc">Connexion</a></button>
                     </li>
 
-                    <!-- Visible si PAS connecté -->
                     <li class="specialButton2" id="signup-button">
-                        <button class="abc">
-                            <a href="Pages/inscription.html" class="abc2">Inscription</a>
-                        </button>
+                        <button class="abc"><a href="Pages/inscription.html" class="abc2">Inscription</a></button>
                     </li>
 
-                    <!-- Visible si connecté — caché par défaut -->
+                    <li class="specialButton3" id="ai-button">
+                        <button class="abc"><a href="Pages/scoly.html" class="abc2">ScolyAI🤖</a></button>
+                    </li>
+
                     <li class="profile-button" id="profile-button" style="display:none;">
                         <button class="abc">
                             <a href="Pages/profile.html" class="abc2">Profil</a>
                         </button>
                     </li>
-
-                    <!-- Visible si connecté — caché par défaut -->
                     <li id="logout-button" style="display:none;">
-                        <button class="abc" onclick="logout()">
-                            Déconnexion
-                        </button>
+                        <button class="abc" onclick="logout()">Déconnexion</button>
                     </li>
                 </ul>
             </nav>
         </header>
 
         <br>
-      
 
-        <h1 class="titlex" id="titlex">
-            Préparez le bac<br>
-            comme jamais auparavant
-        </h1>
+        <div id="result"></div>
 
-        <p class="titlexx" id="titlexx">
-            Des ressources claires, visuelles et passionnantes<br>
-            pour comprendre les grands chapitres du baccalauréat
-        </p>
     </div>
 
-
-
-</style>
-
-    <!-- ======================================================== -->
-    <!-- MODAL D'ACCÈS RESTREINT                                  -->
-    <!-- Cette fenêtre popup s'affiche quand un visiteur non      -->
-    <!-- connecté clique sur un lien du menu déroulant            -->
-    <!-- Elle est cachée par défaut (display:none dans le CSS)    -->
-    <!-- project.js l'ouvre avec ouvrirModal()                    -->
-    <!-- ======================================================== -->
-    <div id="modal-acces" class="modal-overlay">
-        <!-- modal-overlay = le fond sombre derrière la fenêtre -->
-
-        <div class="modal-contenu">
-            <!-- modal-contenu = la fenêtre blanche au centre -->
-
-            <!-- Bouton X pour fermer -->
-            <button class="modal-fermer" onclick="fermerModal()">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-
-            <!-- Icône cadenas -->
-            <div class="modal-icone">🔒</div>
-
-            <h2 class="modal-titre">Accès restreint</h2>
-
-            <p class="modal-texte">
-                Tu dois être <strong>connecté</strong> pour accéder à cette section.<br>
-                Rejoins Scola gratuitement !
+    <section class="hero-home">
+        <div class="hero-copy" style="margin-top:90px">
+            <span class="hero-badge">Apprendre + pratiquer + progresser</span>
+            <h1 class="titlex">Apprends l’histoire comme jamais auparavant</h1>
+            <p class="titlexx">
+                Des chapitres clairs, des quiz, des anciens examens et une IA qui t’aide à mieux comprendre l’histoire haïtienne et mondiale.
             </p>
-
-            <!-- Boutons vers inscription et connexion -->
-            <div class="modal-boutons">
-                <a href="Pages/inscription.html" class="modal-btn-inscription">
-                    S'inscrire gratuitement
-                </a>
-                <a href="Pages/register.html" class="modal-btn-connexion">
-                    Se connecter
-                </a>
+            <div class="hero-actions">
+                <a href="Pages/inscription.html" class="primary-btn">Créer un compte</a>
+                <a href="Pages/sujetsofficiels.html" class="secondary-btn">Voir les chapitres</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <strong>102</strong>
+                    <span>étudiants déjà au programme</span>
+                </div>
+                <div class="stat-item">
+                    <strong>24/7</strong>
+                    <span>accès aux ressources</span>
+                </div>
+                <div class="stat-item">
+                    <strong>3</strong>
+                    <span>formules premium</span>
+                </div>
             </div>
         </div>
+        <div class="hero-panel">
+            <div class="mini-card">
+                <span class="mini-label">Nouveauté</span>
+                <h3>ScolyAI</h3>
+                <p>Pose une question, résume un sujet ou réexplique une leçon en quelques secondes.</p>
+                <a href="Pages/scoly.html">Essayer l’IA</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="plans-section">
+        <div class="section-heading">
+            <p class="eyebrow">Abonnements</p>
+            <h2>Choisis le plan qui te convient</h2>
+        </div>
+
+        <div class="plans-grid">
+            <article class="plan-card">
+                <span class="plan-badge starter">Starter</span>
+                <h3>250 HTG / mois</h3>
+                <p>Pour commencer à réviser sereinement et accéder aux contenus principaux.</p>
+                <ul>
+                    <li>Accès aux chapitres clés</li>
+                    <li>Quiz de base</li>
+                    <li>Suivi de progression</li>
+                </ul>
+                <a href="Pages/paiement.html?tier=starter" class="plan-button starter-btn">Choisir Starter</a>
+            </article>
+
+            <article class="plan-card featured-plan">
+                <span class="plan-badge pro">Pro</span>
+                <h3>500 HTG / mois</h3>
+                <p>Le meilleur équilibre pour les étudiants qui veulent aller plus loin.</p>
+                <ul>
+                    <li>Tout le contenu premium</li>
+                    <li>Anciennes épreuves</li>
+                    <li>Accès complet aux quiz</li>
+                </ul>
+                <a href="Pages/paiement.html?tier=pro" class="plan-button pro-btn">Choisir Pro</a>
+            </article>
+
+            <article class="plan-card">
+                <span class="plan-badge ia">IA + Premium</span>
+                <h3>750 HTG / mois</h3>
+                <p>Accès complet + assistant IA intelligent pour réviser plus vite et mieux.</p>
+                <ul>
+                    <li>Tout le pack Pro</li>
+                    <li>Assistant ScolyAI</li>
+                    <li>Récapitulatif intelligent</li>
+                </ul>
+                <a href="Pages/paiement.html?tier=ia" class="plan-button ia-btn">Choisir IA</a>
+            </article>
+        </div>
+    </section>
+
+    <h1 class="title0000">Explorez les grandes périodes</h1>
+
+    <div id="container1" classs="container1">
+
+        <div class="link1" id="link1">
+            <a href="Premiereguerremondiale.html" class="col">
+                <img
+                    src="../Images/IMG-20250803-WA0114.jpg"
+                    alt="Premiereguerremondiale.html"
+                    class="firstww"
+                >
+
+                <h1 class="title00" id="title00">
+                    La Première Guerre<br>
+                    mondiale
+                </h1>
+
+                <p class="para1">
+                    La Première Guerre mondiale est une guerre<br>
+                    qui a débuté en 1914 et prendra fin en 1918.<br>
+                    C’est une guerre qui a impliqué la plupart<br>
+                    des grandes puissances du monde.
+                </p>
+            </a>
+        </div>
+
+        <div class="link2">
+            <a href="Deuxiemeguerremondiale.html" class="col">
+                <img
+                    src="../Images/IMG-20250803-WA0112.jpg"
+                    alt="Deuxiemeguerremondiale.html"
+                    class="firstww"
+                >
+
+                <h1 class="title02">
+                    La Deuxième Guerre<br>
+                    mondiale
+                </h1>
+
+                <p class="para2">
+                    La Deuxième Guerre mondiale est un conflit mondial qui a débuté<br>
+                    le 1er septembre 1939 et prendra fin le 8 avril 1945<br>
+                    en Europe. C’est l’un des conflits les plus marquants<br>
+                    et sanglants de l’histoire de l’humanité.
+                </p>
+            </a>
+        </div>
+
+        <div class="link3">
+            <a href="guerrefroide.html" class="col">
+                <img
+                    src="../Images/IMG-20250803-WA0113.jpg"
+                    alt="guerrefroide.html"
+                    class="firstww"
+                    id="fff"
+                >
+
+                <h1 class="title03">Guerre froide</h1>
+
+                <p class="para3">
+                    La Guerre froide est un conflit bilatéral<br>
+                    qui a eu lieu entre les États-Unis d’Amérique (capitalistes)<br>
+                    et l’Union des Républiques Socialistes Soviétiques (URSS) (communistes).<br>
+                    Elle débute en 1947 et prendra fin en 1991.
+                </p>
+            </a>
+        </div>
+
     </div>
-  <div id="result"></div>
 
-        <div class="calendrier-offciel" 
-    style="display:flex; justify-content: center;">
-        <img src="../Images/cal.jpg" alt="" class="image-calendrier" 
-        style="height: 100vh; 
-        width: 30%; 
-        min-width: 400px; ">
-  
-    </div>
 
-   <footer>
-    <nav style="display: flex; justify-content: center; align-items: center; gap: 90px;">
-        
-        <p class="copy" id="copy">
-            &copy; 2025 - TOUS DROITS RÉSERVÉS
-        </p>
+    <footer>
+        <nav style="gap:30px">
+            <ul class="separatefooter" style="gap: 30px;">
+                <li>
+                    <a href="../Pages/apropos.html" class="abc">À PROPOS</a>
+                </li>
 
-        
+                <li class="moveup2">
+                    <a href="../Pages/contact.html" class="abc">CONTACT</a>
+                </li>
+            </ul>
 
-       <div class="whatsapp-channel" style="display: flex; justify-content: center; align-items: center; gap:40px; margin-left: 30px;">
+            <p class="copy" id="copy">
+                &copy;2025 - TOUS DROITS RÉSERVÉS
+            </p>
+
+            <div class="whatsapp-channel" style="display: flex; justify-content: center; align-items: center; gap:70px; margin-left: 60px;">
             <a href="https://whatsapp.com/channel/0029Vb6g067B4hdRqZ0dtg01" target="_blank">
-                <img src="Images/logo-w.png" alt="Logo Scola" width="50">
-                Cliquez ici pour nous suivre sur notre chaîne WhatsApp
+                <img src="../Images/logo-w.png" alt="Logo Scola" width="50">
+                Suivez nous
             </a>
         </div>
+        </nav>
+    </footer>
 
-    </nav>
-</footer>
-
-    <script src="Javascript/project.js"></script>
-    <div id="modal-acces" class="modal-overlay">
-    <div class="modal-contenu">
-        <button class="modal-fermer" onclick="fermerModal()">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
-        <div class="modal-icone">🔒</div>
-        <h2 class="modal-titre">Accès restreint</h2>
-        <p class="modal-texte">
-            Tu dois être <strong>connecté</strong> pour accéder à cette section.<br>
-            Rejoins Scola gratuitement !
-        </p>
-        <div class="modal-boutons">
-            <a href="Pages/inscription.html" class="modal-btn-inscription">
-                S'inscrire gratuitement
-            </a>
-            <a href="Pages/register.html" class="modal-btn-connexion">
-                Se connecter
-            </a>
-        </div>
-    </div>
-</div>
+    <script src="../Javascript/project.js"></script>
 </body>
 </html>
