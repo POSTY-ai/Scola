@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mon espace - Scola</title>
+    <link rel="stylesheet" href="../Css/dashboard-connecte.css">
+</head>
+<body>
+    <main class="connected-shell">
+        <header class="topbar">
+            <a href="../index.html" class="brand">Scola</a>
+            <nav>
+                <a href="profile.html">Profil</a>
+                <a href="dashboard-admin.html" id="admin-link" hidden>Admin</a>
+                <button type="button" id="logout-button">Déconnexion</button>
+            </nav>
+        </header>
+
+        <section class="welcome-panel">
+            <div>
+                <p class="eyebrow">Mon espace Scola</p>
+                <h1>Bienvenue, <span id="user-name">élève</span></h1>
+                <p>Continue tes révisions et retrouve rapidement tes ressources.</p>
+            </div>
+            <a class="profile-button" href="profile.html">Voir mon profil</a>
+        </section>
+
+        <section class="quick-links" aria-label="Accès rapides">
+            <a href="sujetsofficiels.html"><strong>Chapitres</strong><span>Revoir les leçons</span></a>
+            <a href="jeuxeducatifs.html"><strong>Jeux éducatifs</strong><span>Apprendre en pratiquant</span></a>
+            <a href="liguebac.html"><strong>Ligue bac</strong><span>Voir ton classement</span></a>
+            <a href="scoly.html"><strong>ScolyAI</strong><span>Poser une question</span></a>
+        </section>
+
+        <section class="content-section">
+            <div class="section-heading"><h2>Grandes périodes</h2><a href="sujetsofficiels.html">Tout voir</a></div>
+            <div class="periods">
+                <a href="Premiereguerremondiale.html"><img src="../Images/IMG-20250803-WA0114.jpg" alt="Première Guerre mondiale"><strong>Première Guerre mondiale</strong><span>1914 - 1918</span></a>
+                <a href="Deuxiemeguerremondiale.html"><img src="../Images/IMG-20250803-WA0112.jpg" alt="Deuxième Guerre mondiale"><strong>Deuxième Guerre mondiale</strong><span>1939 - 1945</span></a>
+                <a href="guerrefroide.html"><img src="../Images/IMG-20250803-WA0113.jpg" alt="Guerre froide"><strong>Guerre froide</strong><span>1947 - 1991</span></a>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="section-heading"><h2>Abonnements</h2><a href="paiement.html?tier=pro">Choisir</a></div>
+            <div class="plans">
+                <a href="paiement.html?tier=pro"><strong>Pro</strong><span>250 HTG / mois</span><small>Contenu premium, examens et quiz.</small></a>
+                <a href="paiement.html?tier=ia"><strong>IA + Premium</strong><span>500 HTG / mois</span><small>Accès complet et outils intelligents.</small></a>
+            </div>
+        </section>
+    </main>
+    <script src="../Javascript/dashboard-connecte.js"></script>
+</body>
+</html>

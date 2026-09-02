@@ -1,0 +1,38 @@
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+    color: #f8fafc;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f172a url('../Images/scola-wave-background.svg') center bottom / cover fixed no-repeat;
+}
+.connected-shell { max-width: 1100px; margin: auto; }
+.topbar, .topbar nav, .section-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.brand { color: #fff; font-size: 24px; font-weight: 800; text-decoration: none; }
+.topbar nav { gap: 10px; }
+.topbar nav a, button, .profile-button { border: 1px solid rgba(255,255,255,.2); border-radius: 8px; padding: 10px 14px; color: #fff; background: rgba(255,255,255,.08); text-decoration: none; cursor: pointer; }
+.welcome-panel { margin: 46px 0 24px; padding: 30px; display: flex; align-items: end; justify-content: space-between; gap: 20px; border: 1px solid rgba(255,255,255,.14); border-radius: 18px; background: rgba(255,255,255,.08); }
+.eyebrow { color: #bfdbfe; text-transform: uppercase; letter-spacing: .1em; font-size: 12px; }
+h1 { margin: 0 0 8px; font-size: clamp(28px, 5vw, 48px); }
+.welcome-panel p:last-child, .section-heading a, .quick-links span, .periods span, .plans small { color: #cbd5e1; }
+.quick-links { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.quick-links a, .content-section, .periods a, .plans a { border: 1px solid rgba(255,255,255,.14); border-radius: 14px; background: rgba(255,255,255,.07); }
+.quick-links a { padding: 18px; color: #fff; text-decoration: none; }
+.quick-links strong, .quick-links span, .periods strong, .periods span, .plans strong, .plans span, .plans small { display: block; }
+.quick-links span { margin-top: 5px; font-size: 13px; }
+.content-section { margin-top: 22px; padding: 22px; }
+h2 { margin: 0; font-size: 21px; }
+.section-heading { margin-bottom: 16px; }
+.section-heading a { text-decoration: none; font-size: 13px; }
+.periods { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.periods a, .plans a { overflow: hidden; color: #fff; text-decoration: none; }
+.periods img { display: block; width: 100%; height: 170px; object-fit: cover; }
+.periods strong, .periods span, .plans a { padding: 12px 14px; }
+.periods span { padding-top: 0; font-size: 12px; }
+.plans { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.plans a { padding: 18px; }
+.plans span { margin-top: 8px; color: #bfdbfe; }
+.plans small { margin-top: 8px; font-size: 13px; }
+@media (max-width: 700px) { .welcome-panel { align-items: flex-start; flex-direction: column; margin-top: 28px; } .quick-links { grid-template-columns: repeat(2, 1fr); } .periods { grid-template-columns: 1fr; } .periods img { height: 150px; } }
+@media (max-width: 430px) { .topbar nav a, button, .profile-button { padding: 8px 9px; font-size: 12px; } .quick-links, .plans { grid-template-columns: 1fr; } .content-section, .welcome-panel { padding: 16px; } }
