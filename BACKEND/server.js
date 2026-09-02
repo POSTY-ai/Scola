@@ -12,6 +12,7 @@ const jwt = require("jsonwebtoken");
 const cors = require('cors');
 const crypto = require("crypto");
 const User = require("./models/user");
+const PaymentRequest = require("./models/paymentRequest");
 const cron = require("node-cron");
 
 // Envoi email via API HTTP Brevo (fetch natif, pas de SDK)
@@ -42,7 +43,7 @@ async function sendEmail(toEmail, toName, subject, htmlContent) {
 // MIDDLEWARES
 // ================================
 app.use(cors({ origin: 'https://scola.onrender.com' }));
-app.use(express.json());
+app.use(express.json({ limit: "7mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "../ALLPAGES")));
 
@@ -170,6 +171,20 @@ function auth(req, res, next) {
 
 }
 
+async function requireAdmin(req, res, next) {
+    try {
+        const user = await User.findOne({ email: req.user.email });
+        if (!user || user.role !== "admin") {
+            return res.status(403).json({ message: "Accès réservé à l'administrateur" });
+        }
+        req.adminUser = user;
+        next();
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Erreur serveur" });
+    }
+}
+
 // ================================
 // MIDDLEWARE PREMIUM
 // ================================
@@ -239,6 +254,7 @@ app.get("/api/me", auth, async (req, res) => {
             email: user.email,
             role,
             premiumExpiry,
+                isAdmin: role === "admin",
             isPro: ["pro", "ia"].includes(role),
             isIA: role === "ia"
         });
@@ -260,10 +276,8 @@ app.post("/api/premium/activer", auth, async (req, res) => {
 
         const { email, tier, dureeJours } = req.body;
 
-        const ADMIN_EMAILS = ["jonathanfortune07@gmail.com"];
-        if (!ADMIN_EMAILS.includes(req.user.email)) {
-            return res.status(403).json({ message: "Accès refusé" });
-        }
+        const admin = await User.findOne({ email: req.user.email, role: "admin" });
+        if (!admin) return res.status(403).json({ message: "Accès réservé à l'administrateur" });
 
         const cible = await User.findOne({ email });
         if (!cible) return res.status(404).json({ message: "Utilisateur introuvable" });
@@ -458,10 +472,8 @@ app.post("/api/premium/desactiver", auth, async (req, res) => {
 
     try {
 
-        const ADMIN_EMAILS = ["jonathanfortune07@gmail.com"];
-        if (!ADMIN_EMAILS.includes(req.user.email)) {
-            return res.status(403).json({ message: "Accès refusé" });
-        }
+        const admin = await User.findOne({ email: req.user.email, role: "admin" });
+        if (!admin) return res.status(403).json({ message: "Accès réservé à l'administrateur" });
 
         const { email } = req.body;
         const cible = await User.findOne({ email });
@@ -724,10 +736,8 @@ async function resetLigue() {
 
 app.post("/api/admin/reset-league", auth, async (req, res) => {
 
-    const ADMIN_EMAILS = ["jonathanfortune07@gmail.com"];
-    if (!ADMIN_EMAILS.includes(req.user.email)) {
-        return res.status(403).json({ message: "Accès refusé" });
-    }
+    const admin = await User.findOne({ email: req.user.email, role: "admin" });
+    if (!admin) return res.status(403).json({ message: "Accès réservé à l'administrateur" });
 
     try {
         await resetLigue();
@@ -1029,4 +1039,79 @@ app.get("/api/paiement/statut", auth, async (req, res) => {
         res.status(500).json({ message: "Erreur serveur" });
     }
 
+});
+
+// ================================
+// DEMANDES DE PAIEMENT ET ADMIN
+// ================================
+
+app.post("/api/paiement/demande-confirmation", auth, async (req, res) => {
+    try {
+        const { tier, montant, screenshot } = req.body;
+        const prixAttendus = { pro: 250, ia: 500 };
+        if (!prixAttendus[tier] || Number(montant) !== prixAttendus[tier]) {
+            return res.status(400).json({ message: "Offre ou montant invalide" });
+        }
+        if (!screenshot || !screenshot.data || !screenshot.type || !screenshot.name) {
+            return res.status(400).json({ message: "Screenshot obligatoire" });
+        }
+        if (!["image/png", "image/jpeg", "application/pdf"].includes(screenshot.type)) {
+            return res.status(400).json({ message: "Format de screenshot invalide" });
+        }
+        if (screenshot.data.length > 7 * 1024 * 1024) {
+            return res.status(400).json({ message: "Screenshot trop volumineux" });
+        }
+        const user = await User.findOne({ email: req.user.email });
+        if (!user) return res.status(404).json({ message: "Utilisateur introuvable" });
+        const request = await PaymentRequest.create({
+            user: user._id,
+            email: user.email,
+            tier,
+            montant: Number(montant),
+            screenshot
+        });
+        res.status(201).json({ message: "Demande envoyée", id: request._id });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Erreur serveur" });
+    }
+});
+
+app.get("/api/admin/summary", auth, requireAdmin, async (req, res) => {
+    const [users, pendingPayments, payments, leaderboard] = await Promise.all([
+        User.countDocuments(),
+        PaymentRequest.countDocuments({ status: "pending" }),
+        PaymentRequest.find().sort({ createdAt: -1 }).limit(100).select("email tier montant status screenshot.name createdAt processedAt processedBy rejectionReason"),
+        User.find().sort({ "weeklyLeague.xp": -1 }).limit(30).select("name email role weeklyLeague xpTotal createdAt")
+    ]);
+    res.json({ users, pendingPayments, payments, leaderboard });
+});
+
+app.get("/api/admin/payments/:id/screenshot", auth, requireAdmin, async (req, res) => {
+    const payment = await PaymentRequest.findById(req.params.id).select("screenshot");
+    if (!payment) return res.status(404).json({ message: "Demande introuvable" });
+    const prefix = `data:${payment.screenshot.type};base64,`;
+    res.json({ name: payment.screenshot.name, type: payment.screenshot.type, data: prefix + payment.screenshot.data });
+});
+
+app.patch("/api/admin/payments/:id", auth, requireAdmin, async (req, res) => {
+    const { status, rejectionReason } = req.body;
+    if (!["approved", "rejected"].includes(status)) return res.status(400).json({ message: "Statut invalide" });
+    const payment = await PaymentRequest.findById(req.params.id);
+    if (!payment) return res.status(404).json({ message: "Demande introuvable" });
+    if (payment.status !== "pending") return res.status(409).json({ message: "Demande déjà traitée" });
+    payment.status = status;
+    payment.processedAt = new Date();
+    payment.processedBy = req.adminUser.email;
+    payment.rejectionReason = status === "rejected" ? String(rejectionReason || "") : null;
+    if (status === "approved") {
+        const user = await User.findById(payment.user);
+        if (user) {
+            user.role = payment.tier;
+            user.premiumExpiry = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+            await user.save();
+        }
+    }
+    await payment.save();
+    res.json({ message: status === "approved" ? "Paiement approuvé" : "Paiement refusé" });
 });

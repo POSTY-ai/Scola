@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Administration - Scola</title>
+    <link rel="stylesheet" href="../Css/admin-dashboard.css">
+</head>
+<body>
+    <main class="admin-shell">
+        <header class="admin-header">
+            <div>
+                <p class="eyebrow">Scola</p>
+                <h1>Administration</h1>
+                <p>Contrôle des utilisateurs, paiements et classement.</p>
+            </div>
+            <a href="../index.html" class="back-link">Accueil</a>
+        </header>
+        <p class="admin-error" id="admin-error"></p>
+        <section class="stats" aria-label="Résumé">
+            <article><span>Utilisateurs</span><strong id="users-count">-</strong></article>
+            <article><span>Demandes en attente</span><strong id="pending-count">-</strong></article>
+        </section>
+        <section class="admin-section">
+            <div class="section-heading"><h2>Demandes de paiement</h2><button id="refresh-btn">Actualiser</button></div>
+            <div class="table-wrap"><table><thead><tr><th>Email</th><th>Offre</th><th>Montant</th><th>Preuve</th><th>Statut</th><th>Action</th></tr></thead><tbody id="payments-body"></tbody></table></div>
+        </section>
+        <section class="admin-section">
+            <h2>Classement Ligue bac</h2>
+            <div class="table-wrap"><table><thead><tr><th>#</th><th>Nom</th><th>Email</th><th>XP semaine</th><th>Ligue</th></tr></thead><tbody id="leaderboard-body"></tbody></table></div>
+        </section>
+    </main>
+    <script src="../Javascript/admin-dashboard.js"></script>
+</body>
+</html>

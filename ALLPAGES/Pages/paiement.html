@@ -546,6 +546,10 @@
 
     <script>
         let screenshotFile = null;
+        let screenshotData = null;
+        const params = new URLSearchParams(window.location.search);
+        const tier = params.get('tier') === 'ia' ? 'ia' : 'pro';
+        const montant = tier === 'ia' ? 500 : 250;
 
         function handleFileUpload(event) {
             const file = event.target.files[0];
@@ -569,6 +573,7 @@
 
             const reader = new FileReader();
             reader.onload = function(e) {
+                screenshotData = e.target.result;
                 const preview = document.getElementById('screenshot-preview');
                 if (file.type.startsWith('image')) {
                     preview.innerHTML = '<img src="' + e.target.result + '" alt="Preuve de paiement"><div class="screenshot-name">✓ ' + file.name + '</div>';
@@ -579,16 +584,52 @@
             reader.readAsDataURL(file);
         }
 
-        function confirmerPaiement() {
+        async function confirmerPaiement() {
             if (!screenshotFile) {
                 document.getElementById('err-paiement').style.display = 'block';
                 document.getElementById('err-paiement-txt').textContent = 'Télécharge d’abord le screenshot de la transaction';
                 return;
             }
 
-            document.getElementById('success-box').style.display = 'flex';
-            document.getElementById('btn-confirmer').textContent = 'Confirmé';
-            document.getElementById('btn-confirmer').disabled = true;
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'connexion.html';
+                return;
+            }
+
+            const button = document.getElementById('btn-confirmer');
+            button.disabled = true;
+            button.textContent = 'Envoi...';
+
+            try {
+                const response = await fetch('/api/paiement/demande-confirmation', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({
+                        tier,
+                        montant,
+                        screenshot: {
+                            data: screenshotData.split(',')[1],
+                            type: screenshotFile.type,
+                            name: screenshotFile.name
+                        }
+                    })
+                });
+
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.message || 'Erreur lors de l’envoi');
+
+                document.getElementById('success-box').style.display = 'flex';
+                button.textContent = 'Confirmé';
+            } catch (error) {
+                document.getElementById('err-paiement').style.display = 'block';
+                document.getElementById('err-paiement-txt').textContent = error.message;
+                button.disabled = false;
+                button.textContent = 'Confirmer';
+            }
         }
     </script>
 </body>

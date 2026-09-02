@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="../Css/quiz.css" />
   <title>Influence des États-Unis sur le monde</title>
   <style>
     :root{
@@ -18,6 +19,10 @@
       margin:0;
       padding:24px;
       background:var(--bg);
+      background-image:url('../Images/scola-wave-background.svg');
+      background-size:cover;
+      background-position:center bottom;
+      background-attachment:fixed;
       color:#111;
       display:flex;
       flex-direction: column;
@@ -138,18 +143,8 @@
         </ul>
       </div>
     </footer>
-  </div>
-  
-   <!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="C:\Users\L.J\Desktop\sces socialesproject\ALLPAGES\Css\quiz.css">
-    <title>Quiz -Influence des États-Unis sur le monde </title>
-</head>
-<body>
+    </div>
+
     <div class="quiz-container">
 
         <header class="quiz-header">
@@ -202,11 +197,14 @@
                     <span>/ 10</span>
                 </div>
 
+                <p id="percentageScore"></p>
+                <p id="resultsMessage"></p>
+
                 <div class="results-actions">
                     <button id="restartBtn">Recommencer</button>
 
                     <!-- ✅ lien corrigé -->
-                    <a href="../Pages/domination-de-l-USA-sur-le-monde.html">
+                    <a href="domination de l'USA sur le monde depuis la premiere guerre mondiale.html">
                         Retour
                     </a>
                 </div>
@@ -219,5 +217,4 @@
     <!-- ✅ JS corrigé -->
     <script src="../Javascript/quizusamonde.js"></script>
 
-</body>
 </html>

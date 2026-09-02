@@ -20,12 +20,12 @@ const userSchema = new mongoose.Schema({
 
     // ================================
     // SYSTÈME PREMIUM
-    // role = "gratuit" | "pro" | "ia"
+    // role = "gratuit" | "pro" | "ia" | "admin"
     // premiumExpiry = date d'expiration de l'abonnement
     // ================================
     role: {
         type: String,
-        enum: ["gratuit", "pro", "ia"],
+        enum: ["gratuit", "pro", "ia", "admin"],
         default: "gratuit"
     },
 

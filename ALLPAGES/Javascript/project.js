@@ -116,6 +116,8 @@ const loginButton   = document.getElementById("logn-button");
 const signupButton  = document.getElementById("signup-button");
 const profileButton = document.getElementById("profile-button");
 const logoutButton  = document.getElementById("logout-button");
+const adminButton = document.getElementById("admin-button");
+const adminMobileButton = document.getElementById("admin-mobile-button");
 
 if (token) {
     // ✅ Token trouvé = utilisateur connecté
@@ -199,7 +201,11 @@ async function chargerRoleUtilisateur() {
 
 function adapterInterfaceSelonRole(data) {
 
-    const { role, isPro, isIA, premiumExpiry } = data;
+    const { role, isPro, isIA, isAdmin, premiumExpiry } = data;
+
+    if (adminButton) adminButton.style.display = isAdmin ? "block" : "none";
+    if (adminMobileButton) adminMobileButton.style.display = isAdmin ? "block" : "none";
+    if (adminMobileButton) adminMobileButton.style.display = isAdmin ? "block" : "none";
 
     // ── Badge premium dans le header (si l'élément existe) ──
     const badgeEl = document.getElementById("badge-role");
