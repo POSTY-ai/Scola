@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
     <link rel="shortcut icon" href="Images/IMG_0755.JPG" type="image/x-icon">
-    <link rel="stylesheet" href="../Css/project.css">
+    <link rel="stylesheet" href="Css/project.css">
 
     <title>Scola</title>
 
@@ -50,24 +50,22 @@
                         </a>
                     </li>
                     <li class="specialButton1" id="logn-button">
-                        <button class="abc" id="abc"><a href="Pages/connexion.html" class="abc2" id="abc">Connexion</a></button>
+                        <a href="Pages/connexion.html" class="abc">Connexion</a>
                     </li>
 
                     <li class="specialButton2" id="signup-button">
-                        <button class="abc"><a href="Pages/inscription.html" class="abc2">Inscription</a></button>
+                        <a href="Pages/inscription.html" class="abc">Inscription</a>
                     </li>
 
                     <li class="specialButton3" id="ai-button">
-                        <button class="abc"><a href="Pages/scoly.html" class="abc2">ScolyAI🤖</a></button>
+                        <a href="Pages/scoly.html" class="abc">ScolyAI🤖</a>
                     </li>
 
                     <li class="profile-button" id="profile-button" style="display:none;">
-                        <button class="abc">
-                            <a href="Pages/profile.html" class="abc2">Profil</a>
-                        </button>
+                        <a href="Pages/profile.html" class="abc">Profil</a>
                     </li>
                     <li id="logout-button" style="display:none;">
-                        <button class="abc" onclick="logout()">Déconnexion</button>
+                        <button type="button" class="abc" onclick="logout()">Déconnexion</button>
                     </li>
                 </ul>
             </nav>
@@ -77,9 +75,120 @@
 
         <div id="result"></div>
 
-    </div>
+        </div>
 
-    <section class="hero-home">
+        <div class="mobile-home-shell" aria-label="Accueil mobile Scola">
+            <div class="mobile-shell-inner">
+                <div class="mobile-topbar">
+                    <span class="mobile-brand">Scola</span>
+                    <button class="mobile-menu-btn" type="button" aria-label="Menu">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                </div>
+
+                <div class="mobile-menu" id="mobile-menu">
+                    <a href="Pages/sujetsofficiels.html">Chapitres</a>
+                    <a href="Pages/jeuxeducatifs.html">Jeux éducatifs</a>
+                    <a href="Pages/liguebac.html">Ligue bac</a>
+                    <a href="Pages/anciennesepreuves.html">Examens officiels</a>
+                </div>
+
+                <div class="mobile-scroll-area">
+                    <div class="mobile-hero-card">
+                        <p class="mobile-hero-title">Apprends l'histoire comme jamais</p>
+                        <p class="mobile-hero-subtitle">Chapitres, quiz et IA pour réussir le bac</p>
+                        <a href="Pages/inscription.html" class="mobile-primary-btn">Créer un compte</a>
+                    </div>
+
+                    <div class="mobile-stats-grid">
+                        <div class="mobile-stat-card">
+                            <p class="mobile-stat-label">Élèves</p>
+                            <p class="mobile-stat-value">102</p>
+                        </div>
+                        <div class="mobile-stat-card">
+                            <p class="mobile-stat-label">Abonnements</p>
+                            <p class="mobile-stat-value">2</p>
+                        </div>
+                    </div>
+
+                    <p class="mobile-section-title">Grandes périodes</p>
+                    <div class="mobile-periods">
+                        <a class="mobile-period-item" href="Pages/Premiereguerremondiale.html">
+                            <img src="Images/IMG-20250803-WA0114.jpg" alt="Première Guerre mondiale">
+                            <p>1ère guerre mondiale</p>
+                            <span>1914 - 1918</span>
+                        </a>
+                        <a class="mobile-period-item" href="Pages/Deuxiemeguerremondiale.html">
+                            <img src="Images/IMG-20250803-WA0112.jpg" alt="Deuxième Guerre mondiale">
+                            <p>2e guerre mondiale</p>
+                            <span>1939 - 1945</span>
+                        </a>
+                        <a class="mobile-period-item" href="Pages/guerrefroide.html">
+                            <img src="Images/IMG-20250803-WA0113.jpg" alt="Guerre froide">
+                            <p>Guerre froide</p>
+                            <span>1947 - 1991</span>
+                        </a>
+                    </div>
+
+                    <div class="mobile-section-header">
+                        <p>Abonnements</p>
+                        <span>2 offres</span>
+                    </div>
+
+                    <a class="mobile-plan-card" href="Pages/paiement.html?tier=pro">
+                        <span class="mobile-plan-badge">Pro</span>
+                        <div class="mobile-plan-row">
+                            <p>250 HTG / mois</p>
+                        </div>
+                        <p class="mobile-plan-text">Tout le contenu premium, anciennes épreuves et quiz.</p>
+                    </a>
+
+                    <a class="mobile-plan-card" href="Pages/paiement.html?tier=ia">
+                        <span class="mobile-plan-badge">IA + Premium</span>
+                        <div class="mobile-plan-row">
+                            <p>500 HTG / mois</p>
+                        </div>
+                        <p class="mobile-plan-text">Accès complet avec des outils intelligents pour réviser.</p>
+                    </a>
+
+                    <a class="mobile-ligue-card" href="Pages/liguebac.html">
+                        <i class="fa-solid fa-trophy" aria-hidden="true"></i>
+                        <div>
+                            <p>Ligue bac</p>
+                            <span>Grimpe le classement chaque semaine</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                    </a>
+
+                    <div class="mobile-whatsapp-box">
+                        <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                        <p>Suis notre chaîne WhatsApp</p>
+                    </div>
+                </div>
+
+                <nav class="mobile-bottom-nav" aria-label="Navigation mobile">
+                    <a href="index.html" class="mobile-nav-item active">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Accueil</span>
+                    </a>
+                    <a href="Pages/connexion.html" class="mobile-nav-item">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        <span>Connexion</span>
+                    </a>
+                    <a href="Pages/inscription.html" class="mobile-nav-item">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span>Inscription</span>
+                    </a>
+                    <a href="Pages/scoly.html" class="mobile-nav-item">
+                        <i class="fa-solid fa-robot"></i>
+                        <span>ScolyAI</span>
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <div class="desktop-home">
+        <section class="hero-home">
         <div class="hero-copy" style="margin-top:90px">
             <span class="hero-badge">Apprendre + pratiquer + progresser</span>
             <h1 class="titlex">Apprends l’histoire comme jamais auparavant</h1>
@@ -219,6 +328,8 @@
     </div>
 
 
+    </div>
+
     <footer>
         <nav style="gap:30px">
             <ul class="separatefooter" style="gap: 30px;">
@@ -244,6 +355,6 @@
         </nav>
     </footer>
 
-    <script src="../Javascript/project.js"></script>
+    <script src="Javascript/project.js"></script>
 </body>
 </html>

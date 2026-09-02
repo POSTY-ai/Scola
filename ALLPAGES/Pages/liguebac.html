@@ -323,19 +323,6 @@ chargerLeaderboard();
 
 }
 
-// Appeler dès que la page se charge
-verifierAccesQuiz();
-
-verifierAccesQuiz()
-.then((autorise) => {
-
-    if (autorise) {
-
-        afficherQuestion();
-
-    }
-
-});
 // ============================================================
 // COUNTDOWN — temps restant avant la réinitialisation du vendredi
 // La ligue dure du lundi au vendredi (5 jours)

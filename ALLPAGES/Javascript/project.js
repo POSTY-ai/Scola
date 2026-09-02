@@ -20,12 +20,15 @@ document.addEventListener("DOMContentLoaded", function () {
 // ============================================================
 // TOGGLE NAV MOBILE — affiche/cache le menu sur mobile
 // ============================================================
-const menuIcon = document.querySelector('.fa-bars');
-const navMenu = document.querySelector('nav ul');
+const mobileMenuButton = document.querySelector('.mobile-menu-btn');
+const mobileMenu = document.querySelector('#mobile-menu');
 
-menuIcon.addEventListener('click', () => {
-    navMenu.classList.toggle('show');
-});
+if (mobileMenuButton && mobileMenu) {
+    mobileMenuButton.addEventListener('click', () => {
+        const isOpen = mobileMenu.classList.toggle('is-open');
+        mobileMenuButton.setAttribute('aria-expanded', String(isOpen));
+    });
+}
 
 // ============================================================
 // RECHERCHE — filtre les cours selon la saisie de l'utilisateur
