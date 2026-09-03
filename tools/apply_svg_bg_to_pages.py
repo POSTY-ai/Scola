@@ -3,7 +3,7 @@ from pathlib import Path
 root = Path(r"c:\Users\L.J\Desktop\sces socialesproject\ALLPAGES\Pages")
 css = """
 body {
-    background-image: url('../Images/scola-wave-background.svg');
+    background-image: url('../Images/scola-wave-background-dark.svg');
     background-size: cover;
     background-position: center bottom;
     background-repeat: no-repeat;
@@ -15,11 +15,11 @@ body {
 updated = []
 for path in sorted(root.rglob("*.html")):
     text = path.read_text(encoding="utf-8")
-    if "scola-wave-background.svg" in text:
-        continue
+    text = text.replace("scola-wave-background.svg", "scola-wave-background-dark.svg")
 
     if "<style" in text and "</style>" in text:
-        text = text.replace("</style>", f"\n<style>{css}</style>\n</style>", 1)
+        if "scola-wave-background-dark.svg" not in text:
+            text = text.replace("</style>", f"\n{css}</style>", 1)
     elif "</head>" in text:
         text = text.replace("</head>", f"\n<style>{css}</style>\n</head>", 1)
     else:
