@@ -1,414 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="../Css/project.css">
     <link rel="stylesheet" href="../Css/liguebac.css">
-    <title>Ligue Bac</title>
-
-<style>
-body {
-    background-image: url('../Images/scola-wave-background-dark.svg');
-    background-size: cover;
-    background-position: center bottom;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    min-height: 100vh;
-}
-</style>
+    <title>Ligue bac - Scola</title>
 </head>
 <body>
-    <div class="ligue-container">
-        <div class="ligue-header">
-            <div class="ligue-statut">
-                <div class="niveau-actuel">
-                    <div class="contenu-niveau">
-                        <h4 id="ligueActuelle">Bronze--Semaine 3</h4>
-                    </div>
-                    </div>
-                    <div class="reinitialisation">
-                        <div class="contenu-reinitialisation">
-                           <h5>Réinitialisation dans :</h5>
-                           <h4 id="countdown">Calcul en cours...</h4>
-                        </div>
-                    </div>
-                </div>
 
-            </div>
-       
-        <div class="ligue-card">
-            <div class="xp-user">
-                <div class="contenu-xpuser">
-                    <h5>Mes XP cette<br> semaine</h5>
-                    <h4 id="userXP">0</h4>
-                    <h5 id="xpToday">+0 aujourd'hui</h5>
-                </div>
-            </div>
-            <div class="classement-user">
-                <div class="contenu-classement">
-                     <h5>Mon<br> classement</h5>
-                   <h4 id="userRank">#0</h4>
-                  <h5 id="totalPlayers">Sur 0 eleves</h5>
-                </div>
-            </div>
-             <div class="consistence-user">
-                <div class="contenu-consistence">
-                     <h5>Serie active</h5>
-                    <h4 id="userStreak">0🔥</h4>
-                    <h5>jours consecutifs</h5>
-                </div>
-            </div>
+    <header class="header-accueil">
+        <div class="containerLogo">
+            <a href="../index.html" style="text-decoration:none;">
+                <p class="name">Scola</p>
+            </a>
         </div>
-       <div class="banniere-semaine">
-    <div class="contenu-banniere">
-        <h5>Thème de la semaine</h5>
-        <h4 id="themeSemaine">La guerre froide et la domination Americaine</h4>
-        <h5 id="themeJour">Chargement...</h5>
-        <button><a href="jouer.html" class="jouer">▶ Jouer</a></button>
-    </div>
-</div>
-        <div class="podium-visuel">
-            <h3 style="margin-bottom: 200px;color: gray;">Top 3 de la semaine</h3>
-            <div class="podium-deuxieme">
-               <div class="user1" id="secondPlace">...</div>
-                <div class="position1">2</div>
+    </header>
+
+    <main class="ligue-wrap">
+
+        <!-- ==================================================== -->
+        <!-- EN-TÊTE DE LA SEMAINE                                -->
+        <!-- chapitreSemaine et joursRestants sont remplis par    -->
+        <!-- JS depuis GET /api/league/current-week               -->
+        <!-- ==================================================== -->
+        <section class="ligue-header">
+            <p class="ligue-kicker">Championnat de la semaine</p>
+            <h1 class="ligue-chapitre" id="chapitreSemaine">Chargement du chapitre...</h1>
+            <p class="ligue-compte-a-rebours" id="joursRestants">--</p>
+        </section>
+
+        <!-- ==================================================== -->
+        <!-- PODIUM TOP 3                                         -->
+        <!-- ==================================================== -->
+        <section class="podium" id="podium">
+            <!-- Rempli dynamiquement : 3 cartes (2e, 1er, 3e dans cet ordre visuel) -->
+        </section>
+
+        <!-- ==================================================== -->
+        <!-- CLASSEMENT — UNIQUEMENT LES PARTICIPANTS             -->
+        <!-- ==================================================== -->
+        <section class="classement">
+            <div class="classement-titre-ligne">
+                <h2>Classement</h2>
+                <span class="classement-sous-titre">Seuls les élèves ayant joué cette semaine apparaissent ici</span>
             </div>
-            <div class="podium-premier">
-              <div class="user2" id="firstPlace">...</div>
-                <div class="position2">1</div>
+            <ul class="liste-classement" id="listeClassement">
+                <!-- Rempli dynamiquement -->
+            </ul>
+            <p class="classement-vide" id="classementVide" style="display:none;">
+                Personne n'a encore marqué de points cette semaine. Sois le premier à jouer !
+            </p>
+        </section>
+
+        <!-- ==================================================== -->
+        <!-- LAURÉAT DU MOIS                                      -->
+        <!-- ==================================================== -->
+        <section class="laureat-mois" id="laureatMois">
+            <div class="laureat-icone"><i class="fa-solid fa-crown"></i></div>
+            <div class="laureat-texte">
+                <p class="laureat-label">Lauréat du mois</p>
+                <p class="laureat-nom" id="laureatNom">--</p>
+                <p class="laureat-detail" id="laureatDetail">--</p>
             </div>
-            <div class="podium-troisieme">
-           <div class="user3" id="thirdPlace">...</div>
-                <div class="position3">3</div>
-            </div>
+        </section>
+
+        <div class="ligue-cta">
+            <a href="jouer.html" class="ligue-bouton-jouer">
+                <i class="fa-solid fa-play"></i> Jouer maintenant
+            </a>
         </div>
-        <div class="leaderboard" id="leaderboard">
-        </div>
-        <div class="niveau-actuelle">
-            <div class="bronze">Bronze<br>🥉</div>
-            <div class="argent">Argent<br>🥈</div>
-            <div class="or">Or<br>🥇</div>
-            <div class="platine">Platine<br>💎</div>
-            <div class="diamant">Diamant<br>👑</div>
-        </div>
-    </div>
-    <script>
 
-const token = localStorage.getItem("token");
+    </main>
 
-async function chargerLigue() {
-
-    try {
-
-        const response = await fetch(
-            "/api/league/me",
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }
-        );
-
-        const data = await response.json();
-
-        document.getElementById(
-            "userXP"
-        ).textContent = data.xp;
-
-        document.getElementById(
-            "xpToday"
-        ).textContent =
-        "+" + data.xpToday +
-        " aujourd'hui";
-
-        document.getElementById(
-            "userRank"
-        ).textContent =
-        "#" + data.rank;
-
-        document.getElementById(
-            "totalPlayers"
-        ).textContent =
-        "Sur " +
-        data.totalPlayers +
-        " eleves";
-
-        document.getElementById(
-            "userStreak"
-        ).textContent =
-        data.streak + "🔥";
-
-        document.getElementById(
-            "ligueActuelle"
-        ).textContent =
-        data.league;
-
-    }
-
-    catch(err){
-
-        console.log(err);
-
-    }
-
-}
-
-// ============================================================
-// THÈMES PAR JOUR — même logique que jouer.html
-// ============================================================
-const THEMES_SEMAINE = {
-    1: "Bilan de la Première Guerre Mondiale",
-    2: "Domination des USA (économique, culturelle, militaire)",
-    3: "Le Plan Marshall",
-    4: "Influence des USA sur Haïti",
-    5: "Influence des USA sur le monde"
-};
-
-function afficherThemeDuJour() {
-    const jour = new Date().getDay();
-    // getDay() : 0=dimanche, 1=lundi ... 5=vendredi, 6=samedi
-
-    const theme = THEMES_SEMAINE[jour];
-
-    if (theme) {
-        // Jour de semaine → afficher le thème du jour
-        document.getElementById("themeJour").textContent = "📚 Aujourd'hui : " + theme;
-    } else {
-        // Samedi ou dimanche → pas de quiz ce jour
-        document.getElementById("themeJour").textContent = "⏸ Reprise lundi prochain";
-    }
-}
-
-afficherThemeDuJour();
-
-async function chargerTop3(){
-
-    try{
-
-        const response =
-        await fetch(
-            "/api/league/top"
-        );
-
-        const top =
-        await response.json();
-
-        if(top[0])
-            document.getElementById(
-                "firstPlace"
-            ).textContent =
-            top[0].name;
-
-        if(top[1])
-            document.getElementById(
-                "secondPlace"
-            ).textContent =
-            top[1].name;
-
-        if(top[2])
-            document.getElementById(
-                "thirdPlace"
-            ).textContent =
-            top[2].name;
-
-    }
-
-    catch(err){
-
-        console.log(err);
-
-    }
-
-}
-
-async function chargerLeaderboard(){
-
-    try{
-
-        const response =
-        await fetch(
-            "/api/league/leaderboard"
-        );
-
-        const users =
-        await response.json();
-
-        const leaderboard =
-        document.getElementById(
-            "leaderboard"
-        );
-
-        leaderboard.innerHTML = "";
-
-        users.forEach(
-            (user,index)=>{
-
-                const div =
-                document.createElement(
-                    "div"
-                );
-
-                div.className =
-                "user1";
-
-                div.textContent =
-                "#" +
-                (index + 1) +
-                " - " +
-                user.name +
-                " (" +
-                user.weeklyLeague.xp +
-                " XP)";
-
-                leaderboard.appendChild(
-                    div
-                );
-
-            }
-        );
-
-    }
-
-    catch(err){
-
-        console.log(err);
-
-    }
-
-}
-
-chargerLigue();
-chargerTop3();
-chargerLeaderboard();
-
-//acces au quiz
- async function verifierAccesQuiz() {
-
-    const token = localStorage.getItem("token");
-
-    // Si pas connecté → rediriger vers la connexion
-    if (!token) {
-        window.location.href = "inscription.html";
-        return;
-    }
-
-    try {
-
-        const response = await fetch("/api/quiz/check", {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-
-        const data = await response.json();
-
-        if (!data.canPlay) {
-
-            // ✅ Désactiver le bouton proprement
-            // sans effacer toute la page comme avant
-            const btnJouer = document.querySelector(".banniere-semaine button");
-            if (btnJouer) {
-                btnJouer.disabled = true;
-                btnJouer.style.opacity = "0.5";
-                btnJouer.style.cursor = "not-allowed";
-                btnJouer.innerHTML = "⏳ Déjà joué aujourd'hui";
-            }
-
-            // Afficher un message sous la bannière
-            const msg = document.createElement("p");
-            msg.textContent = "Tu as déjà joué aujourd'hui. Reviens demain pour gagner plus de XP ! 🔥";
-            msg.style.cssText = `
-                color: #ff9800;
-                font-size: 13px;
-                text-align: center;
-                margin-top: 8px;
-                opacity: 0.9;
-            `;
-            document.querySelector(".banniere-semaine").appendChild(msg);
-
-        }
-
-    } catch (err) {
-        console.log("❌ Erreur vérification quiz :", err);
-    }
-
-}
-
-// ============================================================
-// COUNTDOWN — temps restant avant la réinitialisation du vendredi
-// La ligue dure du lundi au vendredi (5 jours)
-// Réinitialisation chaque vendredi à 23h59
-// ============================================================
-
-function calculerCountdown() {
-
-    const maintenant = new Date();
-
-    // Trouver le prochain vendredi à 23h59
-    const finDeSemaine = new Date();
-
-    // getDay() retourne : 0=dimanche, 1=lundi, 2=mardi, 3=mercredi,
-    //                     4=jeudi, 5=vendredi, 6=samedi
-    const jourActuel = maintenant.getDay();
-
-    // Calculer combien de jours jusqu'au vendredi
-    let joursJusquauVendredi;
-
-    if (jourActuel === 5) {
-        // On est vendredi → fin de semaine ce soir
-        joursJusquauVendredi = 0;
-    } else if (jourActuel === 6) {
-        // On est samedi → prochain vendredi dans 6 jours
-        joursJusquauVendredi = 6;
-    } else if (jourActuel === 0) {
-        // On est dimanche → prochain vendredi dans 5 jours
-        joursJusquauVendredi = 5;
-    } else {
-        // Lundi(1) → 4 jours | Mardi(2) → 3 jours | etc.
-        joursJusquauVendredi = 5 - jourActuel;
-    }
-
-    // Définir la date de fin : vendredi à 23h59m59s
-    finDeSemaine.setDate(maintenant.getDate() + joursJusquauVendredi);
-    finDeSemaine.setHours(23, 59, 59, 0);
-
-    // Calculer la différence entre maintenant et la fin
-    const diff = finDeSemaine - maintenant;
-    // diff = nombre de millisecondes restantes
-
-    if (diff <= 0) {
-        // La semaine est terminée
-        document.getElementById("countdown").textContent = "Réinitialisation en cours...";
-        return;
-    }
-
-    // Convertir les millisecondes en jours, heures, minutes, secondes
-    const jours    = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const heures   = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes  = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const secondes = Math.floor((diff % (1000 * 60)) / 1000);
-
-    // Afficher le résultat dans le HTML
-    // padStart(2, "0") = ajoute un zéro devant si le chiffre est < 10
-    // ex: 9 → "09"
-    if (jours > 0) {
-        document.getElementById("countdown").textContent =
-            `${jours}j ${String(heures).padStart(2,"0")}h ${String(minutes).padStart(2,"0")}m`;
-    } else {
-        document.getElementById("countdown").textContent =
-            `${String(heures).padStart(2,"0")}h ${String(minutes).padStart(2,"0")}m ${String(secondes).padStart(2,"0")}s`;
-    }
-
-}
-
-// Calculer immédiatement au chargement
-calculerCountdown();
-
-// Recalculer toutes les secondes avec setInterval
-// setInterval = répète la fonction toutes les 1000ms (1 seconde)
-setInterval(calculerCountdown, 1000);
-
-</script>
-    
+    <script src="../Javascript/project.js"></script>
+    <script src="../Javascript/liguebac.js"></script>
 </body>
 </html>
